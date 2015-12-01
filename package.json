@@ -1,0 +1,11 @@
+{
+  "name": "tinker",
+  "version": "0.0.1",
+  "description": "The Tinker App",
+  "main": "app.js",
+  "author": "Ameer Nuri",
+  "dependencies": {
+    "ejs": "^2.3.4",
+    "express": "^4.13.3"
+  }
+}
