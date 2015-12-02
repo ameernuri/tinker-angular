@@ -1,10 +1,80 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Tinker</title>
-	</head>
-	<body>
-		<h1>Hello Tinker!</h1>
-	</body>
+<html ng-app="tinker">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+	<title>Tinker</title>
+
+	<link rel="favicon" href="images/favicon.png">
+
+	<link rel="stylesheet" href="lib/bootstrap/less/bootstrap.css" media="screen" charset="utf-8">
+
+	<link rel="stylesheet" href="styles/main.css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="lib/fontawesome/css/font-awesome.min.css" media="screen" charset="utf-8">
+
+	<script type="text/javascript" src="lib/angular.min.js"></script>
+	<script type="text/javascript" src="lib/pouchdb.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript" src="scripts/ctrl.js"></script>
+</head>
+<body ng-controller="GamesCtrl">
+	<div class="container st-12 lt-8 lt-push-2 sd-6 sd-push-3 ld-4 ld-push-4">
+		<div class="current-game">
+			End Games
+		</div>
+
+		<div class="game-form-wrap">
+			<form class="game-form" method="post" ng-submit="addGame()">
+				<input ng-model="gameText" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?" class="game">
+				<input ng-model="endTime" type="text" name="end-time" placeholder="End Time">
+
+				<input type="submit" value="Create Game">
+			</form>
+		</div>
+		<div class="children-wrap">
+			<ul>
+				<li ng-repeat="game in games">
+					<span class="game">
+						<span class="density-wrap">
+							<span ng-show="game.doc.replays[0].density == '8'" class="density">
+								<span class="fa fa-circle icon rock"></span>
+							</span>
+							<span ng-show="game.doc.replays[0].density == '4'" class="density">
+								<span class="fa fa-dot-circle-o icon sand"></span>
+							</span>
+							<span ng-show="game.doc.replays[0].density == '2'" class="density">
+								<span class="fa fa-circle-o icon water"></span>
+							</span>
+						</span>
+
+						{{game.doc.game}}
+					</span>
+					<span class="result-wrap">
+						<span ng-show="game.doc.replays[0].result == 'active'" class="result active">
+							<span class="fa fa-play icon"></span>
+							<span class="text">Active</span>
+						</span>
+						<span ng-show="game.doc.replays[0].result == 'won'" class="result won">
+							<span class="fa fa-check icon"></span>
+							<span class="text">Won</span>
+						</span>
+						<span ng-show="game.doc.replays[0].result == 'lost'" class="result lost">
+							<span class="fa fa-times icon"></span>
+							<span class="text">Lost</span>
+						</span>
+					</span>
+
+					<div class="info-wrap">
+						<span class="time-wrap">
+							<span class="fa fa-clock-o icon"></span>
+							<span class="text">{{game.doc.replays[0].end}}</span>
+						</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
 </html>

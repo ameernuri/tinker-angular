@@ -6,6 +6,8 @@
   "author": "Ameer Nuri",
   "dependencies": {
     "ejs": "^2.3.4",
-    "express": "^4.13.3"
-  }
+    "express": "^4.13.3",
+    "less": "^2.5.3",
+    "less-middleware": "^2.0.1"
+	}
 }
