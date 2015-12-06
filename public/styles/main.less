@@ -71,7 +71,6 @@ input[type=submit], button {
 	border-radius: 30px;
 	padding: 10px 20px;
 	float: right;
-	margin: 10px;
 	cursor: pointer;
 
 	&:hover {
@@ -105,6 +104,22 @@ input {
 	overflow: auto;
 	background: @dark5;
 	padding-bottom: 50px;
+	max-width: inherit;
+}
+
+.game-form-switch {
+	padding: 10px;
+	text-align: center;
+	font-size: 200%;
+	cursor: pointer;
+	transition: .5s;
+	margin-top: 20px;
+	border: dashed #444;
+	border-width: 1px 0;
+
+	&:hover {
+		background: @dark3;
+	}
 }
 
 .game-form-wrap {
@@ -149,6 +164,7 @@ input {
 			padding: 10px 20px;
 			float: right;
 			margin-top: 10px;
+			margin-right: 30px;
 
 			&:hover {
 				background: #ccc;
@@ -158,6 +174,61 @@ input {
 			&:focus {
 				outline: none;
 			}
+		}
+
+
+		.game-density {
+			text-align: center;
+
+			h5 {
+				margin-bottom: 0;
+				font-size: 80%;
+				padding-top: 10px;
+			}
+
+		  label {
+				margin-top: 14px;
+				margin-bottom: 10px;
+
+		    input[type=radio], input[type=checkbox] {
+		      display: none;
+
+		      & + span {
+		        color: #888;
+		        font-size: 12px;
+		        cursor: pointer;
+
+		        &:hover {
+		          color: #eee;
+		        }
+		      }
+
+		      & + span {
+		        cursor: pointer;
+		        color: #888;
+		        display: inline-block;
+		        padding: 5px 10px;
+		        border-radius: 50px;
+		        background: #222;
+		        border: 1px #888;
+		        font-weight: normal;
+						transition: .5s;
+
+		        &:hover {
+		          color: #eee;
+		        }
+		      }
+
+		      &:checked + span {
+		        background-color: #aaa;
+		        color: #222;
+		      }
+		    }
+		  }
+
+		  .repeat-input-wrap {
+		    display: none;
+		  }
 		}
 	}
 }
