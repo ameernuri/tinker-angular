@@ -2,112 +2,31 @@
 <html ng-app="tinker">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
 
 	<title>Tinker</title>
 
-	<link rel="favicon" href="images/favicon.png">
+	<link rel="shortcut icon" href="images/favicon.png">
 
-	<link rel="stylesheet" href="lib/bootstrap/less/bootstrap.css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen" charset="utf-8">
 
 	<link rel="stylesheet" href="styles/main.css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="lib/fontawesome/css/font-awesome.min.css" media="screen" charset="utf-8">
 
-	<script type="text/javascript" src="lib/jquery.min.js"></script>
-	<script type="text/javascript" src="lib/angular.min.js"></script>
-	<script type="text/javascript" src="lib/pouchdb.min.js"></script>
-	<script type="text/javascript" src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+	<script type="text/javascript" src="bower_components/pouchdb/dist/pouchdb.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-pouchdb/angular-pouchdb.min.js"></script>
+	<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript" src="scripts/app.js"></script>
-	<script type="text/javascript" src="scripts/services.js"></script>
 	<script type="text/javascript" src="scripts/controllers.js"></script>
 </head>
 <body ng-controller="GamesCtrl">
-	<div class="container lt-12 sd-8 sd-push-2 ld-6 ld-push-3">
-		<div class="current-game">
-			End Games
-		</div>
-
-		<div class="game-form-switch">
-			<span class="fa fa-plus-circle"></span>
-		</div>
-
-		<div class="game-form-wrap">
-			<form class="game-form" method="post" ng-submit="save()">
-				<input ng-model="gameText" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?" class="game">
-				<input ng-model="endTime" type="text" name="end-time" placeholder="End Time" autocomplete="off">
-
-				<div class="game-density">
-					<h5>DENSITY</h5>
-					<label for="rock-radio">
-						<input id="rock-radio" type="radio" ng-model="density" name="density" ng-value="8">
-						<span>
-							<span class="fa fa-circle"></span>
-							Rock
-						</span>
-					</label>
-
-					<label for="sand-radio">
-						<input id="sand-radio" type="radio" ng-model="density" name="density" ng-value="4">
-						<span>
-							<span class="fa fa-dot-circle-o"></span>
-							Sand
-						</span>
-					</label>
-
-					<label for="water-radio">
-						<input id="water-radio" type="radio" ng-model="density" name="density" ng-value="2">
-						<span>
-							<span class="fa fa-circle-o"></span>
-							Water
-						</span>
-					</label>
-				</div>
-
-				<input type="submit" value="Create Game">
-			</form>
-		</div>
-		<div class="children-wrap">
-			<ul>
-				<li ng-repeat="game in games">
-					<span class="game">
-						<span class="density-wrap">
-							<span ng-show="game.doc.replays[0].density == '8'" class="density">
-								<span class="fa fa-circle icon rock"></span>
-							</span>
-							<span ng-show="game.doc.replays[0].density == '4'" class="density">
-								<span class="fa fa-dot-circle-o icon sand"></span>
-							</span>
-							<span ng-show="game.doc.replays[0].density == '2'" class="density">
-								<span class="fa fa-circle-o icon water"></span>
-							</span>
-						</span>
-
-						{{game.doc.game}}
-					</span>
-					<span class="result-wrap">
-						<span ng-show="game.doc.replays[0].result == 'active'" class="result active">
-							<span class="fa fa-play icon"></span>
-							<span class="text">Active</span>
-						</span>
-						<span ng-show="game.doc.replays[0].result == 'won'" class="result won">
-							<span class="fa fa-check icon"></span>
-							<span class="text">Won</span>
-						</span>
-						<span ng-show="game.doc.replays[0].result == 'lost'" class="result lost">
-							<span class="fa fa-times icon"></span>
-							<span class="text">Lost</span>
-						</span>
-					</span>
-
-					<div class="info-wrap">
-						<span class="time-wrap">
-							<span class="fa fa-clock-o icon"></span>
-							<span class="text">{{game.doc.replays[0].end}}</span>
-						</span>
-					</div>
-				</li>
-			</ul>
+	<div class="container st-12 lt-10 lt-push-1 sd-6 sd-push-3 ld-4 ld-push-4">
+		<div class="container-content">
+			<%- include partials/content.html %>
+			<%- include partials/form.html %>
 		</div>
 	</div>
 </body>

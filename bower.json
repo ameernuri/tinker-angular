@@ -1,0 +1,25 @@
+{
+  "name": "tinker",
+  "description": "The Tinker App",
+  "main": "app.js",
+  "authors": [
+    "Ameer Nuri"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "app.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "bootstrap.css#~2.3.2",
+    "angular": "~1.4.8",
+    "angular-pouchdb": "~4.0.0"
+  }
+}

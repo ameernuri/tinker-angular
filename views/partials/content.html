@@ -1,0 +1,48 @@
+
+<div class="current-game">
+	<span class="fa fa-stop end-icon"></span>
+	End Games
+</div>
+
+<div class="children-wrap">
+	<ul>
+		<li ng-repeat="game in games">
+			<span class="game">
+				<span class="density-wrap">
+					<span ng-show="game.doc.replays[0].density == '8'" class="density">
+						<span class="fa fa-circle icon rock"></span>
+					</span>
+					<span ng-show="game.doc.replays[0].density == '4'" class="density">
+						<span class="fa fa-dot-circle-o icon sand"></span>
+					</span>
+					<span ng-show="game.doc.replays[0].density == '2'" class="density">
+						<span class="fa fa-circle-o icon water"></span>
+					</span>
+				</span>
+
+				{{game.doc.game}}
+			</span>
+			<span class="result-wrap">
+				<span ng-show="game.doc.replays[0].result == 'active'" class="result active">
+					<span class="fa fa-play icon"></span>
+					<span class="text">Playing</span>
+				</span>
+				<span ng-show="game.doc.replays[0].result == 'won'" class="result won">
+					<span class="fa fa-check icon"></span>
+					<span class="text">Won</span>
+				</span>
+				<span ng-show="game.doc.replays[0].result == 'lost'" class="result lost">
+					<span class="fa fa-times icon"></span>
+					<span class="text">Lost</span>
+				</span>
+			</span>
+
+			<div class="info-wrap">
+				<span class="time-wrap">
+					<span class="fa fa-clock-o icon"></span>
+					<span class="text">{{game.doc.replays[0].end}}</span>
+				</span>
+			</div>
+		</li>
+	</ul>
+</div>
