@@ -2,7 +2,7 @@
 <html ng-app="tinker">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
 
 	<title>Tinker</title>
 
@@ -14,19 +14,31 @@
 	<link rel="stylesheet" href="lib/fontawesome/css/font-awesome.min.css" media="screen" charset="utf-8">
 
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 	<script type="text/javascript" src="bower_components/pouchdb/dist/pouchdb.min.js"></script>
+	<script type="text/javascript" src="bower_components/pouchdb-find/dist/pouchdb.find.min.js"></script>
+	<script type="text/javascript" src="bower_components/relational-pouch/dist/pouchdb.relational-pouch.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-pouchdb/angular-pouchdb.min.js"></script>
 	<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript" src="scripts/app.js"></script>
-	<script type="text/javascript" src="scripts/controllers.js"></script>
+	<script type="text/javascript" src="scripts/controllers/games.js"></script>
 </head>
 <body ng-controller="GamesCtrl">
+	<div class="header">
+		<div class="side-switch">
+			<img src="images/logo_icon.svg" />
+		</div>
+		<div class="prio-switch">
+			<span class="fa fa-circle"></span>
+		</div>
+		<img class="logo" src="images/logo.svg">
+	</div>
 	<div class="container st-12 lt-10 lt-push-1 sd-6 sd-push-3 ld-4 ld-push-4">
 		<div class="container-content">
 			<%- include partials/content.html %>
-			<%- include partials/form.html %>
 		</div>
 	</div>
 </body>

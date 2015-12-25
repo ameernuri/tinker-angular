@@ -6,25 +6,25 @@
 	</div>
 
 	<div class="form-content-wrap">
-		<form class="game-form" method="post" ng-submit="save()">
+		<form class="game-form" method="post" ng-submit="add('_endgame')">
 			<div class="game-text-wrap">
 				<span class="game-text-density">
-					<span ng-show="density == 8" class="fa fa-circle"></span>
-					<span ng-show="density == 4" class="fa fa-dot-circle-o"></span>
-					<span ng-show="density == 2" class="fa fa-circle-o"></span>
+					<span ng-show="game.density == 8" class="fa fa-circle"></span>
+					<span ng-show="game.density == 4" class="fa fa-dot-circle-o"></span>
+					<span ng-show="game.density == 2" class="fa fa-circle-o"></span>
 				</span>
 
-				<input ng-model="gameText" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?">
+				<input ng-model="game.game" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?">
 			</div>
 			<div class="game-time-wrap">
 				<span class="fa fa-rotate-right repeat-switch"></span>
-				<input ng-model="endTime" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
+				<input ng-model="game.endsOn" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
 			</div>
 
 			<div class="game-density">
 				<span class="field-label">Priority</span>
 				<label for="rock-radio">
-					<input id="rock-radio" type="radio" ng-model="density" name="density" ng-value="8">
+					<input id="rock-radio" type="radio" ng-model="game.density" name="density" ng-value="8">
 					<span>
 						<span class="fa fa-circle"></span>
 						Rock
@@ -32,7 +32,7 @@
 				</label>
 
 				<label for="sand-radio">
-					<input id="sand-radio" type="radio" ng-model="density" name="density" ng-value="4">
+					<input id="sand-radio" type="radio" ng-model="game.density" name="density" ng-value="4">
 					<span>
 						<span class="fa fa-dot-circle-o"></span>
 						Sand
@@ -40,7 +40,7 @@
 				</label>
 
 				<label for="water-radio">
-					<input id="water-radio" type="radio" ng-model="density" name="density" ng-value="2">
+					<input id="water-radio" type="radio" ng-model="game.density" name="density" ng-value="2">
 					<span>
 						<span class="fa fa-circle-o"></span>
 						Water

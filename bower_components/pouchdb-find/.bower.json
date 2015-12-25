@@ -1,0 +1,39 @@
+{
+  "name": "pouchdb-find",
+  "version": "0.8.0",
+  "description": "Easy-to-use query language for PouchDB",
+  "homepage": "https://github.com/nolanlawson/pouchdb-find",
+  "authors": [
+    "Nolan Lawson <nolan.lawson@gmail.com>"
+  ],
+  "main": "dist/pouchdb.find.min.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "pouchdb",
+    "find",
+    "indexes",
+    "couchdb",
+    "plugin"
+  ],
+  "license": "Apache 2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "vendor"
+  ],
+  "_release": "0.8.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.8.0",
+    "commit": "8237b822dbcff8ce39ae9461091a1b7a26f07199"
+  },
+  "_source": "git://github.com/nolanlawson/pouchdb-find.git",
+  "_target": "~0.8.0",
+  "_originalSource": "pouchdb-find",
+  "_direct": true
+}

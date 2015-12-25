@@ -101,8 +101,61 @@ input {
 	font-family: "lato", "helvetica neue";
 }
 
+.header {
+	width: 100%;
+	position: fixed;
+	top: 0;
+	z-index: 100;
+	text-align: center;
+	background: @dark3;
+
+	img.logo {
+		height: 60px;
+		padding: 10px 0;
+	}
+
+	.side-switch {
+		position: absolute;
+		padding: 15px;
+		left: 0;
+		top: 0;
+		width: 60px;
+		height: 60px;
+		transition: .5s;
+		cursor: pointer;
+
+		img {
+			width: 100%;
+		}
+	}
+
+	.prio-switch {
+		position: absolute;
+		padding: 16px;
+		right: 0;
+		top: 0;
+		width: 60px;
+		height: 60px;
+		transition: .5s;
+		cursor: pointer;
+
+		&:hover {
+			color: #fff;
+		}
+
+		img {
+			width: 100%;
+		}
+
+		span {
+			font-size: 30px;
+		}
+	}
+}
+
 .container {
 	margin: 0 auto;
+	margin-top: 60px;
 	height: 100%;
 	padding: 0;
 	overflow: auto;
@@ -110,8 +163,7 @@ input {
 
 	.container-content {
 		width: 100%;
-		height: 100%;
-		max-width: 650px;
+		min-height: 100%;
 		background: @dark5;
 		margin: 0 auto;
 		overflow: auto;
@@ -132,6 +184,7 @@ input {
 .form-wrap {
 	border: dashed @dark9;
 	border-width: 1px 0;
+	background: @dark4;
 
 	.form-switch {
 		padding: 14px 20px;
@@ -338,6 +391,9 @@ input {
 			transition: .5s;
 			cursor: pointer;
 			overflow: auto;
+			position: relative;
+			min-height: 70px;
+			transition: .5s;
 
 			.game {
 				font-size: 18px;
@@ -354,74 +410,100 @@ input {
 				}
 			}
 
-			.result-wrap {
-				float: right;
+			.state-wrap {
+				position: absolute;
+				right: 20px;
+				top: 20px;
 
-				.result {
-					min-width: 28px;
-					height: 28px;
-					padding-top: 5px;
-					border-radius: 50px;
-					text-align: center;
-					box-sizing: border-box;
-					background: @dark7;
-					overflow: auto;
-					padding: 5px;
-					display: inline-block;
-					margin-top: 10px;
-
-					.text {
-						display: none;
-						font-size: 12px;
-						font-weight: bold;
-						vertical-align: top;
-						margin-top: 1px;
-						margin-right: 10px;
-						overflow: hidden;
-						transition: .5s;
-					}
-
-					&.active .icon {
-						color: #888;
-						margin-right: -5px;
-					}
-
-					&.won .icon {
-						color: @green;
-					}
-
-					&.lost .icon {
-						color: @red;
-					}
-
-					&:hover {
-						@keyframes bounce-in {
-							0% {
-								margin-right: -20px;
-							}
-
-							100% {
-								margin-right: 10px;;
-							}
-						}
+				.states {
+					.state {
+						min-width: 28px;
+						height: 28px;
+						padding-top: 5px;
+						border-radius: 50px;
+						text-align: center;
+						box-sizing: border-box;
+						background: @dark7;
+						padding: 5px;
+						display: inline-block;
 
 						.text {
-							display: inline-block;
-							animation: bounce-in .5s ease-out;
-						}
-
-						.icon {
-							margin-left: 8px;
+							display: none;
+							font-size: 12px;
+							font-weight: bold;
+							vertical-align: top;
+							margin-top: 1px;
+							margin-right: 10px;
+							overflow: hidden;
+							transition: .5s;
 						}
 
 						&.active .icon {
-							margin-right: auto;
+							color: #888;
+							margin-right: -5px;
+						}
+
+						&.won .icon {
+							color: @green;
+						}
+
+						&.lost .icon {
+							color: @red;
+						}
+					}
+				}
+
+				.state-buttons {
+					overflow: auto;
+					display: none;
+					transition: .5s;
+
+					button {
+						.states.state;
+						transform: scale(0);
+						transition: .5s;
+
+						&.active {
+							background: #ddd;
+
+							&.won {
+								color: @green;
+							};
+
+							&.lost {
+								color: @red;
+							}
+						}
+
+						&:hover {
+							.active;
+							background: #fff;
+						}
+					}
+				}
+
+				&:hover {
+					.states {
+						display: none;
+					}
+
+					.state-buttons {
+						display: block;
+
+						button {
+							transform: scale(1);
 						}
 					}
 				}
 			}
 
-			&:hover {
+			&.ui-sortable-helper {
+				outline: dashed @dark9;
+				outline-width: 1px;
+				transition: none;
+			}
+
+			&:hover, &.ui-sortable-helper {
 				background: @dark4;
 				color: #888;
 

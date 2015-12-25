@@ -20,6 +20,11 @@
     "jquery": "~2.1.4",
     "bootstrap": "bootstrap.css#~2.3.2",
     "angular": "~1.4.8",
-    "angular-pouchdb": "~4.0.0"
+    "angular-pouchdb": "~4.0.0",
+    "socket.io": "~1.3.7",
+    "sugar": "sugarjs#~1.4.1"
+  },
+  "resolutions": {
+    "bootstrap": "~3.3.6"
   }
 }
