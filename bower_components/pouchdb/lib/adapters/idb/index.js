@@ -1,6 +1,10 @@
 'use strict';
 
-var utils = require('../../utils');
+var clone = require('../../deps/clone');
+var uuid = require('../../deps/uuid');
+var collections = require('pouchdb-collections');
+var filterChange = require('../../deps/filterChange');
+var toPromise = require('../../deps/toPromise');
 var isDeleted = require('../../deps/docs/isDeleted');
 var isLocalId = require('../../deps/docs/isLocalId');
 var errors = require('../../deps/errors');
@@ -12,6 +16,7 @@ var checkBlobSupport = require('./blobSupport');
 var hasLocalStorage = require('../../deps/env/hasLocalStorage');
 var calculateWinningRev = require('../../deps/merge/winningRev');
 var traverseRevTree = require('../../deps/merge/traverseRevTree');
+var Changes = require('../../changesHandler');
 
 var ADAPTER_VERSION = idbConstants.ADAPTER_VERSION;
 var ATTACH_AND_SEQ_STORE = idbConstants.ATTACH_AND_SEQ_STORE;
@@ -280,7 +285,7 @@ function init(api, opts, callback) {
     return 'idb';
   };
 
-  api._id = utils.toPromise(function (callback) {
+  api._id = toPromise(function (callback) {
     callback(null, api._meta.instanceId);
   });
 
@@ -403,10 +408,10 @@ function init(api, opts, callback) {
   };
 
   api._changes = function (opts) {
-    opts = utils.clone(opts);
+    opts = clone(opts);
 
     if (opts.continuous) {
-      var id = dbName + ':' + utils.uuid();
+      var id = dbName + ':' + uuid();
       IdbPouch.Changes.addListener(dbName, id, api, opts);
       IdbPouch.Changes.notify(dbName);
       return {
@@ -416,7 +421,7 @@ function init(api, opts, callback) {
       };
     }
 
-    var docIds = opts.doc_ids && new utils.Set(opts.doc_ids);
+    var docIds = opts.doc_ids && new collections.Set(opts.doc_ids);
 
     opts.since = opts.since || 0;
     var lastSeq = opts.since;
@@ -426,7 +431,10 @@ function init(api, opts, callback) {
       limit = 1; // per CouchDB _changes spec
     }
     var returnDocs;
-    if ('returnDocs' in opts) {
+    if ('return_docs' in opts) {
+      returnDocs = opts.return_docs;
+    } else if ('returnDocs' in opts) {
+      // TODO: Remove 'returnDocs' in favor of 'return_docs' in a future release
       returnDocs = opts.returnDocs;
     } else {
       returnDocs = true;
@@ -434,8 +442,8 @@ function init(api, opts, callback) {
 
     var results = [];
     var numResults = 0;
-    var filter = utils.filterChange(opts);
-    var docIdsToMetadata = new utils.Map();
+    var filter = filterChange(opts);
+    var docIdsToMetadata = new collections.Map();
 
     var txn;
     var bySeqStore;
@@ -917,7 +925,7 @@ function init(api, opts, callback) {
         instanceId = meta[dbName + '_id'];
         checkSetupComplete();
       } else {
-        instanceId = utils.uuid();
+        instanceId = uuid();
         meta[dbName + '_id'] = instanceId;
         txn.objectStore(META_STORE).put(meta).onsuccess = function () {
           checkSetupComplete();
@@ -930,7 +938,7 @@ function init(api, opts, callback) {
 
       if (!blobSupportPromise) {
         // make sure blob support is only checked once
-        blobSupportPromise = checkBlobSupport(txn, idb);
+        blobSupportPromise = checkBlobSupport(txn);
       }
 
       blobSupportPromise.then(function (val) {
@@ -973,6 +981,6 @@ IdbPouch.valid = function () {
     typeof IDBKeyRange !== 'undefined';
 };
 
-IdbPouch.Changes = new utils.Changes();
+IdbPouch.Changes = new Changes();
 
 module.exports = IdbPouch;

@@ -1,8 +1,7 @@
 'use strict';
 
-var utils = require('./../utils');
-var clone = utils.clone;
-var Promise = utils.Promise;
+var clone = require('../deps/clone');
+var Promise = require('../deps/promise');
 
 function isGenOne(rev) {
   return /^1-/.test(rev);
@@ -43,7 +42,12 @@ function getDocs(src, diffs, state) {
 
     var bulkGetOpts = createBulkGetOpts(diffs);
 
+    if (!bulkGetOpts.docs.length) { // optimization: skip empty requests
+      return;
+    }
+
     return src.bulkGet(bulkGetOpts).then(function (bulkGetResponse) {
+      /* istanbul ignore if */
       if (state.cancelled) {
         throw new Error('cancelled');
       }

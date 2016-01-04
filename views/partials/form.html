@@ -1,49 +1,57 @@
 
 <div class="form-wrap">
 	<div class="form-switch" ng-click="showForm()">
-		<span class="fa fa-plus-circle"></span>
-		<span class="switch-text">Create a New Game</span>
+		<span class="fa fa-plus-circle switch-icon"></span>
+		<span class="switch-text">
+			<span ng-show="currentGame._id == '_endgame'">Create an End Game</span>
+			<span ng-show="currentGame._id != '_endgame'">Create a Sub Game</span>
+		</span>
 	</div>
 
 	<div class="form-content-wrap">
-		<form class="game-form" method="post" ng-submit="add('_endgame')">
+		<form class="game-form" method="post" ng-submit="add()">
 			<div class="game-text-wrap">
-				<span class="game-text-density">
-					<span ng-show="game.density == 8" class="fa fa-circle"></span>
-					<span ng-show="game.density == 4" class="fa fa-dot-circle-o"></span>
-					<span ng-show="game.density == 2" class="fa fa-circle-o"></span>
+				<span class="game-text-priority">
+					<span ng-show="game.priority == 8" class="fa fa-circle"></span>
+					<span ng-show="game.priority == 4" class="fa fa-dot-circle-o"></span>
+					<span ng-show="game.priority == 2" class="fa fa-circle-o"></span>
 				</span>
 
 				<input ng-model="game.game" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?">
 			</div>
 			<div class="game-time-wrap">
-				<span class="fa fa-rotate-right repeat-switch"></span>
-				<input ng-model="game.endsOn" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
+				<input ng-model="game.end" ng-keyup="validateTime()" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
+				<div ng-show="addForm.time.error != false && addForm.time.error != undefined" class="error time-error">
+					{{addForm.time.error}}
+				</div>
+				<div ng-show="addForm.time.message != false && addForm.time.message != undefined" class="success">
+					{{addForm.time.message}}
+				</div>
 			</div>
 
-			<div class="game-density">
+			<div class="game-priority">
 				<span class="field-label">Priority</span>
-				<label for="rock-radio">
-					<input id="rock-radio" type="radio" ng-model="game.density" name="density" ng-value="8">
+				<label for="high-radio">
+					<input id="high-radio" type="radio" ng-model="game.priority" name="priority" ng-value="8">
 					<span>
 						<span class="fa fa-circle"></span>
-						Rock
+						High
 					</span>
 				</label>
 
-				<label for="sand-radio">
-					<input id="sand-radio" type="radio" ng-model="game.density" name="density" ng-value="4">
+				<label for="mid-radio">
+					<input id="mid-radio" type="radio" ng-model="game.priority" name="priority" ng-value="4">
 					<span>
 						<span class="fa fa-dot-circle-o"></span>
-						Sand
+						Mid
 					</span>
 				</label>
 
-				<label for="water-radio">
-					<input id="water-radio" type="radio" ng-model="game.density" name="density" ng-value="2">
+				<label for="low-radio">
+					<input id="low-radio" type="radio" ng-model="game.priority" name="priority" ng-value="2">
 					<span>
 						<span class="fa fa-circle-o"></span>
-						Water
+						Low
 					</span>
 				</label>
 			</div>

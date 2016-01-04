@@ -1,58 +1,7 @@
 
-<div class="current-game">
-	<span class="fa fa-stop end-icon"></span>
-	End Games
+<div class="game-top-wrap">
+	<%- include path.html %>
+	<%- include current.html %>
 </div>
 
-<div class="children-wrap">
-	<%- include form.html %>
-
-	<ul class="sortable">
-		<li ng-repeat="game in games" data-pos="{{game.doc.position}}" data-id="{{game.doc._id}}">
-			<span class="game">
-				<span class="density-wrap">
-					<span ng-show="game.doc.plays[0].density == '8'" class="density">
-						<span class="fa fa-circle icon rock"></span>
-					</span>
-					<span ng-show="game.doc.plays[0].density == '4'" class="density">
-						<span class="fa fa-dot-circle-o icon sand"></span>
-					</span>
-					<span ng-show="game.doc.plays[0].density == '2'" class="density">
-						<span class="fa fa-circle-o icon water"></span>
-					</span>
-				</span>
-
-				<b style="margin: 0 10px;">{{game.doc.position}}</b>
-				{{game.doc.game}}
-			</span>
-			<span class="state-wrap">
-				<span class="states">
-					<span ng-show="game.doc.plays[0].state == 'playing'" class="state playing">
-						<span class="fa fa-play icon"></span>
-						<span class="text">Playing</span>
-					</span>
-					<span ng-show="game.doc.plays[0].state == 'won'" class="state won">
-						<span class="fa fa-check icon"></span>
-						<span class="text">Won</span>
-					</span>
-					<span ng-show="game.doc.plays[0].state == 'lost'" class="state lost">
-						<span class="fa fa-times icon"></span>
-						<span class="text">Lost</span>
-					</span>
-				</span>
-				<span class="state-buttons">
-					<button ng-class="{active: game.doc.plays[0].state == 'won'}" class="fa fa-check won" ng-click="setState(game.doc._id, 'won')"></button>
-					<button ng-class="{active: game.doc.plays[0].state == 'playing'}" class="fa fa-play playing" ng-click="setState(game.doc._id, 'playing')"></button>
-					<button ng-class="{active: game.doc.plays[0].state == 'lost'}" class="fa fa-times lost" ng-click="setState(game.doc._id, 'lost')"></button>
-				</span>
-			</span>
-
-			<div class="info-wrap">
-				<span class="time-wrap">
-					<span class="fa fa-clock-o icon"></span>
-					<span class="text">{{game.doc.plays[0].end}}</span>
-				</span>
-			</div>
-		</li>
-	</ul>
-</div>
+<%- include children.html %>

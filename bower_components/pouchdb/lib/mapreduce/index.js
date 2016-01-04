@@ -17,7 +17,13 @@ if ((typeof console !== 'undefined') && (typeof console.log === 'function')) {
   log = function () {};
 }
 var utils = require('./utils');
+var callbackify = utils.callbackify;
+var sequentialize = utils.sequentialize;
+var uniq = utils.uniq;
+var fin = utils.fin;
+var promisedCallback = utils.promisedCallback;
 var Promise = require('../deps/promise');
+var flatten = require('../deps/flatten');
 var inherits = require('inherits');
 var persistentQueues = {};
 var tempViewQueue = new TaskQueue();
@@ -398,7 +404,7 @@ function getDocsToPersist(docId, view, docIdsToChangesAndEmits) {
         kvDocs.push(kvDoc);
       }
     });
-    metaDoc.keys = utils.uniq(newKeys.concat(metaDoc.keys));
+    metaDoc.keys = uniq(newKeys.concat(metaDoc.keys));
     kvDocs.push(metaDoc);
 
     return kvDocs;
@@ -422,7 +428,7 @@ function saveKeyValues(view, docIdsToChangesAndEmits, seq) {
     return Promise.all(docIds.map(function (docId) {
       return getDocsToPersist(docId, view, docIdsToChangesAndEmits);
     })).then(function (listOfDocsToPersist) {
-      var docsToPersist = utils.flatten(listOfDocsToPersist);
+      var docsToPersist = flatten(listOfDocsToPersist);
       lastSeqDoc.seq = seq;
       docsToPersist.push(lastSeqDoc);
       // write all docs in a single operation, update the seq once
@@ -441,7 +447,7 @@ function getQueue(view) {
 }
 
 function updateView(view) {
-  return utils.sequentialize(getQueue(view), function () {
+  return sequentialize(getQueue(view), function () {
     return updateViewInQueue(view);
   })();
 }
@@ -603,7 +609,7 @@ function reduceView(view, results, options) {
 }
 
 function queryView(view, opts) {
-  return utils.sequentialize(getQueue(view), function () {
+  return sequentialize(getQueue(view), function () {
     return queryViewInQueue(view, opts);
   })();
 }
@@ -661,7 +667,7 @@ function queryViewInQueue(view, opts) {
       };
     }
     if (opts.include_docs) {
-      var docIds = utils.uniq(rows.map(rowToDocId));
+      var docIds = uniq(rows.map(rowToDocId));
 
       return view.sourceDB.allDocs({
         keys: docIds,
@@ -689,12 +695,6 @@ function queryViewInQueue(view, opts) {
       return finalResults;
     }
   }
-
-  var flatten = function (array) {
-    return array.reduce(function (prev, cur) {
-      return prev.concat(cur);
-    });
-  };
 
   if (typeof opts.keys !== 'undefined') {
     var keys = opts.keys;
@@ -797,7 +797,7 @@ function localViewCleanup(db) {
       var dbsToDelete = Object.keys(viewsToStatus).filter(
         function (viewDBName) { return !viewsToStatus[viewDBName]; });
       var destroyPromises = dbsToDelete.map(function (viewDBName) {
-        return utils.sequentialize(getQueue(viewDBName), function () {
+        return sequentialize(getQueue(viewDBName), function () {
           return new db.constructor(viewDBName, db.__opts).destroy();
         })();
       });
@@ -808,7 +808,7 @@ function localViewCleanup(db) {
   }, defaultsTo({ok: true}));
 }
 
-exports.viewCleanup = utils.callbackify(function () {
+exports.viewCleanup = callbackify(function () {
   var db = this;
   if (db.type() === 'http') {
     return httpViewCleanup(db);
@@ -846,7 +846,7 @@ function queryPromised(db, fun, opts) {
         function cleanup() {
           return view.db.destroy();
         }
-        return utils.fin(updateView(view).then(function () {
+        return fin(updateView(view).then(function () {
           return queryView(view, opts);
         }), cleanup);
       });
@@ -906,7 +906,7 @@ exports.query = function (fun, opts, callback) {
   var promise = Promise.resolve().then(function () {
     return queryPromised(db, fun, opts);
   });
-  utils.promisedCallback(promise, callback);
+  promisedCallback(promise, callback);
   return promise;
 };
 

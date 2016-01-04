@@ -1,11 +1,14 @@
 'use strict';
 
-var utils = require('./utils');
+var extend = require('js-extend').extend;
+var Promise = require('./deps/promise');
 var replication = require('./replicate');
+var inherits = require('inherits');
 var replicate = replication.replicate;
 var EE = require('events').EventEmitter;
+var clone = require('./deps/clone');
 
-utils.inherits(Sync, EE);
+inherits(Sync, EE);
 module.exports = sync;
 function sync(src, target, opts, callback) {
   if (typeof opts === 'function') {
@@ -15,7 +18,7 @@ function sync(src, target, opts, callback) {
   if (typeof opts === 'undefined') {
     opts = {};
   }
-  opts = utils.clone(opts);
+  opts = clone(opts);
   /*jshint validthis:true */
   opts.PouchConstructor = opts.PouchConstructor || this;
   src = replication.toPouch(src, opts);
@@ -27,8 +30,8 @@ function Sync(src, target, opts, callback) {
   var self = this;
   this.canceled = false;
 
-  var optsPush = opts.push ? utils.extend({}, opts, opts.push) : opts;
-  var optsPull = opts.pull ? utils.extend({}, opts, opts.pull) : opts;
+  var optsPush = opts.push ? extend({}, opts, opts.push) : opts;
+  var optsPull = opts.pull ? extend({}, opts, opts.pull) : opts;
 
   this.push = replicate(src, target, optsPush);
   this.pull = replicate(target, src, optsPull);
@@ -82,6 +85,7 @@ function Sync(src, target, opts, callback) {
   }
   function pullActive() {
     self.pullPaused = false;
+    /* istanbul ignore if */
     if (self.pushPaused) {
       self.emit('active', {
         direction: 'pull'
@@ -155,7 +159,7 @@ function Sync(src, target, opts, callback) {
   this.pull.on('removeListener', removeAll('pull'));
   this.push.on('removeListener', removeAll('push'));
 
-  var promise = utils.Promise.all([
+  var promise = Promise.all([
     this.push,
     this.pull
   ]).then(function (resp) {

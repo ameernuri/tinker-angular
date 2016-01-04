@@ -1,6 +1,9 @@
 'use strict';
 
-var utils = require('./../utils');
+var clone = require('../deps/clone');
+var Promise = require('../deps/promise');
+var uuid = require('../deps/uuid');
+var filterChange = require('../deps/filterChange');
 var Checkpointer = require('./checkpointer');
 var backOff = require('./backoff');
 var generateReplicationId = require('./generateReplicationId');
@@ -28,7 +31,7 @@ function replicate(src, target, opts, returnValue, result) {
   var allErrors = [];
   var changedDocs = [];
   // Like couchdb, every replication gets a unique session id
-  var session = utils.uuid();
+  var session = uuid();
 
   result = result || {
     ok: true,
@@ -44,7 +47,7 @@ function replicate(src, target, opts, returnValue, result) {
 
   function initCheckpointer() {
     if (checkpointer) {
-      return utils.Promise.resolve();
+      return Promise.resolve();
     }
     return generateReplicationId(src, target, opts).then(function (res) {
       repId = res;
@@ -81,7 +84,7 @@ function replicate(src, target, opts, returnValue, result) {
       docs.forEach(function(doc) {
         var error = errorsById[doc._id];
         if (error) {
-          returnValue.emit('denied', utils.clone(error));
+          returnValue.emit('denied', clone(error));
         } else {
           changedDocs.push(doc);
         }
@@ -101,7 +104,7 @@ function replicate(src, target, opts, returnValue, result) {
 
   function finishBatch() {
     result.last_seq = last_seq = currentBatch.seq;
-    var outResult = utils.clone(result);
+    var outResult = clone(result);
     if (changedDocs.length) {
       outResult.docs = changedDocs;
       returnValue.emit('change', outResult);
@@ -127,6 +130,7 @@ function replicate(src, target, opts, returnValue, result) {
     var diff = {};
     currentBatch.changes.forEach(function (change) {
       // Couchbase Sync Gateway emits these, but we can ignore them
+      /* istanbul ignore if */
       if (change.id === "_user/") {
         return;
       }
@@ -266,7 +270,7 @@ function replicate(src, target, opts, returnValue, result) {
     if (returnValue.cancelled) {
       return completeReplication();
     }
-    var filter = utils.filterChange(opts)(change);
+    var filter = filterChange(opts)(change);
     if (!filter) {
       return;
     }
@@ -301,6 +305,7 @@ function replicate(src, target, opts, returnValue, result) {
 
   function onChangesError(err) {
     changesPending = false;
+    /* istanbul ignore if */
     if (returnValue.cancelled) {
       return completeReplication();
     }
@@ -358,7 +363,7 @@ function replicate(src, target, opts, returnValue, result) {
           batch_size: batch_size,
           style: 'all_docs',
           doc_ids: doc_ids,
-          returnDocs: true // required so we know when we're done
+          return_docs: true // required so we know when we're done
         };
         if (opts.filter) {
           if (typeof opts.filter !== 'string') {
@@ -384,6 +389,7 @@ function replicate(src, target, opts, returnValue, result) {
     });
   }
 
+  /* istanbul ignore if */
   if (returnValue.cancelled) { // cancelled immediately
     completeReplication();
     return;
@@ -409,13 +415,14 @@ function replicate(src, target, opts, returnValue, result) {
       return checkpointer.writeCheckpoint(opts.since, session);
     }).then(function () {
       writingCheckpoint = false;
+      /* istanbul ignore if */
       if (returnValue.cancelled) {
         completeReplication();
         return;
       }
       last_seq = opts.since;
       startChanges();
-    }).catch(function (err) {
+    }).catch(/* istanbul ignore next */ function (err) {
       writingCheckpoint = false;
       abortReplication('writeCheckpoint completed with error', err);
       throw err;

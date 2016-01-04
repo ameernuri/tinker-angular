@@ -18,8 +18,7 @@
 	<script type="text/javascript" src="bower_components/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 	<script type="text/javascript" src="bower_components/pouchdb/dist/pouchdb.min.js"></script>
-	<script type="text/javascript" src="bower_components/pouchdb-find/dist/pouchdb.find.min.js"></script>
-	<script type="text/javascript" src="bower_components/relational-pouch/dist/pouchdb.relational-pouch.min.js"></script>
+	<script type="text/javascript" src="bower_components/sugar/release/sugar.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-pouchdb/angular-pouchdb.min.js"></script>
 	<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
@@ -29,12 +28,13 @@
 <body ng-controller="GamesCtrl">
 	<div class="header">
 		<div class="side-switch">
-			<img src="images/logo_icon.svg" />
+			<span class="fa fa-chevron-right"></span>
 		</div>
 		<div class="prio-switch">
 			<span class="fa fa-circle"></span>
 		</div>
-		<img class="logo" src="images/logo.svg">
+		<img ng-show="currentGame._id == '_endgame'" class="logo" src="images/logo.svg" ng-click="setCurrentGame('_endgame')">
+		<img ng-show="currentGame._id != '_endgame'" class="logo" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
 	</div>
 	<div class="container st-12 lt-10 lt-push-1 sd-6 sd-push-3 ld-4 ld-push-4">
 		<div class="container-content">

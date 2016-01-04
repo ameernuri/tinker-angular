@@ -1,0 +1,14 @@
+<div class="children-wrap">
+	<%- include form.html %>
+
+	<div class="no-games" ng-show="games.length == 0">
+		No
+		<span ng-show="currentGame._id == '_endgame'">end</span>
+		<span ng-show="currentGame._id != '_endgame'">sub</span>
+		games added yet
+	</div>
+
+	<ul class="sortable children">
+		<%- include child.html %>
+	</ul>
+</div>

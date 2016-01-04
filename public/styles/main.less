@@ -8,13 +8,51 @@
 @dark8: lighten(@dark7, 3%);
 @dark9: lighten(@dark8, 3%);
 
-@green: #683;
-@red: #d34;
-@yellow: #a92;
+@green: #6a5;
+@red: #e36;
+@yellow: #ed2;
+@blue: #35a;
+
+@keyframes popIn {
+	0% {
+		transform: scale(0);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes popOut {
+	0% {
+		transform: scale(1);
+	}
+
+	100% {
+		transform: scale(0);
+	}
+}
 
 * {
 	padding: 0;
 	margin: 0;
+
+	&:focus {
+		outline: none;
+	}
+}
+
+*:not(input) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+div {
+	cursor: default;
 }
 
 @font-face {
@@ -108,10 +146,12 @@ input {
 	z-index: 100;
 	text-align: center;
 	background: @dark3;
+	height: 60px;
 
 	img.logo {
-		height: 60px;
-		padding: 10px 0;
+		margin: 15px 0;
+		height: 30px;
+		cursor: pointer;
 	}
 
 	.side-switch {
@@ -123,6 +163,7 @@ input {
 		height: 60px;
 		transition: .5s;
 		cursor: pointer;
+		font-size: 20px;
 
 		img {
 			width: 100%;
@@ -141,10 +182,6 @@ input {
 
 		&:hover {
 			color: #fff;
-		}
-
-		img {
-			width: 100%;
 		}
 
 		span {
@@ -170,47 +207,186 @@ input {
 	}
 }
 
-.current-game {
+.game-top-wrap {
 	margin-top: 20px;
-	font-size: 180%;
-	color: #ddd;
 	padding: 10px 20px;
 
-	.end-icon {
-		color: #aaa;
+	.current-game {
+		font-size: 180%;
+		color: #ddd;
+
+		.editable {
+			cursor: pointer;
+
+			& div {
+				cursor: pointer;
+			}
+		}
+
+		.edit-form-wrap {
+			border-bottom: 1px solid #444;
+			padding-bottom: 8px;
+
+			.game-form-basic;
+
+			.form-content-wrap {
+				.game-form {
+					.game-text-wrap {
+						.game-text-priority {
+							top: 0;
+							left: 0;
+							font-size: 25px;
+						}
+					}
+
+					input[type=text] {
+						&:focus {
+							background: none;
+						}
+
+						&.game-input {
+							font-size: 25px;
+							padding: 0 20px 10px 28px;
+							color: #ddd;
+						}
+
+						&.time-input {
+							font-size: 15px;
+							padding-top: 0;
+							padding-bottom: 0;
+						}
+					}
+				}
+			}
+
+			display: none;
+		}
+
+		.end-icon {
+			color: #aaa;
+		}
+
+		.game-info-wrap {
+			color: #888;
+			font-size: 15px;
+		}
+
+		.game-state-wrap {
+			text-align: center;
+			margin: 5px 0;
+
+			.current-game-state {
+				background: @dark9;
+				border-radius: 20px;
+				display: inline-flex;
+
+				.game-state {
+					cursor: pointer;
+					font-size: 12px;
+					padding: 6px 0 0;
+					border-radius: 20px;
+					display: inline-block;
+					transition: .5s;
+					width: 30px;
+					height: 30px;
+					text-align: center;
+					color: #888;
+
+					&:not(.active) {
+
+						&:hover {
+							background: #ddd;
+
+							&.won {
+								color: @green;
+							}
+
+							&.lost {
+								color: @red;
+							}
+
+							&.playing {
+								color: #fff;
+								background: none;
+							}
+						}
+					}
+
+					&.active {
+						color: #fff;
+
+						&.won {
+							background: @green;
+						}
+
+						&.lost {
+							background: @red;
+						}
+
+						&.playing {
+							color: #fff;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.game-path-wrap {
+		margin-bottom: 10px;
+
+		.game-path {
+			cursor: pointer;
+			color: #aaa;
+			transition: .5s;
+
+			&:hover {
+				color: #ddd;
+			}
+		}
+
+		.ellipsis {
+			color: #ddd;
+			letter-spacing: -2px;
+			transition: .5s;
+			cursor: pointer;
+
+			&:hover {
+				color: #fff;
+			}
+		}
+
+		.current-parent {
+			transition: .5s;
+		}
 	}
 }
 
-.form-wrap {
-	border: dashed @dark9;
-	border-width: 1px 0;
-	background: @dark4;
-
-	.form-switch {
-		padding: 14px 20px;
-		font-size: 18px;
-		cursor: pointer;
-		transition: .5s;
-
-		.switch-text {
-			color: #555;
-		}
-
-		&:hover {
-			background: @dark4;
-		}
-	}
-
+.game-form-basic {
 	.form-content-wrap {
 		overflow: auto;
-		display: none;
 		position: relative;
 
 		.game-form {
+
+			.error, .success, .message {
+				padding: 3px 20px;
+				font-size: 12px;
+				font-style: italic;
+			}
+
+			.error {
+				color: @red;
+			}
+
+			.success {
+				color: @green;
+			}
+
 			.game-text-wrap {
 				position: relative;
 
-				.game-text-density {
+				.game-text-priority {
 					position: absolute;
 					left: 20px;
 					top: 15px;
@@ -233,6 +409,12 @@ input {
 
 			.game-time-wrap {
 				position: relative;
+
+				.time-icon {
+					position: absolute;
+					margin-top: 5px;
+					font-size: 14px;
+				}
 
 				.repeat-switch {
 					position: absolute;
@@ -260,6 +442,7 @@ input {
 				padding: 5px 20px;
 				font-size: 15px;
 				transition: .5s;
+				display: block;
 
 				&:focus {
 					outline: none;
@@ -274,11 +457,11 @@ input {
 
 				&.time-input {
 					font-size: 14px;
+					padding-left: 18px;
 				}
 			}
 
 			.buttons-wrap {
-				background: @dark6;
 				overflow: auto;
 				padding: 4px 0;
 				margin-top: 10px;
@@ -289,7 +472,6 @@ input {
 					color: #888;
 					float: right;
 					padding: 0;
-					margin: 10px 20px;
 					vertical-align: middle;
 
 					&.close-button {
@@ -321,9 +503,7 @@ input {
 				}
 			}
 
-			.game-density {
-				padding: 0 20px;
-
+			.game-priority {
 				.field-label {
 					font-size: 14px;
 				}
@@ -375,8 +555,52 @@ input {
 	}
 }
 
-.parent-wrap {
+.form-wrap {
+	border: dashed @dark9;
+	border-width: 1px 0;
+	background: @dark4;
+	.game-form-basic;
 
+	.form-switch {
+		padding: 14px 20px;
+		font-size: 18px;
+		cursor: pointer;
+		transition: .5s;
+
+		.switch-icon, .switch-text {
+			color: #666;
+			transition: .5s;
+		}
+
+		.switch-text {
+			font-style: italic;
+		}
+
+		&:hover {
+			background: @dark3;
+
+			.switch-icon, .switch-text {
+				color: #aaa;
+			}
+		}
+	}
+
+	.game-priority {
+		padding: 0 20px;
+	}
+
+	.buttons-wrap {
+		background: @dark6;
+
+		button {
+			margin: 10px 20px;
+		}
+	}
+
+	.form-content-wrap {
+		display: none;
+		min-height: 50px;
+	}
 }
 
 .children-wrap {
@@ -385,7 +609,7 @@ input {
 	ul {
 		margin: 0;
 
-		li {
+		li.child {
 			list-style: none;
 			padding: 10px 20px;
 			transition: .5s;
@@ -399,6 +623,8 @@ input {
 				font-size: 18px;
 				color: #aaa;
 				transition: .5s;
+				display: block;
+				padding-right: 10px;
 			}
 
 			.info-wrap {
@@ -414,84 +640,96 @@ input {
 				position: absolute;
 				right: 20px;
 				top: 20px;
+				display: inline-flex;
+				border-radius: 20px;
+				transition: .5s;
+				cursor: pointer;
 
-				.states {
-					.state {
-						min-width: 28px;
-						height: 28px;
-						padding-top: 5px;
-						border-radius: 50px;
-						text-align: center;
-						box-sizing: border-box;
-						background: @dark7;
-						padding: 5px;
+				.state {
+					display: none;
+					cursor: pointer;
+					transition: .5s;
+					border-radius: 20px;
+					padding: 6px;
+					width: 30px;
+					height: 30px;
+					font-size: 13px;
+					text-align: center;
+
+					&.active {
 						display: inline-block;
 
-						.text {
-							display: none;
-							font-size: 12px;
-							font-weight: bold;
-							vertical-align: top;
-							margin-top: 1px;
-							margin-right: 10px;
-							overflow: hidden;
-							transition: .5s;
-						}
-
-						&.active .icon {
-							color: #888;
-							margin-right: -5px;
-						}
-
-						&.won .icon {
+						&.won {
 							color: @green;
 						}
 
-						&.lost .icon {
+						&.lost {
 							color: @red;
 						}
 					}
 				}
 
-				.state-buttons {
-					overflow: auto;
-					display: none;
-					transition: .5s;
+				&:hover {
+					background: @dark9;
 
-					button {
-						.states.state;
-						transform: scale(0);
-						transition: .5s;
+					.state {
+						display: inline-block;
+
+						&:not(.active){
+							@keyframes slide {
+								0% {
+									margin-right: -15px;
+									opacity: 0;
+								}
+
+								60% {
+									margin-right: 1px;
+								}
+
+								100% {
+									margin-right: 0;
+									opacity: 1;
+								}
+							}
+
+							animation: slide .5s ease-out;
+						}
 
 						&.active {
-							background: #ddd;
+							color: #fff;
 
 							&.won {
-								color: @green;
-							};
+								background: @green;
+							}
 
 							&.lost {
-								color: @red;
+								background: @red;
+							}
+
+							&.playing {
+								color: #fff;
 							}
 						}
 
 						&:hover {
-							.active;
 							background: #fff;
-						}
-					}
-				}
 
-				&:hover {
-					.states {
-						display: none;
-					}
+							&.won {
+								color: @green;
+							}
 
-					.state-buttons {
-						display: block;
+							&.lost {
+								color: @red;
+							}
 
-						button {
-							transform: scale(1);
+							&.playing {
+								color: #fff;
+								background: none;
+							}
+
+							&.active {
+								color: #fff;
+							}
 						}
 					}
 				}
@@ -512,5 +750,14 @@ input {
 				}
 			}
 		}
+	}
+
+	.no-games {
+		text-align: center;
+		background: none;
+		font-style: italic;
+		color: #555;
+		padding: 20px 10px;
+		transition: .5s;
 	}
 }
