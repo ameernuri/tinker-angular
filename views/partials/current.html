@@ -1,5 +1,5 @@
 <div class="current-game">
-	<span ng-show="currentGame._id == '_endgame'">
+	<span ng-show="currentGame._id == '_endgame'" class="end-game-text">
 		<span class="current-game-text">
 			<span class="fa fa-stop end-icon"></span>
 			End Games
@@ -24,7 +24,7 @@
 
 					<div class="game-info-wrap">
 						<span class="fa fa-clock-o"></span>
-						{{currentGame.plays[0].end}}
+						<span am-time-ago="currentGame.plays[0].end"></span>
 					</div>
 				</span>
 			</div>
@@ -32,56 +32,68 @@
 			<div class="edit-form-wrap">
 				<div class="form-content-wrap">
 					<form class="game-form" method="post" ng-submit="saveEdit()">
-						<div class="game-text-wrap">
-							<span class="game-text-priority">
-								<span ng-show="editForm.priority.value == 8" class="fa fa-circle"></span>
-								<span ng-show="editForm.priority.value == 4" class="fa fa-dot-circle-o"></span>
-								<span ng-show="editForm.priority.value == 2" class="fa fa-circle-o"></span>
-							</span>
-
-							<input ng-model="editForm.game.text" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?">
-						</div>
-						<div class="game-time-wrap">
-							<span class="fa fa-clock-o time-icon"></span>							
-							<input ng-model="editForm.time.text" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
-						</div>
-
-						<div class="game-priority">
-							<span class="field-label">Priority</span>
-							<label for="edit-high-radio">
-								<input id="edit-high-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="8">
-								<span>
-									<span class="fa fa-circle"></span>
-									High
+						<div class="game-form-content">
+							<div class="game-text-wrap">
+								<span class="game-text-priority">
+									<span ng-show="editForm.priority.value == 8" class="fa fa-circle"></span>
+									<span ng-show="editForm.priority.value == 4" class="fa fa-dot-circle-o"></span>
+									<span ng-show="editForm.priority.value == 2" class="fa fa-circle-o"></span>
 								</span>
-							</label>
 
-							<label for="edit-mid-radio">
-								<input id="edit-mid-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="4">
-								<span>
-									<span class="fa fa-dot-circle-o"></span>
-									Mid
-								</span>
-							</label>
+								<input ng-model="editForm.game.text" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?">
+							</div>
+							<div class="game-time-wrap">
+								<span class="fa fa-clock-o time-icon"></span>
+								<input ng-model="editForm.time.text" ng-keyup="validateEditTime()" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
+								<div ng-show="editForm.time.error != false && editForm.time.error != undefined" class="error time-error">
+									<span class="fa fa-times-circle"></span>
+									{{editForm.time.error}}
+								</div>
+								<div ng-show="editForm.time.success != false && editForm.time.success != undefined" class="success">
+									<span class="fa fa-check-circle"></span>
+									Ends {{editForm.time.success}}
+								</div>
+							</div>
 
-							<label for="edit-low-radio">
-								<input id="edit-low-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="2">
-								<span>
-									<span class="fa fa-circle-o"></span>
-									Low
-								</span>
-							</label>
+							<div class="game-priority">
+								<span class="field-label">Priority</span>
+								<label for="edit-high-radio">
+									<input id="edit-high-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="8" ng-click="focusOnEditGame()">
+									<span>
+										<span class="fa fa-circle"></span>
+										High
+									</span>
+								</label>
+
+								<label for="edit-mid-radio">
+									<input id="edit-mid-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="4" ng-click="focusOnEditGame()">
+									<span>
+										<span class="fa fa-dot-circle-o"></span>
+										Mid
+									</span>
+								</label>
+
+								<label for="edit-low-radio">
+									<input id="edit-low-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="2" ng-click="focusOnEditGame()">
+									<span>
+										<span class="fa fa-circle-o"></span>
+										Low
+									</span>
+								</label>
+							</div>
 						</div>
+
 						<div class="buttons-wrap">
+							<button class="ellipsis">
+								&bull;&bull;&bull;
+							</button>
+
 							<button type="submit" class="submit-button">
 								<span class="button-text">
 									Save
 								</span>
 								<span class="fa fa-check-circle button-icon">
 								</span>
-							</button>
-							<button type="button" class="close-button" ng-click="hideEditForm(false)">
-								<span class="fa fa-times-circle button-icon"></span>
 							</button>
 						</div>
 					</form>

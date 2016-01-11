@@ -1,4 +1,4 @@
-var app = angular.module('tinker', ['pouchdb'])
+var app = angular.module('tinker', ['pouchdb', 'angularMoment'])
 
 app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	var db = pouchDB('games'),
@@ -22,12 +22,14 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		game: {
 			text: '',
 			error: '',
-			message: ''
+			info: '',
+			success: ''
 		},
 		time: {
 			text: '',
 			error: '',
-			message: ''
+			info: '',
+			success: ''
 		}
 	}
 
@@ -35,12 +37,14 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		game: {
 			text: '',
 			error: '',
-			message: ''
+			info: '',
+			success: ''
 		},
 		time: {
 			text: '',
 			error: '',
-			message: ''
+			info: '',
+			success: ''
 		},
 		priority: {
 			value: $scope.game.priority
@@ -180,67 +184,55 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	}
 
 	$scope.validateTime = function() {
-		var input = $scope.game.end.trim(),
-		invalid = 'Invalid Date',
-		parsed = parseTime(input),
-		error = 'time not parsed'
 
-		if (input == '') {
-			$scope.addForm.time.error = false
-			$scope.addForm.time.message = false
+		var v
+
+		if ($scope.currentGame._id != '_endgame') {
+			v = validateTime($scope.game.end, $scope.currentGame.plays[0].end)
+		} else {
+			v = validateTime($scope.game.end)
+		}
+
+		var success = v.success
+
+		if (v.error != false) {
+			$scope.addForm.time.error = v.error
+			$scope.addForm.time.success = v.success
+
 			return false
-		}
-
-		if (!parsed) {
-
-			$scope.addForm.time.error = error
-			$scope.addForm.time.message = false
 		} else {
 
-			if (isValidTime(input) == 'past') {
-				$scope.addForm.time.error = 'time cannot be in the past'
-				$scope.addForm.time.message = false
+			$scope.addForm.time.error = v.error
+			$scope.addForm.time.success = v.success
 
-				return false
-			} else if (isValidTime(input) == 'far') {
-				$scope.addForm.time.error = 'time is too far in the future'
-				$scope.addForm.time.message = false
-
-				return false
-			}
-
-			$scope.addForm.time.error = false
-			$scope.addForm.time.message = parseTime(input)
 			return true
 		}
+	}
 
-		// not parsed, add 'in ' and try again
-	  parsed = parseTime('in ' + input)
+	$scope.validateEditTime = function() {
 
-		if (!parsed) {
+		var v
 
-			$scope.addForm.time.error = error
-			$scope.addForm.time.message = false
+		if ($scope.currentGame.parent != '_endgame') {
+			v = validateTime($scope.editForm.time.text, $scope.currentParent.plays[0].end, false)
+		} else {
+			v = validateTime($scope.editForm.time.text, false, false)
+		}
+
+		var success = v.success
+
+		if (v.error != false) {
+			$scope.editForm.time.error = v.error
+			$scope.editForm.time.success = v.success
+
+			return false
 		} else {
 
-			if (isValidTime(input) == 'past') {
-				$scope.addForm.time.error = 'time cannot be in the past'
-				$scope.addForm.time.message = false
+			$scope.editForm.time.error = v.error
+			$scope.editForm.time.success = v.success
 
-				return false
-			} else if (isValidTime(input) == 'past') {
-				$scope.addForm.time.error = 'time is too far in the future'
-				$scope.addForm.time.message = false
-
-				return false
-			}
-
-			$scope.addForm.time.error = false
-			$scope.addForm.time.message = parsed
 			return true
 		}
-
-		return true
 	}
 
 	$scope.add = function() {
@@ -250,22 +242,30 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			return false
 		}
 
-		if ($scope.game.end == '') {
+		var v
+
+		if ($scope.currentGame._id != '_endgame') {
+			v = validateTime($scope.game.end, $scope.currentGame.plays[0].end)
+		} else {
+			v = validateTime($scope.game.end)
+		}
+
+		if (v.error != false) {
 			$('.form-wrap .time-input').focus()
+			$scope.addForm.time.error = v.error
 			return false
 		}
 
-		var end = Date.create(($scope.game.end))
-
-		if (end == 'Invalid Date') {
-			$('.form-wrap .time-input').focus()
-			$scope.addForm.time.error = 'time not parsed'
-			return false
-		}
-
-		var gameId = generateId(),
+		var end = parseTime($scope.game.end),
+		gameId = generateId(),
 		gameText = $scope.game.game.trim(),
-		now = new Date().toISOString()
+		now = Date.create()
+
+		if (end == false) {
+			$('.form-wrap .time-input').focus()
+			$scope.addForm.time.error = 'unknown error'
+			return false
+		}
 
 		countMap = function(doc, emit) {
 			if(doc.parent == parent) {
@@ -300,7 +300,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.hideForm()
 
 		$scope.addForm.time.error = false
-		$scope.addForm.time.message = false
+		$scope.addForm.time.success = false
 
 		$scope.fetchChildren($scope.currentGame._id, function(children) {
 			var low = 1
@@ -337,12 +337,35 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 	$scope.update = function(success, error) {
 
+		var v
+
+		if ($scope.currentParent._id != '_noparent') {
+
+			v = validateTime($scope.editForm.time.text, $scope.currentParent.plays[0].end, false)
+		} else {
+			v = validateTime($scope.editForm.time.text, false, false)
+		}
+
+		if (v.error != false) {
+			$('.edit-form-wrap .time-input').focus()
+			$scope.editForm.time.error = v.error
+			return false
+		}
+
 		if (success == undefined) {
 			success = function() {}
 		}
 
 		if (error == undefined) {
 			error = function() {}
+		}
+
+		var end = parseTime($scope.editForm.time.text)
+
+		if (end == false) {
+			$('.edit-form-wrap .time-input').focus()
+			$scope.editForm.time.error = 'unknown error'
+			return false
 		}
 
 		if ($scope.editForm.game.text == '') {
@@ -357,7 +380,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		db.get($scope.currentGame._id).then(function(edited) {
 			var gameText = $scope.editForm.game.text
-			end = $scope.editForm.time.text
 			priority = $scope.editForm.priority.value
 
 			if (gameText != '' && gameText != edited.game) {
@@ -386,6 +408,14 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}).catch(function(err) {
 			error(err)
 		})
+	}
+
+	$scope.focusOnEditGame = function() {
+		$('.edit-form-wrap .game-input').focus()
+	}
+
+	$scope.focusOnAddGame = function() {
+		$('.form-wrap .game-input').focus()
 	}
 
 	$scope.setState = function(id, state) {
@@ -450,6 +480,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			$('.form-wrap .form-switch').animate({
 				opacity: 1
 			})
+
+			$scope.addForm.time.error = false
+			$scope.addForm.time.success = false
+
 	}
 
 	$scope.showEditForm = function() {
@@ -458,32 +492,31 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$('.editable-switch').hide()
 
 		$scope.editForm.game.text = $scope.currentGame.game
-		$scope.editForm.time.text = $scope.currentGame.plays[0].end
+		$scope.editForm.time.text = Date.create($scope.currentGame.plays[0].end)
+		.format('{Mon} {d} {yyyy} {12hr}:{mm} {TT}')
 		$scope.editForm.priority.value = $scope.currentGame.plays[0].priority
 
 		$scope.editing = true
 	}
 
-	$scope.hideEditForm = function(save) {
-
-		if (save == undefined) {
-			save = true
-		}
+	$scope.hideEditForm = function() {
 
 		$('.edit-form-wrap').hide()
 		$('.editable-switch').fadeIn(500)
 
-		if (save) {
-			$scope.update()
-		}
-
 		$scope.editing = false
+
+		$scope.editForm.time.error = false
+		$scope.editForm.time.success = false
 	}
 
 	$scope.setCurrentGame = function(id) {
 		if ($scope.currentGame._id == id) {
 			return true
 		}
+
+		$('.form-wrap .game-input').val('')
+		$('.form-wrap .time-input').val('')
 
 		$scope.fetchChildren(id, function(games) {
 			$scope.games = games
@@ -562,6 +595,26 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	}
 
+	$scope.showStateButtons = function(e) {
+		var element = $(e.currentTarget)
+
+		$('.state-wrap')
+			.removeClass('activate')
+			.find('.state')
+			.removeClass('ready')
+
+		element
+			.addClass('activate')
+			.find('.state')
+			.addClass('ready')
+	}
+
+	$scope.hideStateButtons = function(e) {
+		var element = $(e.currentTarget)
+
+		element.removeClass('activate')
+	}
+
 	$(document).on('mouseup click touch', function(e) {
 		var target = e.target,
 		form = $('.form-wrap'),
@@ -582,93 +635,91 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	})
 
-	$(document).ready(function() {
-
-		$(document).keydown(function (e) {
-			if (e.keyCode === 27) {
-				$scope.hideForm()
-				$scope.hideEditForm(false)
-				return false;
-			}
-		})
-
-		//todo: doesn't work on mobile & jquery-ui-touch-punch doesn't seem to be helping :(
-
-		// var stopPos
-
-		//
-		// $('.sortable').sortable({
-		// 	axis: 'y',
-		// 	containment: '.children-wrap',
-		// 	distance: 10,
-		// 	revert: true,
-		// 	tolerance: 'pointer',
-		// 	delay: 500,
-		// 	stop: function(event, ui) {
-		// 		stopPos = ui.item.index()
-		// 		var movedId = $(ui.item).data('id'),
-		// 		prevId = $(ui.item).prev().data('id'),
-		// 		nextId = $(ui.item).next().data('id')
-		//
-		// 		db.get(prevId).then(function(doc) {
-		//
-		// 			var prevPos = doc.position
-		//
-		// 			if (!isNaN(prevPos)) {
-		// 				return prevPos
-		// 			} else {
-		// 				return 0
-		// 			}
-		// 		}).then(function(prevPos) {
-		// 			// prevPos is found
-		// 			db.get(nextId).then(function(doc) {
-		// 				var nextPos = doc.position
-		//
-		// 				if (!isNaN(nextPos)) {
-		// 					log('nextPos: ' + nextPos)
-		// 					log('prevPos: ' + prevPos)
-		// 					return (nextPos + prevPos)/2
-		//
-		// 				} else {
-		//
-		// 					log('prevPos: ' + prevPos)
-		// 					return Math.round(prevPos + 1)
-		// 				}
-		// 			}).then(function(pos) {
-		// 				log("finalPos: " + pos)
-		// 				$scope.setPosition(movedId, pos)
-		// 			}).catch(function(err) {
-		// 				// we don't have nextPos
-		// 				console.error(err)
-		// 				log('prevPos: ' + prevPos)
-		// 				$scope.setPosition(movedId, Math.round(prevPos + 1))
-		// 			})
-		// 		}).catch(function(err) {
-		// 			// prevPos is not found
-		// 			db.get(nextId).then(function(doc) {
-		// 				var nextPos = doc.position
-		//
-		// 				if (!isNaN(nextPos)) {
-		// 					log('nextPos: ' + nextPos)
-		// 					return Math.round(nextPos - 1)
-		//
-		// 				} else {
-		// 					// we've nothing - return 0
-		// 					return 0
-		// 				}
-		// 			}).then(function(pos) {
-		// 				// we've nextPos
-		// 				log("finalPos: " + pos)
-		// 				$scope.setPosition(movedId, pos)
-		// 			}).catch(function(err) {
-		// 				// we've nothing
-		// 				console.error(err)
-		// 				$scope.setPosition(movedId, 0)
-		// 			})
-		// 		})
-		//
-		// 		return false
-		// 	}
-		// })
+	$(document).keydown(function (e) {
+		if (e.keyCode === 27) {
+			$scope.hideForm()
+			$scope.hideEditForm()
+			return false
+		}
 	})
+
+
+	//todo: doesn't work on mobile & jquery-ui-touch-punch doesn't seem to be helping :(
+
+	// var stopPos
+	//
+	//
+	// $('.sortable').sortable({
+	// 	axis: 'y',
+	// 	containment: '.children-wrap',
+	// 	distance: 10,
+	// 	revert: true,
+	// 	tolerance: 'pointer',
+	// 	delay: 500,
+	// 	stop: function(event, ui) {
+	// 		stopPos = ui.item.index()
+	// 		var movedId = $(ui.item).data('id'),
+	// 		prevId = $(ui.item).prev().data('id'),
+	// 		nextId = $(ui.item).next().data('id')
+	//
+	// 		db.get(prevId).then(function(doc) {
+	//
+	// 			var prevPos = doc.position
+	//
+	// 			if (!isNaN(prevPos)) {
+	// 				return prevPos
+	// 			} else {
+	// 				return 0
+	// 			}
+	// 		}).then(function(prevPos) {
+	// 			// prevPos is found
+	// 			db.get(nextId).then(function(doc) {
+	// 				var nextPos = doc.position
+	//
+	// 				if (!isNaN(nextPos)) {
+	// 					log('nextPos: ' + nextPos)
+	// 					log('prevPos: ' + prevPos)
+	// 					return (nextPos + prevPos)/2
+	//
+	// 				} else {
+	//
+	// 					log('prevPos: ' + prevPos)
+	// 					return Math.round(prevPos + 1)
+	// 				}
+	// 			}).then(function(pos) {
+	// 				log("finalPos: " + pos)
+	// 				$scope.setPosition(movedId, pos)
+	// 			}).catch(function(err) {
+	// 				// we don't have nextPos
+	// 				console.error(err)
+	// 				log('prevPos: ' + prevPos)
+	// 				$scope.setPosition(movedId, Math.round(prevPos + 1))
+	// 			})
+	// 		}).catch(function(err) {
+	// 			// prevPos is not found
+	// 			db.get(nextId).then(function(doc) {
+	// 				var nextPos = doc.position
+	//
+	// 				if (!isNaN(nextPos)) {
+	// 					log('nextPos: ' + nextPos)
+	// 					return Math.round(nextPos - 1)
+	//
+	// 				} else {
+	// 					// we've nothing - return 0
+	// 					return 0
+	// 				}
+	// 			}).then(function(pos) {
+	// 				// we've nextPos
+	// 				log("finalPos: " + pos)
+	// 				$scope.setPosition(movedId, pos)
+	// 			}).catch(function(err) {
+	// 				// we've nothing
+	// 				console.error(err)
+	// 				$scope.setPosition(movedId, 0)
+	// 			})
+	// 		})
+	//
+	// 		return false
+	// 	}
+	// })
 })

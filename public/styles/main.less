@@ -1,9 +1,10 @@
 @import "components/_grid";
 
-@dark3: darken(@dark4, 3%);
+@dark2: darken(@dark3, 1%);
+@dark3: darken(@dark4, 1%);
 @dark4: darken(@dark5, 3%);
-@dark5: #111214;
-@dark6: lighten(@dark5, 3%);
+@dark5: #202427;
+@dark6: lighten(@dark5, 2%);
 @dark7: lighten(@dark6, 3%);
 @dark8: lighten(@dark7, 3%);
 @dark9: lighten(@dark8, 3%);
@@ -145,7 +146,7 @@ input {
 	top: 0;
 	z-index: 100;
 	text-align: center;
-	background: @dark3;
+	background: @dark4;
 	height: 60px;
 
 	img.logo {
@@ -209,28 +210,39 @@ input {
 
 .game-top-wrap {
 	margin-top: 20px;
-	padding: 10px 20px;
+	padding: 10px 0;
 
 	.current-game {
-		font-size: 180%;
+		font-size: 25px;
 		color: #ddd;
 
 		.editable {
 			cursor: pointer;
+
+			.editable-switch {
+				margin: 0 20px;
+			}
 
 			& div {
 				cursor: pointer;
 			}
 		}
 
+		.end-game-text {
+			margin: 0 20px;
+		}
+
 		.edit-form-wrap {
-			border-bottom: 1px solid #444;
-			padding-bottom: 8px;
+			background: @dark4;
 
 			.game-form-basic;
 
 			.form-content-wrap {
 				.game-form {
+					.game-form-content {
+						padding: 8px 20px;
+					}
+
 					.game-text-wrap {
 						.game-text-priority {
 							top: 0;
@@ -239,21 +251,42 @@ input {
 						}
 					}
 
+					.buttons-wrap {
+						padding: 9px 20px;
+						background: @dark6;
+
+						.ellipsis {
+							float: left;
+							font-size: 10px;
+							padding: 5px 0;
+							color: #aaa;
+
+							&:hover {
+								color: #fff;
+							}
+						}
+					}
+
+					.success, .info, .error {
+						padding: 3px 0;
+					}
+
 					input[type=text] {
+
 						&:focus {
 							background: none;
 						}
 
 						&.game-input {
 							font-size: 25px;
-							padding: 0 20px 10px 28px;
+							padding: 0 20px 5px 28px;
 							color: #ddd;
 						}
 
 						&.time-input {
 							font-size: 15px;
-							padding-top: 0;
-							padding-bottom: 0;
+							padding-top: 5px;
+							padding-bottom: 5px;
 						}
 					}
 				}
@@ -269,6 +302,12 @@ input {
 		.game-info-wrap {
 			color: #888;
 			font-size: 15px;
+
+			.fa {
+				width: 20px;
+				text-align: center;
+				margin-right: -3px;
+			}
 		}
 
 		.game-state-wrap {
@@ -276,7 +315,7 @@ input {
 			margin: 5px 0;
 
 			.current-game-state {
-				background: @dark9;
+				background: @dark7;
 				border-radius: 20px;
 				display: inline-flex;
 
@@ -333,7 +372,7 @@ input {
 	}
 
 	.game-path-wrap {
-		margin-bottom: 10px;
+		margin: 0 20px 10px;
 
 		.game-path {
 			cursor: pointer;
@@ -369,18 +408,34 @@ input {
 
 		.game-form {
 
-			.error, .success, .message {
+			.error, .success, .info, .warn {
+				@keyframes slideDown {
+					from {
+						opacity: 0;
+					}
+
+					to {
+						opacity: 1;
+					}
+				}
+
 				padding: 3px 20px;
 				font-size: 12px;
-				font-style: italic;
+				color: #888;
+				transition: .5s;
+				animation: slideDown .5s;
 			}
 
-			.error {
+			.error .fa {
 				color: @red;
 			}
 
-			.success {
+			.success .fa {
 				color: @green;
+			}
+
+			.warn .fa {
+				color: @yellow;
 			}
 
 			.game-text-wrap {
@@ -390,6 +445,7 @@ input {
 					position: absolute;
 					left: 20px;
 					top: 15px;
+					color: #ddd;
 					font-size: 18px;
 
 					.fa {
@@ -412,8 +468,10 @@ input {
 
 				.time-icon {
 					position: absolute;
-					margin-top: 5px;
+					margin-top: 8px;
 					font-size: 14px;
+					width: 20px;
+					text-align: center;
 				}
 
 				.repeat-switch {
@@ -444,6 +502,22 @@ input {
 				transition: .5s;
 				display: block;
 
+				&::-webkit-input-placeholder {
+					color: #666;
+				}
+
+				&:-moz-placeholder {
+					color: #666;
+				}
+
+				&::-moz-placeholder {
+					color: #666;
+				}
+
+				&:-ms-input-placeholder {
+					color: #666;
+				}
+
 				&:focus {
 					outline: none;
 					background: @dark4;
@@ -457,13 +531,13 @@ input {
 
 				&.time-input {
 					font-size: 14px;
-					padding-left: 18px;
+					padding-left: 22px;
 				}
 			}
 
 			.buttons-wrap {
 				overflow: auto;
-				padding: 4px 0;
+				padding: 0 8px;
 				margin-top: 10px;
 
 				button {
@@ -483,13 +557,12 @@ input {
 					}
 
 					.button-icon {
-						font-size: 24px;
+						font-size: 20px;
 					}
 
 					.button-text {
-						font-size: 15px;
+						font-size: 14px;
 						margin: 0 3px;
-						font-weight: 400;
 						vertical-align: top;
 					}
 
@@ -505,44 +578,35 @@ input {
 
 			.game-priority {
 				.field-label {
-					font-size: 14px;
+					font-size: 12px;
+					color: #888;
 				}
 
 			  label {
-					margin-top: 14px;
+					margin-top: 5px;
 					margin-bottom: 10px;
 
 			    input[type=radio], input[type=checkbox] {
 			      display: none;
 
 			      & + span {
-			        color: #888;
-			        font-size: 12px;
 			        cursor: pointer;
-
-			        &:hover {
-			          color: #eee;
-			        }
-			      }
-
-			      & + span {
-			        cursor: pointer;
-			        color: #888;
+			        color: #444;
 			        display: inline-block;
-			        padding: 4px 10px;
+							font-size: 12px;
+			        padding: 4px;
 			        border-radius: 50px;
-			        background: #222;
+			        background: none;
 			        font-weight: normal;
 							transition: .5s;
 
 			        &:hover {
-			          color: #eee;
+			          color: #aaa;
 			        }
 			      }
 
 			      &:checked + span {
-			        background-color: #aaa;
-			        color: #222;
+			        color: #aaa;
 			      }
 			    }
 			  }
@@ -591,9 +655,10 @@ input {
 
 	.buttons-wrap {
 		background: @dark6;
+		padding: 4px 0;
 
 		button {
-			margin: 10px 20px;
+			margin: 10px 12px;
 		}
 	}
 
@@ -633,6 +698,11 @@ input {
 
 				.time-wrap {
 					color: #666;
+
+					.fa {
+						width: 14px;
+						text-align: center;
+					}
 				}
 			}
 
@@ -669,8 +739,8 @@ input {
 					}
 				}
 
-				&:hover {
-					background: @dark9;
+				&.activate {
+					background: @dark7;
 
 					.state {
 						display: inline-block;

@@ -14,14 +14,14 @@
 		{{game.doc.game}}
 	</span>
 
-	<span class="state-wrap">
-		<span ng-class="{active: game.doc.plays[0].state == 'lost'}" class="state lost" ng-click="setState(game.doc._id, 'lost')">
+	<span class="state-wrap" ng-mouseover="showStateButtons($event)" ng-mouseleave="hideStateButtons($event)">
+		<span ng-class="{active: game.doc.plays[0].state == 'lost'}" class="state lost" ng-click="ready || setState(game.doc._id, 'lost')">
 			<span class="fa fa-times"></span>
 		</span>
-		<span ng-class="{active: game.doc.plays[0].state == 'playing'}" class="state playing" ng-click="setState(game.doc._id, 'playing')">
+		<span ng-class="{active: game.doc.plays[0].state == 'playing'}" class="state playing" ng-click="ready || setState(game.doc._id, 'playing')">
 			<span class="fa fa-circle"></span>
 		</span>
-		<span ng-class="{active: game.doc.plays[0].state == 'won'}" class="state won" ng-click="setState(game.doc._id, 'won')">
+		<span ng-class="{active: game.doc.plays[0].state == 'won'}" class="state won" ng-click="ready || setState(game.doc._id, 'won')">
 			<span class="fa fa-check"></span>
 		</span>
 	</span>
@@ -29,7 +29,7 @@
 	<div class="info-wrap">
 		<span class="time-wrap">
 			<span class="fa fa-clock-o icon"></span>
-			<span class="text">{{game.doc.plays[0].end}}</span>
+			<span class="text" am-time-ago="game.doc.plays[0].end"></span>
 		</span>
 	</div>
 </li>

@@ -25,6 +25,7 @@
     "sugar": "sugarjs#~1.4.1"
   },
   "resolutions": {
-    "bootstrap": "~3.3.6"
+    "bootstrap": "~3.3.6",
+    "moment": "~2.11.0"
   }
 }
