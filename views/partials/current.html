@@ -46,12 +46,12 @@
 								<span class="fa fa-clock-o time-icon"></span>
 								<input ng-model="editForm.time.text" ng-keyup="validateEditTime()" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
 								<div ng-show="editForm.time.error != false && editForm.time.error != undefined" class="error time-error">
-									<span class="fa fa-times-circle"></span>
+									<span class="fa fa-circle"></span>
 									{{editForm.time.error}}
 								</div>
 								<div ng-show="editForm.time.success != false && editForm.time.success != undefined" class="success">
-									<span class="fa fa-check-circle"></span>
-									Ends {{editForm.time.success}}
+									<span class="fa fa-circle"></span>
+									ends {{editForm.time.success}}
 								</div>
 							</div>
 

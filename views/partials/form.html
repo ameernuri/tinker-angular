@@ -17,17 +17,27 @@
 					<span ng-show="game.priority == 2" class="fa fa-circle-o"></span>
 				</span>
 
-				<input ng-model="game.game" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?">
+				<input ng-change="validateGame()" ng-required="required" ng-model="game.game" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?">
+
+				<div ng-show="addForm.game.error != false && addForm.game.error != undefined" class="error">
+					<span class="fa fa-circle"></span>
+					{{addForm.game.error}}
+				</div>
 			</div>
 			<div class="game-time-wrap">
-				<input ng-model="game.end" ng-keyup="validateTime()" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
+				<span class="typeahead" ng-show="addForm.time.typeahead != false && addForm.time.typeahead != undefined && addForm.time.error == false">
+					<span class="typeahead-pusher" style="visibility: hidden;">{{game.end}}</span><span class="typeahead-text" ng-click="replaceTypeahead()" ng-keyup=" replaceTypeahead()">{{addForm.time.typeahead}}</span>
+				</span>
+
+				<input ng-required="required" ng-trim="false" ng-model="game.end" ng-focus="hideTypeahead()" ng-keydown="hideTypeahead()" ng-change="validateTime($event)" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off" spellcheck="false">
+
 				<div ng-show="addForm.time.error != false && addForm.time.error != undefined" class="error time-error">
-					<span class="fa fa-times-circle"></span>
+					<span class="fa fa-circle"></span>
 					{{addForm.time.error}}
 				</div>
 				<div ng-show="addForm.time.success != false && addForm.time.success != undefined" class="success">
-					<span class="fa fa-check-circle"></span>
-					Ends {{addForm.time.success}}
+					<span class="fa fa-circle"></span>
+					ends {{addForm.time.success}}
 				</div>
 			</div>
 

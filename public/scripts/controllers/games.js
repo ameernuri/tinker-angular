@@ -29,7 +29,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			text: '',
 			error: '',
 			info: '',
-			success: ''
+			success: '',
+			typeahead: ''
 		}
 	}
 
@@ -44,7 +45,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			text: '',
 			error: '',
 			info: '',
-			success: ''
+			success: '',
+			typeahead: ''
 		},
 		priority: {
 			value: $scope.game.priority
@@ -183,7 +185,21 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		})
 	}
 
-	$scope.validateTime = function() {
+	$scope.validateGame = function() {
+		if ($scope.game.game == '') {
+			$scope.addForm.game.error = 'what\'s the game?'
+			return false
+		} else {
+			$scope.addForm.game.error = false
+			return true
+		}
+	}
+
+	$scope.validateTime = function(e) {
+
+		$('.form-wrap .typeahead').show()
+
+		$scope.addForm.time.typeahead = ''
 
 		var v
 
@@ -204,6 +220,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 			$scope.addForm.time.error = v.error
 			$scope.addForm.time.success = v.success
+			$scope.addForm.time.typeahead = v.typeahead
 
 			return true
 		}
@@ -239,6 +256,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		if ($scope.game.game == '') {
 			$('.form-wrap .game-input').focus()
+			$scope.addForm.game.error = 'what\'s the game?'
 			return false
 		}
 
@@ -615,6 +633,23 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		element.removeClass('activate')
 	}
 
+	$scope.replaceTypeahead = function() {
+		var typeahead = $scope.game.end + $scope.addForm.time.typeahead
+		typeahead = typeahead
+		.replace(/([0-9])([a-zA-Z])/, '$1 $2')
+
+		$scope.addForm.time.typeahead = ''
+		$('.form-wrap .time-input')
+			.val(typeahead)
+			.focus()
+
+		$scope.game.end = typeahead
+	}
+
+	$scope.hideTypeahead = function() {
+		$('.form-wrap .typeahead').hide()
+	}
+
 	$(document).on('mouseup click touch', function(e) {
 		var target = e.target,
 		form = $('.form-wrap'),
@@ -635,10 +670,23 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	})
 
-	$(document).keydown(function (e) {
+	$(document).keydown(function(e) {
 		if (e.keyCode === 27) {
 			$scope.hideForm()
 			$scope.hideEditForm()
+			return false
+		}
+
+		if (
+			(e.keyCode == 9 || e.keyCode == 39)
+			&& $scope.addForm.time.typeahead != ''
+			&& $scope.addForm.time.typeahead != false
+			&& $scope.addForm.time.typeahead != undefined
+			&& $(e.target)[0] == $('.form-wrap .time-input')[0]
+		) {
+
+			$scope.replaceTypeahead()
+
 			return false
 		}
 	})

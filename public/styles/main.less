@@ -424,6 +424,10 @@ input {
 				color: #888;
 				transition: .5s;
 				animation: slideDown .5s;
+
+				.fa {
+					font-size: 10px;
+				}
 			}
 
 			.error .fa {
@@ -465,6 +469,21 @@ input {
 
 			.game-time-wrap {
 				position: relative;
+
+				.typeahead {
+					position: absolute;
+					left: 22.5px;
+					top: 5px;
+
+					.typeahead-puhser {
+						visibility: hidden;
+					}
+
+					.typeahead-text {
+						color: #666;
+						cursor: pointer;
+					}
+				}
 
 				.time-icon {
 					position: absolute;
