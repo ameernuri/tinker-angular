@@ -150,14 +150,34 @@ input {
 	height: 60px;
 
 	img.logo {
+		transition: .5s;
 		margin: 15px 0;
 		height: 30px;
 		cursor: pointer;
+
+		&.simple {
+			float: left;
+		}
+		
+		&:not(.simple) {
+			@keyframes logoAnim {
+				0% {
+					margin-top: -20px;
+					opacity: 0;
+				}
+
+				100% {
+					margin-top: 15px;
+					opacity: 1;
+				}
+			}
+
+			animation: logoAnim .5s ease-out;
+		}
 	}
 
 	.side-switch {
-		position: absolute;
-		padding: 15px;
+		padding: 15px 0 0 15px;
 		left: 0;
 		top: 0;
 		width: 60px;
@@ -165,6 +185,7 @@ input {
 		transition: .5s;
 		cursor: pointer;
 		font-size: 20px;
+		float: left;
 
 		img {
 			width: 100%;
@@ -209,8 +230,7 @@ input {
 }
 
 .game-top-wrap {
-	margin-top: 20px;
-	padding: 10px 0;
+	padding: 30px 0 0;
 
 	.current-game {
 		font-size: 25px;
@@ -642,6 +662,7 @@ input {
 	border: dashed @dark9;
 	border-width: 1px 0;
 	background: @dark4;
+	margin-top: 20px;
 	.game-form-basic;
 
 	.form-switch {
@@ -688,7 +709,7 @@ input {
 }
 
 .children-wrap {
-	margin-top: 10px;
+	margin-top: 5px;
 
 	ul {
 		margin: 0;

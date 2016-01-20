@@ -613,6 +613,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	}
 
+	$scope.openCurrentParent = function() {
+		$scope.setCurrentGame($scope.currentGame.parent)
+	}
+
 	$scope.showStateButtons = function(e) {
 		var element = $(e.currentTarget)
 
@@ -687,6 +691,25 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 			$scope.replaceTypeahead()
 
+			return false
+		}
+	})
+
+	$(window).scroll(function(e) {
+		var dh = $(document).height(),
+		wh = $(window).height(),
+		st = $(window).scrollTop()
+
+		log('...')
+		log(st)
+		log(wh)
+		log(dh)
+
+		if (st + wh >= dh) {
+			return false
+		}
+
+		if (st <= 0) {
 			return false
 		}
 	})

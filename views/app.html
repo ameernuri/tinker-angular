@@ -30,14 +30,14 @@
 </head>
 <body ng-controller="GamesCtrl">
 	<div class="header">
-		<div class="side-switch">
-			<span class="fa fa-chevron-right"></span>
+		<div class="side-switch" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()">
+			<span class="fa fa-chevron-left"></span>
 		</div>
 		<div class="prio-switch">
 			<span class="fa fa-circle"></span>
 		</div>
 		<img ng-show="currentGame._id == '_endgame'" class="logo" src="images/logo.svg" ng-click="setCurrentGame('_endgame')">
-		<img ng-show="currentGame._id != '_endgame'" class="logo" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
+		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
 	</div>
 	<div class="container st-12 lt-10 lt-push-1 sd-6 sd-push-3 ld-4 ld-push-4">
 		<div class="container-content">
