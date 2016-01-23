@@ -1,5 +1,6 @@
 @import "components/_grid";
 
+@dark1: darken(@dark2, 1%);
 @dark2: darken(@dark3, 1%);
 @dark3: darken(@dark4, 1%);
 @dark4: darken(@dark5, 3%);
@@ -8,6 +9,34 @@
 @dark7: lighten(@dark6, 3%);
 @dark8: lighten(@dark7, 3%);
 @dark9: lighten(@dark8, 3%);
+@dark10: lighten(@dark9, 3%);
+@dark11: lighten(@dark10, 3%);
+@dark12: lighten(@dark11, 3%);
+
+@gray1: #4f5254;
+@gray2: lighten(@gray1, 3%);
+@gray3: lighten(@gray2, 4%);
+@gray4: lighten(@gray3, 5%);
+@gray5: lighten(@gray4, 5%);
+@gray6: lighten(@gray5, 5%);
+
+@light1: #646566;
+@light2: lighten(@light1, 3%);
+@light3: lighten(@light2, 4%);
+@light4: lighten(@light3, 5%);
+@light5: lighten(@light4, 5%);
+@light6: lighten(@light5, 5%);
+
+@white1: #999a9b;
+@white2: lighten(@white1, 3%);
+@white3: lighten(@white2, 4%);
+@white4: lighten(@white3, 4%);
+@white5: lighten(@white4, 5%);
+@white6: lighten(@white5, 5%);
+@white7: lighten(@white6, 5%);
+@white8: lighten(@white7, 5%);
+@white9: lighten(@white8, 5%);
+
 
 @green: #6a5;
 @red: #e36;
@@ -105,15 +134,15 @@ html {
 body {
 	font-family: 'lato', 'helvetica neue';
 	font-weight: 200;
-	background: @dark4;
-	color: #888;
+	background: @dark3;
+	color: @gray3;
 	height: 100%;
 }
 
 input[type=submit], button {
 	border: none;
-	background: #ddd;
-	color: #888;
+	background: @white7;
+	color: @gray3;
 	border-radius: 30px;
 	padding: 8px 20px;
 	font-size: 13px;
@@ -123,8 +152,8 @@ input[type=submit], button {
 	font-weight: 400;
 
 	&:hover {
-		background: #ccc;
-		color: #666;
+		background: @white7;
+		color: @gray3;
 	}
 
 	&:focus {
@@ -158,7 +187,7 @@ input {
 		&.simple {
 			float: left;
 		}
-		
+
 		&:not(.simple) {
 			@keyframes logoAnim {
 				0% {
@@ -203,7 +232,7 @@ input {
 		cursor: pointer;
 
 		&:hover {
-			color: #fff;
+			color: @white9;
 		}
 
 		span {
@@ -234,7 +263,7 @@ input {
 
 	.current-game {
 		font-size: 25px;
-		color: #ddd;
+		color: @white7;
 
 		.editable {
 			cursor: pointer;
@@ -279,10 +308,10 @@ input {
 							float: left;
 							font-size: 10px;
 							padding: 5px 0;
-							color: #aaa;
+							color: @gray6;
 
 							&:hover {
-								color: #fff;
+								color: @white9;
 							}
 						}
 					}
@@ -300,7 +329,7 @@ input {
 						&.game-input {
 							font-size: 25px;
 							padding: 0 20px 5px 28px;
-							color: #ddd;
+							color: @white7;
 						}
 
 						&.time-input {
@@ -316,11 +345,11 @@ input {
 		}
 
 		.end-icon {
-			color: #aaa;
+			color: @white3;
 		}
 
 		.game-info-wrap {
-			color: #888;
+			color: @gray3;
 			font-size: 15px;
 
 			.fa {
@@ -349,12 +378,12 @@ input {
 					width: 30px;
 					height: 30px;
 					text-align: center;
-					color: #888;
+					color: @gray3;
 
 					&:not(.active) {
 
 						&:hover {
-							background: #ddd;
+							box-shadow: 0 0 0 17px white inset;
 
 							&.won {
 								color: @green;
@@ -365,25 +394,38 @@ input {
 							}
 
 							&.playing {
-								color: #fff;
-								background: none;
+								box-shadow: none;
+								color: @white9;
 							}
 						}
 					}
 
 					&.active {
-						color: #fff;
+						color: @white9;
 
 						&.won {
-							background: @green;
+							box-shadow: 0 0 0 17px @green inset;
 						}
 
 						&.lost {
-							background: @red;
+							box-shadow: 0 0 0 17px @red inset;
 						}
 
 						&.playing {
-							color: #fff;
+							color: @white9;
+
+							.fa:before {
+								content: "\f111";
+							}
+						}
+					}
+
+					&:hover {
+
+						&.playing {
+							.fa:before {
+								content: "\f111";
+							}
 						}
 					}
 				}
@@ -396,22 +438,22 @@ input {
 
 		.game-path {
 			cursor: pointer;
-			color: #aaa;
+			color: @gray6;
 			transition: .5s;
 
 			&:hover {
-				color: #ddd;
+				color: @white7;
 			}
 		}
 
 		.ellipsis {
-			color: #ddd;
+			color: @white7;
 			letter-spacing: -2px;
 			transition: .5s;
 			cursor: pointer;
 
 			&:hover {
-				color: #fff;
+				color: @white9;
 			}
 		}
 
@@ -441,7 +483,7 @@ input {
 
 				padding: 3px 20px;
 				font-size: 12px;
-				color: #888;
+				color: @gray3;
 				transition: .5s;
 				animation: slideDown .5s;
 
@@ -469,7 +511,7 @@ input {
 					position: absolute;
 					left: 20px;
 					top: 15px;
-					color: #ddd;
+					color: @white7;
 					font-size: 18px;
 
 					.fa {
@@ -500,7 +542,7 @@ input {
 					}
 
 					.typeahead-text {
-						color: #666;
+						color: @gray3;
 						cursor: pointer;
 					}
 				}
@@ -524,7 +566,7 @@ input {
 					background: @dark7;
 
 					&:hover {
-						color: #eee;
+						color: @white7;
 						background: @dark9;
 					}
 				}
@@ -535,32 +577,32 @@ input {
 				border: none;
 				background: none;
 				font-weight: 100;
-				color: #aaa;
+				color: @gray6;
 				padding: 5px 20px;
 				font-size: 15px;
 				transition: .5s;
 				display: block;
 
 				&::-webkit-input-placeholder {
-					color: #666;
+					color: @gray3;
 				}
 
 				&:-moz-placeholder {
-					color: #666;
+					color: @gray3;
 				}
 
 				&::-moz-placeholder {
-					color: #666;
+					color: @gray3;
 				}
 
 				&:-ms-input-placeholder {
-					color: #666;
+					color: @gray3;
 				}
 
 				&:focus {
 					outline: none;
 					background: @dark4;
-					color: #ddd;
+					color: @white7;
 				}
 
 				&.game-input {
@@ -582,7 +624,7 @@ input {
 				button {
 					border: none;
 					background: none;
-					color: #888;
+					color: @gray3;
 					float: right;
 					padding: 0;
 					vertical-align: middle;
@@ -606,7 +648,7 @@ input {
 					}
 
 					&:hover {
-						color: #ddd;
+						color: @white7;
 					}
 
 					&:focus {
@@ -618,7 +660,7 @@ input {
 			.game-priority {
 				.field-label {
 					font-size: 12px;
-					color: #888;
+					color: @gray3;
 				}
 
 			  label {
@@ -630,7 +672,7 @@ input {
 
 			      & + span {
 			        cursor: pointer;
-			        color: #444;
+			        color: @gray1;
 			        display: inline-block;
 							font-size: 12px;
 			        padding: 4px;
@@ -640,12 +682,12 @@ input {
 							transition: .5s;
 
 			        &:hover {
-			          color: #aaa;
+			          color: @gray6;
 			        }
 			      }
 
 			      &:checked + span {
-			        color: #aaa;
+			        color: @gray6;
 			      }
 			    }
 			  }
@@ -672,7 +714,7 @@ input {
 		transition: .5s;
 
 		.switch-icon, .switch-text {
-			color: #666;
+			color: @gray3;
 			transition: .5s;
 		}
 
@@ -684,7 +726,7 @@ input {
 			background: @dark3;
 
 			.switch-icon, .switch-text {
-				color: #aaa;
+				color: @gray6;
 			}
 		}
 	}
@@ -726,7 +768,7 @@ input {
 
 			.game {
 				font-size: 18px;
-				color: #aaa;
+				color: @light6;
 				transition: .5s;
 				display: block;
 				padding-right: 10px;
@@ -737,7 +779,7 @@ input {
 				font-size: 14px;
 
 				.time-wrap {
-					color: #666;
+					color: @gray3;
 
 					.fa {
 						width: 14px;
@@ -755,6 +797,38 @@ input {
 				transition: .5s;
 				cursor: pointer;
 
+				.touch-block {
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					border-radius: 20px;
+					z-index: 100;
+					opacity: 0;
+					color: red;
+					opacity: .5;
+				}
+
+				&:hover {
+					@keyframes removeBlock {
+						0% {
+							width: 100%;
+						}
+
+						99% {
+							width: 100%;
+						}
+
+						100% {
+							width: 0;
+						}
+					}
+
+					.touch-block {
+						animation: removeBlock .4s;
+						width: 0;
+					}
+				}
+
 				.state {
 					display: none;
 					cursor: pointer;
@@ -769,18 +843,31 @@ input {
 					&.active {
 						display: inline-block;
 
+						&.playing {
+							color: @dark9;
+							font-size: 25px;
+							padding: 0;
+							margin-top: -3px;
+
+							.fa:before {
+								content: "\f1db";
+							}
+						}
+
 						&.won {
 							color: @green;
+							background: @dark7;
 						}
 
 						&.lost {
 							color: @red;
+							background: @dark7;
 						}
 					}
 				}
 
 				&.activate {
-					background: @dark7;
+					background: @dark6;
 
 					.state {
 						display: inline-block;
@@ -805,40 +892,52 @@ input {
 							animation: slide .5s ease-out;
 						}
 
-						&.active {
-							color: #fff;
+						&.active, &.active:hover {
+							color: @white9;
 
 							&.won {
-								background: @green;
+								box-shadow: 0 0 0 17px @green inset;
 							}
 
 							&.lost {
-								background: @red;
+								box-shadow: 0 0 0 17px @red inset;
 							}
 
 							&.playing {
-								color: #fff;
+								color: @white9;
+								font-size: 13px;
+								padding-top: 6px;
+								transition: .3s;
+								margin: 0;
+
+								.fa:before {
+									content: "\f111";
+								}
 							}
 						}
 
 						&:hover {
-							background: #fff;
-
 							&.won {
 								color: @green;
+								box-shadow: 0 0 0 17px white inset;
 							}
 
 							&.lost {
 								color: @red;
+								box-shadow: 0 0 0 17px white inset;
 							}
 
 							&.playing {
-								color: #fff;
+								color: @white9;
 								background: none;
+
+								.fa:before {
+									content: "\f111";
+								}
 							}
 
 							&.active {
-								color: #fff;
+								color: @white9;
 							}
 						}
 					}
@@ -853,10 +952,10 @@ input {
 
 			&:hover, &.ui-sortable-helper {
 				background: @dark4;
-				color: #888;
+				color: @gray3;
 
 				.game {
-					color: #ddd;
+					color: @white7;
 				}
 			}
 		}
@@ -866,7 +965,7 @@ input {
 		text-align: center;
 		background: none;
 		font-style: italic;
-		color: #555;
+		color: @gray2;
 		padding: 20px 10px;
 		transition: .5s;
 	}

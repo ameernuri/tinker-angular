@@ -1,4 +1,4 @@
-var tinker = angular.module('tinker', ['pouchDB'])
+var tinker = angular.module('tinker', ['pouchDB', 'ionic'])
 .filter('sugar', function() {
 	return function(input, format) {
 		format = format || 'dd MM YYYY'
@@ -9,6 +9,16 @@ var tinker = angular.module('tinker', ['pouchDB'])
 	return function(input) {
 		return $filter('date')(Date.create().isAfter(Date.create(input)))
 	}
+})
+.run(function($ionicPlatform) {
+  $ionicPlatform.ready(function() {
+    if(window.cordova && window.cordova.plugins.Keyboard) {
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+    }
+    if(window.StatusBar) {
+      StatusBar.styleDefault();
+    }
+  });
 })
 
 var remote1 = 'http://localhost:5984/games',

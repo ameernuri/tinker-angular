@@ -438,6 +438,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 	$scope.setState = function(id, state) {
 
+		$('.state-wrap.activate').removeClass('activate')
+
 		db.get(id).then(function(doc) {
 			var updatedDoc = doc
 
