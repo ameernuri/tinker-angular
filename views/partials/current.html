@@ -10,13 +10,13 @@
 		<span class="editable">
 			<div ng-click="showEditForm()" class="editable-switch">
 				<span class="current-game-text">
-					<span ng-show="currentGame.plays[0].priority == '8'" class="priority">
+					<span ng-show="currentGame.plays[currentGame.plays.length-1].priority == '8'" class="priority">
 						<span class="fa fa-circle icon rock"></span>
 					</span>
-					<span ng-show="currentGame.plays[0].priority == '4'" class="priority">
+					<span ng-show="currentGame.plays[currentGame.plays.length-1].priority == '4'" class="priority">
 						<span class="fa fa-dot-circle-o icon sand"></span>
 					</span>
-					<span ng-show="currentGame.plays[0].priority == '2'" class="priority">
+					<span ng-show="currentGame.plays[currentGame.plays.length-1].priority == '2'" class="priority">
 						<span class="fa fa-circle-o icon water"></span>
 					</span>
 
@@ -24,7 +24,7 @@
 
 					<div class="game-info-wrap">
 						<span class="fa fa-clock-o"></span>
-						<span am-time-ago="currentGame.plays[0].end"></span>
+						<span am-time-ago="currentGame.plays[currentGame.plays.length-1].end"></span>
 					</div>
 				</span>
 			</div>
@@ -102,14 +102,92 @@
 		</span>
 
 		<div class="game-state-wrap">
+			<div class="replay-wrap" ng-show="currentGame.plays[currentGame.plays.length-1].state != 'playing'">
+				<button class="replay-form-switch" ng-click="showReplayForm()">
+					<span class="fa fa-rotate-right"></span>
+					<span>Play Again</span>
+				</button>
+
+
+				<div class="replay-form-wrap">
+					<div class="game-text-wrap" ng-click="focusOnReplayTime()">
+						<span class="game-text-priority">
+							<span ng-show="replayForm.priority.value == 8" class="fa fa-circle"></span>
+							<span ng-show="replayForm.priority.value == 4" class="fa fa-dot-circle-o"></span>
+							<span ng-show="replayForm.priority.value == 2" class="fa fa-circle-o"></span>
+						</span>
+
+						<span type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's The Game?">
+							{{currentGame.game}}
+						</span>
+					</div>
+
+					<div class="form-content-wrap">
+						<form class="game-form" method="post" ng-submit="createReplay()">
+							<div class="game-form-content">
+								<div class="game-time-wrap">
+									<span class="fa fa-clock-o time-icon"></span>
+									<input ng-model="replayForm.time.text" ng-keyup="validateReplayTime()" type="text" name="end-time" placeholder="Replay End Time" class="time-input" autocomplete="off">
+									<div ng-show="replayForm.time.error != false && replayForm.time.error != undefined" class="error time-error">
+										<span class="fa fa-circle"></span>
+										{{replayForm.time.error}}
+									</div>
+									<div ng-show="replayForm.time.success != false && replayForm.time.success != undefined" class="success">
+										<span class="fa fa-circle"></span>
+										ends {{replayForm.time.success}}
+									</div>
+								</div>
+
+								<div class="game-priority">
+									<span class="field-label">Priority</span>
+									<label for="replay-high-radio">
+										<input id="replay-high-radio" type="radio" ng-model="replayForm.priority.value" name="priority" ng-value="8" ng-click="focusOnReplayTime()">
+										<span>
+											<span class="fa fa-circle"></span>
+											High
+										</span>
+									</label>
+
+									<label for="replay-mid-radio">
+										<input id="replay-mid-radio" type="radio" ng-model="replayForm.priority.value" name="priority" ng-value="4" ng-click="focusOnReplayTime()">
+										<span>
+											<span class="fa fa-dot-circle-o"></span>
+											Mid
+										</span>
+									</label>
+
+									<label for="replay-low-radio">
+										<input id="replay-low-radio" type="radio" ng-model="replayForm.priority.value" name="priority" ng-value="2" ng-click="focusOnReplayTime()">
+										<span>
+											<span class="fa fa-circle-o"></span>
+											Low
+										</span>
+									</label>
+								</div>
+							</div>
+
+							<div class="buttons-wrap">
+								<button type="submit" class="submit-button">
+									<span class="button-text">
+										Create Replay
+									</span>
+									<span class="fa fa-plus-circle button-icon">
+									</span>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
 			<span class="current-game-state">
-				<span ng-class="{active: currentGame.plays[0].state == 'lost'}" class="game-state lost" ng-click="setState(currentGame._id, 'lost')">
+				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'lost'}" class="game-state lost" ng-click="setState(currentGame._id, 'lost')">
 					<span class="fa fa-times"></span>
 				</span>
-				<span ng-class="{active: currentGame.plays[0].state == 'playing'}" class="game-state playing" ng-click="setState(currentGame._id, 'playing')">
+				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'playing'}" class="game-state playing" ng-click="setState(currentGame._id, 'playing')">
 					<span class="fa fa-circle-o"></span>
 				</span>
-				<span ng-class="{active: currentGame.plays[0].state == 'won'}" class="game-state won" ng-click="setState(currentGame._id, 'won')">
+				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'won'}" class="game-state won" ng-click="setState(currentGame._id, 'won')">
 					<span class="fa fa-check"></span>
 				</span>
 			</span>

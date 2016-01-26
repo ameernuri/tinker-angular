@@ -10,16 +10,6 @@ var tinker = angular.module('tinker', ['pouchDB', 'ionic'])
 		return $filter('date')(Date.create().isAfter(Date.create(input)))
 	}
 })
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-  });
-})
 
 var remote1 = 'http://localhost:5984/games',
 remote2 = 'http://pener:cloudant@penser.cloudant.com/games'

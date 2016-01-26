@@ -53,6 +53,19 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	}
 
+	$scope.replayForm = {
+		time: {
+			text: '',
+			error: '',
+			info: '',
+			success: '',
+			typeahead: ''
+		},
+		priority: {
+			value: $scope.game.priority
+		}
+	}
+
 	changes.on('change', function(change) {
 		$scope.fetchChildren($scope.currentGame._id, function(games) {
 			$scope.games = games
@@ -204,7 +217,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		var v
 
 		if ($scope.currentGame._id != '_endgame') {
-			v = validateTime($scope.game.end, $scope.currentGame.plays[0].end)
+			v = validateTime($scope.game.end, $scope.currentGame.plays[$scope.currentGame.plays.length-1].end)
 		} else {
 			v = validateTime($scope.game.end)
 		}
@@ -231,7 +244,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		var v
 
 		if ($scope.currentGame.parent != '_endgame') {
-			v = validateTime($scope.editForm.time.text, $scope.currentParent.plays[0].end, false)
+			v = validateTime($scope.editForm.time.text, $scope.currentParent.plays[$scope.currentParent.plays.length-1].end, false)
 		} else {
 			v = validateTime($scope.editForm.time.text, false, false)
 		}
@@ -252,6 +265,32 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	}
 
+	$scope.validateReplayTime = function() {
+
+		var v
+
+		if ($scope.currentGame.parent != '_endgame') {
+			v = validateTime($scope.replayForm.time.text, $scope.currentParent.plays[$scope.currentParent.plays.length-1].end, false)
+		} else {
+			v = validateTime($scope.replayForm.time.text, false, false)
+		}
+
+		var success = v.success
+
+		if (v.error != false) {
+			$scope.replayForm.time.error = v.error
+			$scope.replayForm.time.success = v.success
+
+			return false
+		} else {
+
+			$scope.replayForm.time.error = v.error
+			$scope.replayForm.time.success = v.success
+
+			return true
+		}
+	}
+
 	$scope.add = function() {
 
 		if ($scope.game.game == '') {
@@ -263,7 +302,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		var v
 
 		if ($scope.currentGame._id != '_endgame') {
-			v = validateTime($scope.game.end, $scope.currentGame.plays[0].end)
+			v = validateTime($scope.game.end, $scope.currentGame.plays[$scope.currentGame.plays.length-1].end)
 		} else {
 			v = validateTime($scope.game.end)
 		}
@@ -359,7 +398,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		if ($scope.currentParent._id != '_noparent') {
 
-			v = validateTime($scope.editForm.time.text, $scope.currentParent.plays[0].end, false)
+			v = validateTime($scope.editForm.time.text, $scope.currentParent.plays[$scope.currentParent.plays.length-1].end, false)
 		} else {
 			v = validateTime($scope.editForm.time.text, false, false)
 		}
@@ -404,19 +443,19 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				edited.game = gameText
 			}
 
-			if (end != '' && end != edited.plays[0].end) {
-				edited.plays[0].end = end
+			if (end != '' && end != edited.plays[edited.plays.length-1].end) {
+				edited.plays[edited.plays.length-1].end = end
 			}
 
-			if (
-				(priority == 8 || priority == 4 || priority == 2)
-				&& priority != edited.plays[0].priority
-			) {
-				edited.plays[0].priority = priority
+			if (priority != 8 && priority != 4 && priority != 2) {
+				priority = 4
+			}
+
+			if (priority != edited.plays[edited.plays.length-1].priority) {
+				edited.plays[edited.plays.length-1].priority = priority
 			}
 
 			db.put(edited, edited._id, edited._rev).then(function(doc) {
-				currentGame = doc
 				success(doc)
 			}).catch(function(err) {
 
@@ -426,6 +465,82 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}).catch(function(err) {
 			error(err)
 		})
+	}
+
+	$scope.createReplay = function(success, error) {
+
+		var v
+
+		if ($scope.currentParent._id != '_noparent') {
+
+			v = validateTime($scope.replayForm.time.text, $scope.currentParent.plays[$scope.currentParent.plays.length-1].end, false)
+		} else {
+			v = validateTime($scope.replayForm.time.text, false, false)
+		}
+
+		if (v.error != false) {
+			$('.replay-form-wrap .time-input').focus()
+			$scope.replayForm.time.error = v.error
+			return false
+		}
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		var end = parseTime($scope.replayForm.time.text)
+
+		if (end == false) {
+			$('.replay-form-wrap .time-input').focus()
+			$scope.replayForm.time.error = 'unknown error'
+			return false
+		}
+
+		if ($scope.replayForm.time.text == '') {
+			$('replay-form-wrap .time-input').focus()
+			return false
+		}
+
+		db.get($scope.currentGame._id).then(function(edited) {
+			log('checkpoint 1: ' + edited)
+			var	priority = $scope.replayForm.priority.value,
+			now = Date.create()
+
+			if (priority != 8 && priority != 4 && priority != 2) {
+				priority = 4
+			}
+
+			var replay = {
+				state: 'playing',
+				end: end,
+				priority: priority,
+				created: now
+			}
+
+			edited.plays.push(replay)
+
+			db.put(edited, edited._id, edited._rev).then(function(doc) {
+
+				$scope.replayForm.time.text = ''
+
+				hideReplayForm()
+				success(doc)
+			}).catch(function(err) {
+
+				$scope.hideReplayForm()
+				error(err)
+			})
+		}).catch(function(err) {
+			error(err)
+		})
+	}
+
+	$scope.focusOnReplayTime = function() {
+		$('.replay-form-wrap .time-input').focus()
 	}
 
 	$scope.focusOnEditGame = function() {
@@ -443,7 +558,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		db.get(id).then(function(doc) {
 			var updatedDoc = doc
 
-			updatedDoc.plays[0].state = state
+			updatedDoc.plays[updatedDoc.plays.length-1].state = state
 			log(updatedDoc)
 
 			return db.put(updatedDoc, doc._id, doc._rev).then(function() {
@@ -512,9 +627,9 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$('.editable-switch').hide()
 
 		$scope.editForm.game.text = $scope.currentGame.game
-		$scope.editForm.time.text = Date.create($scope.currentGame.plays[0].end)
+		$scope.editForm.time.text = Date.create($scope.currentGame.plays[$scope.currentGame.plays.length-1].end)
 		.format('{Mon} {d} {yyyy} {12hr}:{mm} {TT}')
-		$scope.editForm.priority.value = $scope.currentGame.plays[0].priority
+		$scope.editForm.priority.value = $scope.currentGame.plays[$scope.currentGame.plays.length-1].priority
 
 		$scope.editing = true
 	}
@@ -530,6 +645,25 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.editForm.time.success = false
 	}
 
+	$scope.showReplayForm = function() {
+		$('.replay-form-wrap').fadeIn(500)
+		$('.replay-form-wrap .time-input').focus()
+		$('.editable').hide()
+		$('.replay-form-switch').hide()
+
+		$scope.replayForm.priority.value = $scope.currentGame.plays[$scope.currentGame.plays.length-1].priority
+	}
+
+	$scope.hideReplayForm = function() {
+
+		$('.replay-form-wrap').hide()
+		$('.replay-form-switch').show()
+		$('.editable').fadeIn()
+
+		$scope.replayForm.time.error = false
+		$scope.replayForm.time.success = false
+	}
+
 	$scope.setCurrentGame = function(id) {
 		if ($scope.currentGame._id == id) {
 			return true
@@ -537,6 +671,16 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$('.form-wrap .game-input').val('')
 		$('.form-wrap .time-input').val('')
+
+		$scope.addForm.game.text =
+		$scope.addForm.game.success =
+		$scope.addForm.game.info =
+		$scope.addForm.game.error =
+		$scope.addForm.time.text =
+		$scope.addForm.time.success =
+		$scope.addForm.time.info =
+		$scope.addForm.time.error =
+		$scope.addForm.time.typeahead = ''
 
 		$scope.fetchChildren(id, function(games) {
 			$scope.games = games
@@ -660,6 +804,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		var target = e.target,
 		form = $('.form-wrap'),
 		editForm = $('.editable')
+		replayForm = $('.replay-wrap')
 
 		if (
 			!$(target).is(form) && !$(target).parents().is(form)
@@ -674,12 +819,20 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		) {
 			$scope.hideEditForm()
 		}
+
+		if (
+			!$(target).is(replayForm)
+			&& !$(target).parents().is(replayForm)
+		) {
+			$scope.hideReplayForm()
+		}
 	})
 
 	$(document).keydown(function(e) {
 		if (e.keyCode === 27) {
 			$scope.hideForm()
 			$scope.hideEditForm()
+			$scope.hideReplayForm()
 			return false
 		}
 
