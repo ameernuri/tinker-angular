@@ -14,17 +14,7 @@ var tinker = angular.module('tinker', ['pouchDB', 'ionic'])
 var remote1 = 'http://localhost:5984/games',
 remote2 = 'http://pener:cloudant@penser.cloudant.com/games'
 
-log = function(log) {
-	console.log(log)
-}
-
-err = function(err) {
-	console.error(err)
-}
-
 getTypeahead = function(input) {
-
-	log('input: ' + input)
 
 	var output = input
 	.toLowerCase()
@@ -130,9 +120,6 @@ getTypeahead = function(input) {
 	// more fixes
 	.trim()
 	.toLowerCase()
-
-	log('output: ' + output)
-
 
 	return output
 }
@@ -327,11 +314,7 @@ isValidRange = function(input, parentEnd) {
 	if (time.isAfter(Date.create().addYears(30))) {
 		return 'farFuture'
 	}
-
-	log('soon-inpu: ' + input)
-	log('soon-futu: ' + Date.future(input))
-	log('soon-time: ' + time)
-	log('soon-5min: ' + Date.create().addMinutes(5))
+	
 	if (time.isBefore(Date.create().addMinutes(5))) {
 		return 'soon'
 	}
