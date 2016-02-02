@@ -392,6 +392,105 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		})
 	}
 
+	$scope.findTrashed = function(success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		var trashedMap = function(doc, emit) {
+		  if (doc.game == '_trash') {
+		    emit([doc])
+		  }
+		}
+
+		db.query(trashedMap, {include_docs: true}).then(function(trashed) {
+			success(trashed)
+		}).catch(function(err) {
+			error(err)
+		})
+	}
+
+	$scope.findChildren = function(id, success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		var childrenMap = function(doc, emit) {
+		  if (doc.parent == id) {
+		    emit([doc])
+		  }
+		}
+
+		db.query(childrenMap, {include_docs: true}).then(function(children) {
+			success(children)
+		}).catch(function(err) {
+			error(err)
+		})
+	}
+
+	$scope.delete = function(success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		$scope.trash($scope.currentGame._id)
+
+		$scope.openCurrentParent()
+	}
+
+	$scope.trash = function(id, success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		$scope.changeParent(id, '_trash', success, error)
+	}
+
+	$scope.changeParent = function(child, parent, success, error) {
+
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		db.get($scope.currentGame._id).then(function(edited) {
+
+			edited.parent = parent
+
+			db.put(edited, edited._id, edited._rev).then(function(doc) {
+				success(doc)
+			}).catch(function(err) {
+				error(err)
+			})
+		}).catch(function(err) {
+			error(err)
+		})
+	}
+
 	$scope.update = function(success, error) {
 
 		var v
@@ -506,7 +605,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 
 		db.get($scope.currentGame._id).then(function(edited) {
-			log('checkpoint 1: ' + edited)
+			console.log('checkpoint 1: ' + edited)
 			var	priority = $scope.replayForm.priority.value,
 			now = Date.create()
 
@@ -559,7 +658,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			var updatedDoc = doc
 
 			updatedDoc.plays[updatedDoc.plays.length-1].state = state
-			log(updatedDoc)
+			console.log(updatedDoc)
 
 			return db.put(updatedDoc, doc._id, doc._rev).then(function() {
 				// updates the ui, the actual result is slow
@@ -581,7 +680,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			updatedDoc.position = pos
 
 			return db.put(updatedDoc, doc._id, doc._rev).then(function() {
-				log('updated')
+				console.log('updated')
 			}).catch(function(err) {
 				console.error(err)
 			})
@@ -638,6 +737,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$('.edit-form-wrap').hide()
 		$('.editable-switch').fadeIn(500)
+		$('.edit-details-wrap').hide()
 
 		$scope.editing = false
 
@@ -751,7 +851,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		element = $(e.currentTarget),
 		id = element.data('id')
 
-		log(element)
+		console.log(element)
 
 		if (id != undefined && !target.is('.state-wrap') && !target.parents().is('.state-wrap')) {
 
@@ -775,6 +875,11 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			.addClass('activate')
 			.find('.state')
 			.addClass('ready')
+	}
+
+	$scope.showEditButtons = function() {
+		$('.edit-details-wrap').slideDown()
+		return false
 	}
 
 	$scope.hideStateButtons = function(e) {
@@ -837,38 +942,23 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 
 		if (
-			(e.keyCode == 9 || e.keyCode == 39)
-			&& $scope.addForm.time.typeahead != ''
+			$scope.addForm.time.typeahead != ''
 			&& $scope.addForm.time.typeahead != false
 			&& $scope.addForm.time.typeahead != undefined
 			&& $(e.target)[0] == $('.form-wrap .time-input')[0]
 		) {
 
-			$scope.replaceTypeahead()
+			if (e.keyCode == 9 || e.keyCode == 39) {
+				$scope.replaceTypeahead()
 
-			return false
+				return false
+			}
+
+			if (e.keyCode == 13) {
+				$scope.replaceTypeahead()
+			}
 		}
 	})
-
-	$(window).scroll(function(e) {
-		var dh = $(document).height(),
-		wh = $(window).height(),
-		st = $(window).scrollTop()
-
-		log('...')
-		log(st)
-		log(wh)
-		log(dh)
-
-		if (st + wh >= dh) {
-			return false
-		}
-
-		if (st <= 0) {
-			return false
-		}
-	})
-
 
 	//todo: doesn't work on mobile & jquery-ui-touch-punch doesn't seem to be helping :(
 
@@ -903,22 +993,22 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	// 				var nextPos = doc.position
 	//
 	// 				if (!isNaN(nextPos)) {
-	// 					log('nextPos: ' + nextPos)
-	// 					log('prevPos: ' + prevPos)
+	// 					console.log('nextPos: ' + nextPos)
+	// 					console.log('prevPos: ' + prevPos)
 	// 					return (nextPos + prevPos)/2
 	//
 	// 				} else {
 	//
-	// 					log('prevPos: ' + prevPos)
+	// 					console.log('prevPos: ' + prevPos)
 	// 					return Math.round(prevPos + 1)
 	// 				}
 	// 			}).then(function(pos) {
-	// 				log("finalPos: " + pos)
+	// 				console.log("finalPos: " + pos)
 	// 				$scope.setPosition(movedId, pos)
 	// 			}).catch(function(err) {
 	// 				// we don't have nextPos
 	// 				console.error(err)
-	// 				log('prevPos: ' + prevPos)
+	// 				console.log('prevPos: ' + prevPos)
 	// 				$scope.setPosition(movedId, Math.round(prevPos + 1))
 	// 			})
 	// 		}).catch(function(err) {
@@ -927,7 +1017,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	// 				var nextPos = doc.position
 	//
 	// 				if (!isNaN(nextPos)) {
-	// 					log('nextPos: ' + nextPos)
+	// 					console.log('nextPos: ' + nextPos)
 	// 					return Math.round(nextPos - 1)
 	//
 	// 				} else {
@@ -936,7 +1026,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	// 				}
 	// 			}).then(function(pos) {
 	// 				// we've nextPos
-	// 				log("finalPos: " + pos)
+	// 				console.log("finalPos: " + pos)
 	// 				$scope.setPosition(movedId, pos)
 	// 			}).catch(function(err) {
 	// 				// we've nothing

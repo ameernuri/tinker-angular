@@ -222,20 +222,32 @@ input {
 
 	.prio-switch {
 		position: absolute;
-		padding: 16px;
+		padding: 18px;
 		right: 0;
 		top: 0;
 		width: 60px;
 		height: 60px;
 		transition: .5s;
 		cursor: pointer;
+		margin-right: 10px;
 
 		&:hover {
 			color: @white9;
 		}
 
-		span {
-			font-size: 30px;
+		.prio-button {
+			border: 2px solid @gray6;
+			border-radius: 4px;
+			transform: rotate(45deg);
+			width: 24px;
+			height: 24px;
+			display: inline-block;
+			transition: .5s;
+
+			&:hover {
+				box-shadow: 0 0 0 17px @white9 inset;
+				border-color: @white9;
+			}
 		}
 	}
 }
@@ -336,6 +348,24 @@ input {
 							padding-top: 5px;
 							padding-bottom: 5px;
 						}
+					}
+				}
+			}
+
+			.edit-details-wrap {
+				display: none;
+				width: 100%;
+				border-top: 1px solid @dark5;
+				color: @dark10;
+
+				button {
+					background: none;
+					padding: 10px 20px;
+					font-size: 12px;
+					display: block;
+
+					&:hover {
+						color: @light6;
 					}
 				}
 			}
@@ -533,6 +563,10 @@ input {
 
 		.game-form {
 
+			.game-form-content {
+				margin-bottom: 10px;
+			}
+
 			.error, .success, .info, .warn {
 				@keyframes slideDown {
 					from {
@@ -669,7 +703,6 @@ input {
 			.buttons-wrap {
 				overflow: auto;
 				padding: 0 8px;
-				margin-top: 10px;
 
 				button {
 					border: none;
@@ -710,7 +743,7 @@ input {
 			.game-priority {
 				.field-label {
 					font-size: 12px;
-					color: @gray3;
+					color: @white3;
 				}
 
 			  label {

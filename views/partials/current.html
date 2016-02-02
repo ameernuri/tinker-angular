@@ -83,10 +83,17 @@
 							</div>
 						</div>
 
-						<div class="buttons-wrap">
-							<button class="ellipsis">
-								&bull;&bull;&bull;
+						<div class="edit-details-wrap">
+							<button class="delete" ng-click="delete()">
+								<span class="fa fa-trash"></span>
+								Delete Game
 							</button>
+						</div>
+
+						<div class="buttons-wrap">
+							<span class="ellipsis" ng-click="showEditButtons()">
+								&bull;&bull;&bull;
+							</span>
 
 							<button type="submit" class="submit-button">
 								<span class="button-text">
