@@ -9,5 +9,8 @@
     "express": "^4.13.3",
     "less": "^2.5.3",
     "less-middleware": "^2.0.1"
-	}
+	},
+	"scripts": {
+    "start": "node public/scripts/app.js"
+}
 }
