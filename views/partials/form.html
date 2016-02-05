@@ -10,9 +10,9 @@
 
 	<div class="form-content-wrap">
 		<form class="game-form" method="post" ng-submit="add()">
-			<div class="game-form-content">				
+			<div class="game-form-content">
 				<div class="game-text-wrap">
-					<span class="game-text-priority">
+					<span class="game-text-priority" ng-click="nextPriority()">
 						<span ng-show="game.priority == 8" class="fa fa-circle"></span>
 						<span ng-show="game.priority == 4" class="fa fa-dot-circle-o"></span>
 						<span ng-show="game.priority == 2" class="fa fa-circle-o"></span>
@@ -40,10 +40,16 @@
 						<span class="fa fa-circle"></span>
 						ends {{addForm.time.success}}
 					</div>
+
+					<div class="repeat-switch" ng-click="showRepeatInput()">
+						<span class="fa fa-refresh"></span> Repeat
+					</div>
+
+					<input ng-trim="false" ng-model="game.repeat" type="text" name="repeat-time" placeholder="Repeat Interval" class="repeat-input" autocomplete="off" spellcheck="false">
 				</div>
 
 				<div class="game-priority">
-					<span class="field-label">Priority</span>
+					<span class="field-label">Priority:</span>
 					<label for="high-radio">
 						<input id="high-radio" type="radio" ng-model="game.priority" name="priority" ng-value="8" ng-click="focusOnAddGame()">
 						<span>

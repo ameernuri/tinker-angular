@@ -1,5 +1,25 @@
 var app = angular.module('tinker', ['pouchdb', 'angularMoment'])
 
+app.filter('repeatTime', function() {
+  return function(input) {
+    return 'every ' + Date.create(Date.create().getTime() + input).relative()
+		.replace(' from now', '')
+		.replace(' ago', '')
+  };
+})
+.filter('relativeTime', function() {
+  return function(input) {
+		var t = Date.create(input)
+
+		if (t.isPast()) {
+			return t.relative()
+		}
+
+    return 'for ' + t.relative()
+		.replace(' from now', '')
+  };
+})
+
 app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	var db = pouchDB('games'),
 	changes = db.changes({live: true, since: 'now'}),
@@ -11,6 +31,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	$scope.game = []
 	$scope.game.game = ''
 	$scope.game.end = ''
+	$scope.game.repeat = ''
 
 	if (sessionGame == '_endgame') {
 		$scope.game.priority = 8
@@ -313,10 +334,15 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			return false
 		}
 
-		var end = parseTime($scope.game.end),
+		var now = Date.create(),
+		end = parseTime($scope.game.end),
 		gameId = generateId(),
-		gameText = $scope.game.game.trim(),
-		now = Date.create()
+		gameText = $scope.game.game.trim()
+
+		if ($scope.game.repeat != '') {
+			var repeat = parseTime($scope.game.repeat).getTime() - now.getTime(),
+			repeatEnd = Date.create(Date.create().getTime() + repeat)
+		}
 
 		if (end == false) {
 			$('.form-wrap .time-input').focus()
@@ -331,20 +357,45 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 
 		// defining game and pushing to $scope.games here because the ui needs to be rendered as fast as possible
-		var game = {
-			_id: gameId,
-			game: gameText,
-			parent: $scope.currentGame._id,
-			created: now,
-			position: 0,
-			plays: [
-				{
-					state: 'playing',
-					end: end,
-					priority: $scope.game.priority,
-					created: now
-				}
-			]
+
+		if (repeat != '' && repeat != undefined && repeat != false) {
+
+			var game = {
+				_id: gameId,
+				game: gameText,
+				parent: $scope.currentGame._id,
+				repeat: repeat,
+				end: end,
+				created: now,
+				position: 0,
+				plays: [
+					{
+						state: 'playing',
+						end: repeatEnd,
+						kind: 'repeat',
+						priority: $scope.game.priority,
+						created: now
+					}
+				]
+			}
+		} else {
+
+			var game = {
+				_id: gameId,
+				game: gameText,
+				parent: $scope.currentGame._id,
+				repeat: repeat,
+				created: now,
+				position: 0,
+				plays: [
+					{
+						state: 'playing',
+						end: end,
+						priority: $scope.game.priority,
+						created: now
+					}
+				]
+			}
 		}
 
 		var temp = {
@@ -451,6 +502,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.trash($scope.currentGame._id)
 
 		$scope.openCurrentParent()
+		$scope.hideEditForm()
 	}
 
 	$scope.trash = function(id, success, error) {
@@ -566,6 +618,53 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		})
 	}
 
+	$scope.createRepeat = function(id, success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		db.get(id).then(function(repeated) {
+
+			var end = Date.create(
+				Date.create(repeated.plays[repeated.plays.length-1].end)
+				.getTime() + repeated.repeat
+			)
+			var	priority = repeated.plays[repeated.plays.length-1],
+			now = Date.create()
+
+			if (end.isAfter(Date.create(repeated.end))) {
+				return false
+			}
+
+			if (priority != 8 && priority != 4 && priority != 2) {
+				priority = 4
+			}
+
+			var replay = {
+				state: 'playing',
+				end: end,
+				priority: priority,
+				kind: 'repeat',
+				created: now
+			}
+
+			repeated.plays.push(replay)
+
+			db.put(repeated, repeated._id, repeated._rev).then(function(doc) {
+				success(doc)
+			}).catch(function(err) {
+				error(err)
+			})
+		}).catch(function(err) {
+			error(err)
+		})
+	}
+
 	$scope.createReplay = function(success, error) {
 
 		var v
@@ -667,6 +766,15 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 						$(this)[0].doc = updatedDoc
 					}
 				})
+
+				if (doc.repeat != '' && doc.repeat != undefined && doc.repeat != false) {
+					console.log('>>>>>>> there will be a replay here!')
+					$scope.createRepeat(doc._id, function() {
+						console.log('>>>>>> Yay!')
+					}, function(err) {
+						console.error(err)
+					})
+				}
 			}).catch(function(err) {
 				console.error(err)
 			})
@@ -762,6 +870,12 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$scope.replayForm.time.error = false
 		$scope.replayForm.time.success = false
+	}
+
+	$scope.showRepeatInput = function() {
+		$('.form-wrap .repeat-input')
+			.slideDown()
+			.focus()
 	}
 
 	$scope.setCurrentGame = function(id) {
@@ -903,6 +1017,58 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 	$scope.hideTypeahead = function() {
 		$('.form-wrap .typeahead').hide()
+	}
+
+	$scope.nextPriority = function() {
+		var p = $scope.game.priority
+
+		if (p == 8) {
+			$scope.game.priority = 4
+		}
+
+		if (p == 4) {
+			$scope.game.priority = 2
+		}
+
+		if (p == 2) {
+			$scope.game.priority = 8
+		}
+
+		$('.form-wrap .game-input').focus()
+	}
+
+	$scope.nextEditPriority = function() {
+		var p = $scope.editForm.priority.value
+
+		if (p == 8) {
+			$scope.editForm.priority.value = 4
+		}
+
+		if (p == 4) {
+			$scope.editForm.priority.value = 2
+		}
+
+		if (p == 2) {
+			$scope.editForm.priority.value = 8
+		}
+
+		$('.edit-form-wrap .game-input').focus()
+	}
+
+	$scope.nextReplayPriority = function() {
+		var p = $scope.replayForm.priority.value
+
+		if (p == 8) {
+			$scope.replayForm.priority.value = 4
+		}
+
+		if (p == 4) {
+			$scope.replayForm.priority.value = 2
+		}
+
+		if (p == 2) {
+			$scope.replayForm.priority.value = 8
+		}
 	}
 
 	$(document).on('mouseup click touch', function(e) {

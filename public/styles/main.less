@@ -245,16 +245,25 @@ input {
 			transition: .5s;
 
 			&:hover {
-				box-shadow: 0 0 0 17px @white9 inset;
+				background: @white9;
 				border-color: @white9;
 			}
 		}
 	}
 }
 
+.prio-wrap {
+	background: rgba(255, 0, 0, 0.5);
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	z-index: 100;
+	transition: .5s;
+	left: 100%;
+}
+
 .container {
 	margin: 0 auto;
-	margin-top: 60px;
 	height: 100%;
 	padding: 0;
 	overflow: auto;
@@ -265,12 +274,52 @@ input {
 		min-height: 100%;
 		background: @dark5;
 		margin: 0 auto;
+		margin-top: 60px;
 		overflow: auto;
 	}
 }
 
+.check-button {
+	label {
+		margin: 0;
+
+		input[type=radio], input[type=checkbox] {
+			display: none;
+
+			& + span {
+				cursor: pointer;
+				color: @gray1;
+				display: inline-block;
+				font-size: 12px;
+				padding: 0 2px;
+				border-radius: 50px;
+				background: none;
+				font-weight: normal;
+				transition: .5s;
+
+				.fa {
+					display: none;
+					animation: popIn .2s;
+				}
+
+				&:hover {
+					color: @gray6;
+				}
+			}
+
+			&:checked + span {
+				color: @white5;
+
+				.fa {
+					display: inline-block;
+				}
+			}
+		}
+	}
+}
+
 .game-top-wrap {
-	padding: 30px 0 0;
+	padding: 20px 0 0;
 
 	.current-game {
 		font-size: 25px;
@@ -285,6 +334,12 @@ input {
 
 			& div {
 				cursor: pointer;
+			}
+
+			.replay-count-wrap {
+				font-size: 13px;
+				color: @light3;
+				font-weight: 100;
 			}
 		}
 
@@ -358,11 +413,13 @@ input {
 				border-top: 1px solid @dark5;
 				color: @dark10;
 
-				button {
+				.button {
 					background: none;
 					padding: 10px 20px;
 					font-size: 12px;
 					display: block;
+					color: @light1;
+					transition: .5s;
 
 					&:hover {
 						color: @light6;
@@ -540,18 +597,10 @@ input {
 	.game-text-wrap {
 
 		.game-text-priority {
+			cursor: pointer;
 
 			.fa {
-				@keyframes pop {
-					0% {
-						transform: scale(0);
-					}
-					100% {
-						transform: scale(1);
-					}
-				}
-
-				animation: pop .5s ease;
+				animation: popIn .5s ease;
 			}
 		}
 	}
@@ -640,14 +689,17 @@ input {
 				}
 
 				.repeat-switch {
-					position: absolute;
-					top: 0;
-					right: 0;
-					cursor: pointer;
-					transition: .5s;
-					padding: 8px 10px;
-					height: 100%;
-					background: @dark7;
+				  position: absolute;
+				  top: 0;
+				  right: 0;
+				  cursor: pointer;
+				  transition: .5s;
+				  padding: 4px 15px;
+				  background: #2b3135;
+				  border-radius: 20px;
+				  font-size: 12px;
+				  margin-top: 2px;
+				  margin-right: 20px;
 
 					&:hover {
 						color: @white7;
@@ -694,9 +746,13 @@ input {
 					padding: 15px 20px 10px 40px;
 				}
 
-				&.time-input {
+				&.time-input, &.repeat-input {
 					font-size: 14px;
 					padding-left: 22px;
+				}
+
+				&.repeat-input {
+					display: none;
 				}
 			}
 
@@ -746,37 +802,7 @@ input {
 					color: @white3;
 				}
 
-			  label {
-					margin: 0;
-
-			    input[type=radio], input[type=checkbox] {
-			      display: none;
-
-			      & + span {
-			        cursor: pointer;
-			        color: @gray1;
-			        display: inline-block;
-							font-size: 12px;
-			        padding: 0 2px;
-			        border-radius: 50px;
-			        background: none;
-			        font-weight: normal;
-							transition: .5s;
-
-			        &:hover {
-			          color: @gray6;
-			        }
-			      }
-
-			      &:checked + span {
-			        color: @white5;
-			      }
-			    }
-			  }
-
-			  .repeat-input-wrap {
-			    display: none;
-			  }
+				.check-button;
 			}
 		}
 	}
@@ -845,6 +871,8 @@ input {
 			position: relative;
 			min-height: 70px;
 			cursor: pointer;
+			border-top: 2px solid rgba(0, 0, 0, 0);
+			transition: .2s;
 
 			* {
 				cursor: pointer;
@@ -882,6 +910,10 @@ input {
 						width: 14px;
 						text-align: center;
 					}
+				}
+
+				.replay-icon {
+					font-size: 10px;
 				}
 			}
 
@@ -1050,9 +1082,22 @@ input {
 			&:hover, &.ui-sortable-helper {
 				background: @dark4;
 				color: @gray3;
+				border-top-color: @dark3;
 
 				.game {
 					color: @white7;
+				}
+			}
+		}
+
+		&.won-and-lost {
+			background: @dark6;
+
+			li.child {
+
+				&:hover {
+					border-top-color: lighten(@dark4, 1%);
+					background: @dark5;
 				}
 			}
 		}

@@ -1,15 +1,4 @@
 var tinker = angular.module('tinker', ['pouchDB', 'ionic'])
-.filter('sugar', function() {
-	return function(input, format) {
-		format = format || 'dd MM YYYY'
-		return $filter('date')(Date.create(input), format)
-	}
-})
-.filter('isPast', function() {
-	return function(input) {
-		return $filter('date')(Date.create().isAfter(Date.create(input)))
-	}
-})
 
 var remote1 = 'http://localhost:5984/games',
 remote2 = 'http://pener:cloudant@penser.cloudant.com/games'
@@ -314,7 +303,7 @@ isValidRange = function(input, parentEnd) {
 	if (time.isAfter(Date.create().addYears(30))) {
 		return 'farFuture'
 	}
-	
+
 	if (time.isBefore(Date.create().addMinutes(5))) {
 		return 'soon'
 	}

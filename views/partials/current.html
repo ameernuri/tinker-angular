@@ -22,7 +22,17 @@
 
 					{{currentGame.game}}
 
+					<span class="replay-count-wrap" ng-show="currentGame.plays.length > 1">
+						<span class="fa fa-rotate-right replay-icon"></span>
+						{{currentGame.plays.length}}
+					</span>
+
 					<div class="game-info-wrap">
+						<span ng-show="currentGame.repeat != '' && currentGame.repeat != undefined && currentGame.repeat != false">
+							<span class="fa fa-refresh"></span> {{currentGame.repeat | repeatTime}}
+
+							{{currentGame.end | relativeTime}}
+						</span>
 						<span class="fa fa-clock-o"></span>
 						<span am-time-ago="currentGame.plays[currentGame.plays.length-1].end"></span>
 					</div>
@@ -34,7 +44,7 @@
 					<form class="game-form" method="post" ng-submit="saveEdit()">
 						<div class="game-form-content">
 							<div class="game-text-wrap">
-								<span class="game-text-priority">
+								<span class="game-text-priority" ng-click="nextEditPriority()">
 									<span ng-show="editForm.priority.value == 8" class="fa fa-circle"></span>
 									<span ng-show="editForm.priority.value == 4" class="fa fa-dot-circle-o"></span>
 									<span ng-show="editForm.priority.value == 2" class="fa fa-circle-o"></span>
@@ -56,7 +66,7 @@
 							</div>
 
 							<div class="game-priority">
-								<span class="field-label">Priority</span>
+								<span class="field-label">Priority:</span>
 								<label for="edit-high-radio">
 									<input id="edit-high-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="8" ng-click="focusOnEditGame()">
 									<span>
@@ -84,10 +94,10 @@
 						</div>
 
 						<div class="edit-details-wrap">
-							<button class="delete" ng-click="delete()">
+							<span class="delete button" ng-click="delete()">
 								<span class="fa fa-trash"></span>
 								Delete Game
-							</button>
+							</span>
 						</div>
 
 						<div class="buttons-wrap">
@@ -109,7 +119,7 @@
 		</span>
 
 		<div class="game-state-wrap">
-			<div class="replay-wrap" ng-show="currentGame.plays[currentGame.plays.length-1].state != 'playing'">
+			<div class="replay-wrap" ng-show="currentGame.plays[currentGame.plays.length-1].state != 'playing' && (currentGame.repeat == '' || currentGame.repeat == undefined || currentGame.repeat == false)">
 				<button class="replay-form-switch" ng-click="showReplayForm()">
 					<span class="fa fa-rotate-right"></span>
 					<span>Play Again</span>
@@ -118,7 +128,7 @@
 
 				<div class="replay-form-wrap">
 					<div class="game-text-wrap" ng-click="focusOnReplayTime()">
-						<span class="game-text-priority">
+						<span class="game-text-priority" ng-click="nextReplayPriority()">
 							<span ng-show="replayForm.priority.value == 8" class="fa fa-circle"></span>
 							<span ng-show="replayForm.priority.value == 4" class="fa fa-dot-circle-o"></span>
 							<span ng-show="replayForm.priority.value == 2" class="fa fa-circle-o"></span>
@@ -146,7 +156,7 @@
 								</div>
 
 								<div class="game-priority">
-									<span class="field-label">Priority</span>
+									<span class="field-label">Priority:</span>
 									<label for="replay-high-radio">
 										<input id="replay-high-radio" type="radio" ng-model="replayForm.priority.value" name="priority" ng-value="8" ng-click="focusOnReplayTime()">
 										<span>
