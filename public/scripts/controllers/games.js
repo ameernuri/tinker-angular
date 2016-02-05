@@ -20,6 +20,22 @@ app.filter('repeatTime', function() {
   };
 })
 
+app.directive(
+	'appLoaderWrap',
+	function($animate) {
+		return({
+			link: link,
+			restrict: 'C'
+		})
+
+		function link(scope, element, attributes) {
+			element.find('.app-loader').animate({opacity: 0}, function() {
+				element.remove()
+			})
+		}
+	}
+)
+
 app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	var db = pouchDB('games'),
 	changes = db.changes({live: true, since: 'now'}),
