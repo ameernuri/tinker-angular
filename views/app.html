@@ -50,7 +50,7 @@
 
 		<div class="navbar navbar-app navbar-absolute-top">
 			<div class="navbar-brand navbar-brand-center" ui-yield-to="title">
-				<div ng-include="'partials/path.html'"></div>
+				<div ng-include="'public/partials/path.html'"></div>
 			</div>
 			<div class="btn-group pull-left">
 				<div ui-toggle="uiSidebarLeft" class="btn sidebar-toggle">
@@ -75,34 +75,5 @@
 	</div>
 
 	<div ui-yield-to="modals"></div>
-
-
-	<!-- <div class="app-loader-wrap" style="z-index: 1000; width: 100%; height: 100%; position: fixed; display: table; background: #202427; ">
-		<div class="app-loader" style="display: table-cell; vertical-align: middle; text-align: center; font-size: 18px; font-weight: 400;">
-			<div>
-				<img src="images/logo.svg" alt="Tinker" style="width: 40%; max-width: 150px; margin-bottom: 20px;" />
-			</div>
-			loading...
-		</div>
-	</div>
-
-	<div class="header">
-		<div class="side-switch" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()">
-			<span class="fa fa-chevron-left"></span>
-		</div>
-		<div class="prio-switch">
-			<span class="prio-button"></span>
-		</div>
-		<img ng-show="currentGame._id == '_endgame'" class="logo" src="images/logo.svg" ng-click="setCurrentGame('_endgame')">
-		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
-	</div>
-	<div class="prio-wrap">
-		prio-wrap
-	</div>
-	<div class="container st-12 lt-10 lt-push-1 sd-6 sd-push-3 ld-4 ld-push-4">
-		<div class="container-content">
-			<%- include partials/content.html %>
-		</div>
-	</div> -->
 </body>
 </html>
