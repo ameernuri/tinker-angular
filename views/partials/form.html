@@ -1,0 +1,89 @@
+
+<div class="form-wrap">
+	<div class="form-switch" ng-click="showForm()">
+		<span class="fa fa-plus-circle switch-icon"></span>
+		<span class="switch-text">
+			<span ng-show="currentGame._id == '_endgame'">Create an End Game</span>
+			<span ng-show="currentGame._id != '_endgame'">Create a Sub Game</span>
+		</span>
+	</div>
+
+	<div class="form-content-wrap">
+		<form class="game-form" method="post" ng-submit="add()">
+			<div class="game-form-content">
+				<div class="game-text-wrap">
+					<span class="game-text-priority" ng-click="nextPriority()">
+						<span ng-show="game.priority == 8" class="fa fa-circle"></span>
+						<span ng-show="game.priority == 4" class="fa fa-dot-circle-o"></span>
+						<span ng-show="game.priority == 2" class="fa fa-circle-o"></span>
+					</span>
+
+					<input ng-change="validateGame()" ng-required="required" ng-model="game.game" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's the Game?">
+
+					<div ng-show="addForm.game.error != false && addForm.game.error != undefined" class="error">
+						<span class="fa fa-circle"></span>
+						{{addForm.game.error}}
+					</div>
+				</div>
+				<div class="game-time-wrap">
+					<span class="typeahead" ng-show="addForm.time.typeahead != false && addForm.time.typeahead != undefined && addForm.time.error == false">
+						<span class="typeahead-pusher" style="visibility: hidden;">{{game.end}}</span><span class="typeahead-text" ng-click="replaceTypeahead()" ng-keyup=" replaceTypeahead()">{{addForm.time.typeahead}}</span>
+					</span>
+
+					<input ng-required="required" ng-trim="false" ng-model="game.end" ng-focus="hideTypeahead()" ng-keydown="hideTypeahead()" ng-change="validateTime($event)" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off" spellcheck="false">
+
+					<div ng-show="addForm.time.error != false && addForm.time.error != undefined" class="error time-error">
+						<span class="fa fa-circle"></span>
+						{{addForm.time.error}}
+					</div>
+					<div ng-show="addForm.time.success != false && addForm.time.success != undefined" class="success">
+						<span class="fa fa-circle"></span>
+						ends {{addForm.time.success}}
+					</div>
+
+					<div class="repeat-switch" ng-click="showRepeatInput()">
+						<span class="fa fa-refresh"></span> Repeat
+					</div>
+
+					<input ng-trim="false" ng-model="game.repeat" type="text" name="repeat-time" placeholder="Repeat Interval" class="repeat-input" autocomplete="off" spellcheck="false">
+				</div>
+
+				<div class="game-priority">
+					<span class="field-label">Priority:</span>
+					<label for="high-radio">
+						<input id="high-radio" type="radio" ng-model="game.priority" name="priority" ng-value="8" ng-click="focusOnAddGame()">
+						<span>
+							<span class="fa fa-circle"></span>
+							High
+						</span>
+					</label>
+
+					<label for="mid-radio">
+						<input id="mid-radio" type="radio" ng-model="game.priority" name="priority" ng-value="4" ng-click="focusOnAddGame()">
+						<span>
+							<span class="fa fa-dot-circle-o"></span>
+							Mid
+						</span>
+					</label>
+
+					<label for="low-radio">
+						<input id="low-radio" type="radio" ng-model="game.priority" name="priority" ng-value="2" ng-click="focusOnAddGame()">
+						<span>
+							<span class="fa fa-circle-o"></span>
+							Low
+						</span>
+					</label>
+				</div>
+			</div>
+			<div class="buttons-wrap">
+				<button type="submit" class="submit-button">
+					<span class="button-text">
+						Create Game
+					</span>
+					<span class="fa fa-plus-circle button-icon">
+					</span>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
