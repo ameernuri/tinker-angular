@@ -2,7 +2,10 @@
 <html ng-app="tinker">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="yes" />
 
 	<title>Tinker</title>
 
@@ -10,8 +13,11 @@
 
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen" charset="utf-8">
 
-	<link rel="stylesheet" href="styles/main.css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="lib/fontawesome/css/font-awesome.min.css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-base.css" charset="utf-8">
+	<link rel="stylesheet" href="bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-hover.css" charset="utf-8">
+	<link rel="stylesheet" href="bower_components/mobile-angular-ui/dist/css/mobile-angular-ui-desktop.css" charset="utf-8">
+	<link rel="stylesheet" href="styles/main.css" media="screen" charset="utf-8">
 
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.min.js"></script>
@@ -20,42 +26,54 @@
 	<script type="text/javascript" src="bower_components/pouchdb/dist/pouchdb.min.js"></script>
 	<script type="text/javascript" src="bower_components/sugar/release/sugar.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-pouchdb/angular-pouchdb.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
 	<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-moment/angular-moment.min.js"></script>
-	<script type="text/javascript" src="bower_components/typeahead.js/dist/typeahead.jquery.min.js"></script>
+	<script type="text/javascript" src="bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.min.js"></script>
+	<script type="text/javascript" src="bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.gestures.min.js"></script>
 
 	<script type="text/javascript" src="scripts/app.js"></script>
 	<script type="text/javascript" src="scripts/controllers/games.js"></script>
 </head>
-<body ng-controller="GamesCtrl">
+<body
+	ng-controller="GamesCtrl"
+	ui-prevent-touchmove-defaults
+>
+  <div
+		ng-include="'sidebar.html'"
+    ui-track-as-search-param='true'
+    class="sidebar sidebar-left"
+	></div>
 
-	<div class="app-loader-wrap" style="z-index: 1000; width: 100%; height: 100%; position: fixed; display: table; background: #202427; ">
-		<div class="app-loader" style="display: table-cell; vertical-align: middle; text-align: center; font-size: 18px; font-weight: 400;">
-			<div>
-				<img src="images/logo.svg" alt="Tinker" style="width: 40%; max-width: 150px; margin-bottom: 20px;" />
+	<div class="app" ng-swipe-right='Ui.turnOn("uiSidebarLeft")' ng-swipe-left='Ui.turnOff("uiSidebarLeft")'>
+
+		<div class="navbar navbar-app navbar-absolute-top">
+			<div class="navbar-brand navbar-brand-center" ui-yield-to="title">
+				<div ng-include="'public/partials/path.html'"></div>
 			</div>
-			loading...
+			<div class="btn-group pull-left">
+				<div ui-toggle="uiSidebarLeft" class="btn sidebar-toggle">
+					<i class="fa fa-chevron-right"></i>
+				</div>
+			</div>
+			<div class="btn-group pull-right" ui-yield-to="navbarAction">
+				<div ui-toggle="uiSidebarRight" class="btn">
+					<span class="fa fa-circle-o"></span>
+				</div>
+			</div>
+		</div>
+
+		<div class="app-body" ng-class="{loading: loading}">
+			<div ng-show="loading" class="app-content-loading">
+				<i class="fa fa-spinner fa-spin loading-spinner"></i>
+			</div>
+			<div class="app-content">
+				<ng-view></ng-view>
+			</div>
 		</div>
 	</div>
 
-	<div class="header">
-		<div class="side-switch" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()">
-			<span class="fa fa-chevron-left"></span>
-		</div>
-		<div class="prio-switch">
-			<span class="prio-button"></span>
-		</div>
-		<img ng-show="currentGame._id == '_endgame'" class="logo" src="images/logo.svg" ng-click="setCurrentGame('_endgame')">
-		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
-	</div>
-	<div class="prio-wrap">
-		prio-wrap
-	</div>
-	<div class="container st-12 lt-10 lt-push-1 sd-6 sd-push-3 ld-4 ld-push-4">
-		<div class="container-content">
-			<%- include partials/content.html %>
-		</div>
-	</div>
+	<div ui-yield-to="modals"></div>
 </body>
 </html>

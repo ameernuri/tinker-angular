@@ -139,6 +139,7 @@ body {
 	font-weight: 200;
 	background: @dark3;
 	color: @gray3;
+	-webkit-overflow-scrolling: touch;
 }
 
 input[type=submit], button {
@@ -168,6 +169,65 @@ h1, h2, h3, h4, h5, h6 {
 
 input {
 	font-family: "lato", "helvetica neue";
+}
+
+.sidebar {
+	background: @dark4;
+
+	.app-name {
+		text-align: center;
+
+		img {
+			max-height: 30px;
+		}
+	}
+
+	.list-group {
+		background: none;
+		border: none;
+
+		.list-group-item {
+			background: none;
+			border: none;
+			color: @light6;
+			font-weight: 300;
+			padding: 12px 20px;
+
+			&:hover {
+				color: @white6;
+				background: @dark1;
+			}
+		}
+	}
+}
+
+.navbar {
+	border-radius: 0;
+	border: none;
+	background: @dark4;
+
+	.btn {
+		color: @light6;
+		font-size: 18px;
+		padding: 0 20px;
+
+		&:hover {
+			color: @white6;
+		}
+	}
+}
+
+.app-body {
+	background: @dark5;
+
+	.list-group {
+		.list-group-item {
+			background: none;
+			padding: 0;
+			border: none;
+			text-align: left;
+		}
+	}
 }
 
 .header {
@@ -811,10 +871,11 @@ input {
 }
 
 .form-wrap {
-	border: dashed @dark9;
-	border-width: 1px 0;
+	border: 1px dashed @dark9;
+	border-radius: 5px;
 	background: @dark4;
-	margin-top: 20px;
+	margin: 20px 10px 10px;
+	overflow: auto;
 	.game-form-basic;
 
 	.form-switch {
@@ -861,14 +922,12 @@ input {
 }
 
 .children-wrap {
-	margin-top: 5px;
-
 	ul {
 		margin: 0;
 
 		li.child {
 			list-style: none;
-			padding: 10px 20px;
+			padding: 10px 20px 10px 30px;
 			overflow: auto;
 			position: relative;
 			min-height: 70px;

@@ -1,7 +1,7 @@
-var tinker = angular.module('tinker', ['pouchDB', 'ionic'])
+var tinker = angular.module('tinker', ['pouchDB'])
 
 var remote1 = 'http://localhost:5984/games',
-remote2 = 'http://pener:cloudant@penser.cloudant.com/games'
+remote2 = 'http://penser:cloudant@penser.cloudant.com/games'
 
 getTypeahead = function(input) {
 
@@ -324,10 +324,10 @@ PouchDB.sync('games', remote1, {
 	retry: true
 })
 
-// PouchDB.sync('games', remote2, {
-// 	live: true,
-// 	retry: true
-// })
+PouchDB.sync('games', remote2, {
+	live: true,
+	retry: true
+})
 
 tinker.run(function($pouchdb) {
   $pouchdb.setDatabase("games")
