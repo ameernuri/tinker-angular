@@ -932,28 +932,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$scope.fetchChildren(id, function(games) {
 			$scope.games = games
-			$('.children').css({
-				'margin-left': 60,
-				opacity: 0
-			}).animate({
-				'margin-left': 0,
-				opacity: 1
-			})
-
-			$('.no-games').css('opacity', 1)
 		})
-
-		$('.current-game-text').css({
-			'margin-left': -60,
-			'zoom': .6,
-			opacity: 0
-		}).animate({
-			'margin-left': 0,
-			'zoom': 1,
-			opacity: 1
-		})
-
-		$('.no-games').css('opacity', 0)
 
 		if (id == '_endgame') {
 			$scope.currentGame = { _id: id}
@@ -985,13 +964,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$('.container').animate({ scrollTop: 0})
 		$('body').animate({ scrollTop: 0})
-
-		$.each($('.children .child'), function() {
-			$(this).css({
-				opacity: 0,
-				'margin-left': -$(this).offset().top*.8
-			})
-		})
 	}
 
 	$scope.openGame = function(e) {
@@ -999,11 +971,23 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		element = $(e.currentTarget),
 		id = element.data('id')
 
-		console.log(element)
 
 		if (id != undefined && !target.is('.state-wrap') && !target.parents().is('.state-wrap')) {
 
-			$scope.setCurrentGame(id)
+			element
+				.removeClass('child')
+				.addClass('opening-child')
+				.css({
+					'font-size': 25,
+					'color': '#dcdcdd',
+					'padding': '10px 20px',
+					'background': 'none'
+				})
+				.find('.state-wrap, .info-wrap').hide()
+
+			$('.child, .form-wrap, .current-game').slideUp(function() {
+				$scope.setCurrentGame(id)
+			})
 		}
 	}
 
