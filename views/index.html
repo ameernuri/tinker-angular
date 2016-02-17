@@ -39,6 +39,7 @@
 <body
 	ng-controller="GamesCtrl"
 	ui-prevent-touchmove-defaults
+	ng-swipe-right='Ui.turnOn("uiSidebarLeft")' ng-swipe-left='Ui.turnOff("uiSidebarLeft")'
 >
   <div
 		ng-include="'sidebar.html'"
@@ -46,7 +47,7 @@
     class="sidebar sidebar-left"
 	></div>
 
-	<div class="app" ng-swipe-right='Ui.turnOn("uiSidebarLeft")' ng-swipe-left='Ui.turnOff("uiSidebarLeft")'>
+	<div class="app">
 
 		<div class="navbar navbar-app navbar-absolute-top">
 			<div class="navbar-brand navbar-brand-center" ui-yield-to="title">
