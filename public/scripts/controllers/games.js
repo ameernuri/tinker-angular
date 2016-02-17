@@ -1,20 +1,14 @@
 var app = angular.module('tinker', [
-	'pouchdb', 'angularMoment',
-	'ngRoute'
+	'pouchdb',
+	'angularMoment',
 ])
-
-app.config(function($routeProvider) {
-  $routeProvider.when('/',              {templateUrl: 'home.html', reloadOnSearch: false});
-	$routeProvider.when('/account',      {templateUrl: 'account.html', reloadOnSearch: false});
-  $routeProvider.when('/prio',      {templateUrl: 'prio.html', reloadOnSearch: false});
-});
 
 app.filter('repeatTime', function() {
   return function(input) {
     return 'every ' + Date.create(Date.create().getTime() + input).relative()
 		.replace(' from now', '')
 		.replace(' ago', '')
-  };
+  }
 })
 .filter('relativeTime', function() {
   return function(input) {
@@ -26,7 +20,7 @@ app.filter('repeatTime', function() {
 
     return 'for ' + t.relative()
 		.replace(' from now', '')
-  };
+  }
 })
 
 app.directive(
@@ -1148,83 +1142,4 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			}
 		}
 	})
-
-	//todo: doesn't work on mobile & jquery-ui-touch-punch doesn't seem to be helping :(
-
-	// var stopPos
-	//
-	//
-	// $('.sortable').sortable({
-	// 	axis: 'y',
-	// 	containment: '.children-wrap',
-	// 	distance: 10,
-	// 	revert: true,
-	// 	tolerance: 'pointer',
-	// 	delay: 500,
-	// 	stop: function(event, ui) {
-	// 		stopPos = ui.item.index()
-	// 		var movedId = $(ui.item).data('id'),
-	// 		prevId = $(ui.item).prev().data('id'),
-	// 		nextId = $(ui.item).next().data('id')
-	//
-	// 		db.get(prevId).then(function(doc) {
-	//
-	// 			var prevPos = doc.position
-	//
-	// 			if (!isNaN(prevPos)) {
-	// 				return prevPos
-	// 			} else {
-	// 				return 0
-	// 			}
-	// 		}).then(function(prevPos) {
-	// 			// prevPos is found
-	// 			db.get(nextId).then(function(doc) {
-	// 				var nextPos = doc.position
-	//
-	// 				if (!isNaN(nextPos)) {
-	// 					console.log('nextPos: ' + nextPos)
-	// 					console.log('prevPos: ' + prevPos)
-	// 					return (nextPos + prevPos)/2
-	//
-	// 				} else {
-	//
-	// 					console.log('prevPos: ' + prevPos)
-	// 					return Math.round(prevPos + 1)
-	// 				}
-	// 			}).then(function(pos) {
-	// 				console.log("finalPos: " + pos)
-	// 				$scope.setPosition(movedId, pos)
-	// 			}).catch(function(err) {
-	// 				// we don't have nextPos
-	// 				console.error(err)
-	// 				console.log('prevPos: ' + prevPos)
-	// 				$scope.setPosition(movedId, Math.round(prevPos + 1))
-	// 			})
-	// 		}).catch(function(err) {
-	// 			// prevPos is not found
-	// 			db.get(nextId).then(function(doc) {
-	// 				var nextPos = doc.position
-	//
-	// 				if (!isNaN(nextPos)) {
-	// 					console.log('nextPos: ' + nextPos)
-	// 					return Math.round(nextPos - 1)
-	//
-	// 				} else {
-	// 					// we've nothing - return 0
-	// 					return 0
-	// 				}
-	// 			}).then(function(pos) {
-	// 				// we've nextPos
-	// 				console.log("finalPos: " + pos)
-	// 				$scope.setPosition(movedId, pos)
-	// 			}).catch(function(err) {
-	// 				// we've nothing
-	// 				console.error(err)
-	// 				$scope.setPosition(movedId, 0)
-	// 			})
-	// 		})
-	//
-	// 		return false
-	// 	}
-	// })
 })

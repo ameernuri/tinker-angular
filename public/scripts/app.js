@@ -4,7 +4,6 @@ var remote1 = 'http://localhost:5984/games',
 remote2 = 'http://penser:cloudant@penser.cloudant.com/games'
 
 getTypeahead = function(input) {
-
 	var output = input
 	.toLowerCase()
 	.trim()

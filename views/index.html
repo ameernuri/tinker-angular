@@ -11,9 +11,7 @@
 	<link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" media="screen" charset="utf-8">
 
 	<link rel="stylesheet" href="styles/main.css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="lib/fontawesome/css/font-awesome.min.css" media="screen" charset="utf-8">
-
-	<link href="lib/ionic/css/ionic.css" rel="stylesheet">
+	<link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css" media="screen" charset="utf-8">
 
 	<script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="lib/jquery-ui/jquery-ui.min.js"></script>
@@ -25,9 +23,6 @@
 	<script type="text/javascript" src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="lib/moment/min/moment.min.js"></script>
 	<script type="text/javascript" src="lib/angular-moment/angular-moment.min.js"></script>
-	<script type="text/javascript" src="lib/typeahead.js/dist/typeahead.jquery.min.js"></script>
-
-	<script src="lib/ionic/js/ionic.bundle.js"></script>
 
 	<script type="text/javascript" src="scripts/app.js"></script>
 	<script type="text/javascript" src="scripts/controllers/games.js"></script>
@@ -38,7 +33,7 @@
 			<span class="fa fa-chevron-left"></span>
 		</div>
 		<div class="prio-switch">
-			<span class="fa fa-circle"></span>
+			<img src="images/triangle.svg">
 		</div>
 		<img ng-show="currentGame._id == '_endgame'" class="logo" src="images/logo.svg" ng-click="setCurrentGame('_endgame')">
 		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">

@@ -1,12 +1,12 @@
 {
-  "name": "tinker",
+  "name": "Tinker",
   "description": "The Tinker App",
   "main": "app.js",
   "authors": [
     "Ameer Nuri"
   ],
   "moduleType": [],
-  "homepage": "app.html",
+  "homepage": "index.html",
   "private": true,
   "ignore": [
     "**/.*",
