@@ -9,7 +9,7 @@ var lessMiddleware = require('less-middleware')
 
 app.use(lessMiddleware(__dirname + '/public'))
 app.use(express.static(__dirname + '/public'))
-app.use('/bower_components',  express.static(__dirname + '/bower_components'))
+app.use('/lib',  express.static(__dirname + '/lib'))
 
 app.get('/', function(req, res) {
 	res.render('index.html')

@@ -1,7 +1,5 @@
 var app = angular.module('tinker', [
 	'pouchdb', 'angularMoment',
-	'mobile-angular-ui',
-	'mobile-angular-ui.gestures',
 	'ngRoute'
 ])
 
