@@ -764,7 +764,6 @@ input {
 				width: 100%;
 				border: none;
 				background: none;
-				font-weight: 100;
 				color: @gray6;
 				padding: 5px 20px;
 				font-size: 15px;
@@ -861,7 +860,6 @@ input {
 }
 
 .form-wrap {
-	border: 1px dashed @dark9;
 	border-radius: 5px;
 	background: @dark4;
 	margin: 20px 10px 10px;
@@ -875,18 +873,19 @@ input {
 		transition: .5s;
 
 		.switch-icon, .switch-text {
-			color: @gray3;
 			transition: .5s;
+			color: @white4;
 		}
 
 		.switch-text {
-			font-style: italic;
+			font-weight: normal;
+			color: @gray3;
 		}
 
 		&:hover {
 			background: @dark3;
 
-			.switch-icon, .switch-text {
+			.switch-text {
 				color: @gray6;
 			}
 		}
@@ -1024,10 +1023,9 @@ input {
 						display: inline-block;
 
 						&.playing {
-							color: @dark9;
-							font-size: 25px;
-							padding: 0;
+							color: rgba(0, 0, 0, 0);
 							margin-top: -3px;
+							box-shadow: 0 0 0 2px @dark7 inset;
 
 							.fa:before {
 								content: "\f1db";
@@ -1088,6 +1086,7 @@ input {
 								font-size: 13px;
 								padding-top: 6px;
 								transition: .3s;
+								box-shadow: none;
 								margin: 0;
 
 								.fa:before {

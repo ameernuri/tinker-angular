@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/public'))
 app.use('/bower_components',  express.static(__dirname + '/bower_components'))
 
 app.get('/', function(req, res) {
-	res.render('app.html')
+	res.render('index.html')
 })
 
 var port = 1234

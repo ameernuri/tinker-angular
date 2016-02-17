@@ -7,15 +7,8 @@ var app = angular.module('tinker', [
 
 app.config(function($routeProvider) {
   $routeProvider.when('/',              {templateUrl: 'home.html', reloadOnSearch: false});
-  $routeProvider.when('/scroll',        {templateUrl: 'scroll.html', reloadOnSearch: false});
-  $routeProvider.when('/toggle',        {templateUrl: 'toggle.html', reloadOnSearch: false});
-  $routeProvider.when('/tabs',          {templateUrl: 'tabs.html', reloadOnSearch: false});
-  $routeProvider.when('/accordion',     {templateUrl: 'accordion.html', reloadOnSearch: false});
-  $routeProvider.when('/overlay',       {templateUrl: 'overlay.html', reloadOnSearch: false});
-  $routeProvider.when('/forms',         {templateUrl: 'forms.html', reloadOnSearch: false});
-  $routeProvider.when('/dropdown',      {templateUrl: 'dropdown.html', reloadOnSearch: false});
-  $routeProvider.when('/drag',          {templateUrl: 'drag.html', reloadOnSearch: false});
-  $routeProvider.when('/carousel',      {templateUrl: 'carousel.html', reloadOnSearch: false});
+	$routeProvider.when('/account',      {templateUrl: 'account.html', reloadOnSearch: false});
+  $routeProvider.when('/prio',      {templateUrl: 'prio.html', reloadOnSearch: false});
 });
 
 app.filter('repeatTime', function() {
@@ -998,8 +991,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		var target = $(e.target),
 		element = $(e.currentTarget),
 		id = element.data('id')
-
-		console.log(element)
 
 		if (id != undefined && !target.is('.state-wrap') && !target.parents().is('.state-wrap')) {
 
