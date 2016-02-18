@@ -128,9 +128,10 @@ div {
 }
 
 html, body {
-	overflow: auto;
 	height: 100%;
 	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 body {
@@ -171,7 +172,6 @@ input {
 }
 
 .header {
-	width: 100%;
 	position: fixed;
 	top: 0;
 	z-index: 100;
@@ -207,10 +207,9 @@ input {
 	}
 
 	.side-switch {
-		padding: 15px 0 0 15px;
+		padding: 15px 10px;
 		left: 0;
 		top: 0;
-		width: 60px;
 		height: 60px;
 		transition: .5s;
 		cursor: pointer;
@@ -282,7 +281,10 @@ input {
 }
 
 .prio-container {
+  z-index: 200;
+
 	.container-content {
+		margin: 0;
 		background: @dark6;
 
 		h4 {
@@ -900,13 +902,15 @@ input {
 
 		li.child {
 			list-style: none;
-			padding: 10px 20px 10px 30px;
+			padding: 5px;
+			margin: 0 15px;
 			overflow: auto;
 			position: relative;
 			min-height: 70px;
 			cursor: pointer;
 			border-top: 2px solid rgba(0, 0, 0, 0);
 			transition: .2s;
+			border-bottom: 1px solid @dark4;
 
 			* {
 				cursor: pointer;
@@ -1114,24 +1118,22 @@ input {
 			}
 
 			&:hover, &.ui-sortable-helper {
-				background: @dark4;
-				color: @gray3;
-				border-top-color: @dark3;
+				color: @light3;
 
 				.game {
-					color: @white7;
+					color: @white9;
 				}
 			}
 		}
 
 		&.won-and-lost {
+			margin-top: 5px;
 			background: @dark6;
 
 			li.child {
 
 				&:hover {
-					border-top-color: lighten(@dark4, 1%);
-					background: @dark5;
+					color: @white9;
 				}
 			}
 		}

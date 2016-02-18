@@ -102,6 +102,15 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	}
 
 	changes.on('change', function(change) {
+
+		$scope.findTrashed(function(trashed) {
+			$.each(trashed.rows, function() {
+				console.log($(this))
+				// $scope.delete(trashed.doc._id)
+			})
+		})
+
+
 		$scope.fetchPrios($scope.currentGame._id, function(prios) {
 			$scope.prios = prios
 		})
@@ -144,7 +153,13 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		childrenMap = function(doc, emit) {
 		  if (doc.parent == parent) {
-		    emit([doc.position])
+				var now = Date.create().valueOf(),
+				time = Date.create(doc.plays[doc.plays.length-1].end).valueOf(),
+				priority = doc.plays[doc.plays.length-1].priority,
+				diff = now - time,
+				order = (time - (diff - Math.abs(diff)) * Math.log(Math.abs(diff))) / Math.log(1000 + priority)
+
+		    emit([order])
 		  }
 		}
 
@@ -206,7 +221,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				time = Date.create(doc.plays[doc.plays.length-1].end).valueOf(),
 				priority = doc.plays[doc.plays.length-1].priority,
 				diff = now - time,
-				order = time - (diff - Math.abs(diff) * Math.log(Math.abs(diff))) / Math.log(800 + priority)
+				order = (time - (diff - Math.abs(diff)) * Math.log(Math.abs(diff))) / Math.log(1000 + priority)
 
 		    emit([order])
 		  }
@@ -530,6 +545,23 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		db.query(trashedMap, {include_docs: true}).then(function(trashed) {
 			success(trashed)
+		}).catch(function(err) {
+			error(err)
+		})
+	}
+
+	$scope.delete = function(id, success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		db.remove(id).then(function(game) {
+			success(game)
 		}).catch(function(err) {
 			error(err)
 		})

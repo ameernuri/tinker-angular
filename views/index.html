@@ -28,7 +28,7 @@
 	<script type="text/javascript" src="scripts/controllers/games.js"></script>
 </head>
 <body ng-controller="GamesCtrl">
-	<div class="header">
+	<div class="header sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2">
 		<div class="side-switch" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()">
 			<span class="fa fa-chevron-left"></span>
 		</div>
@@ -39,7 +39,7 @@
 		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
 	</div>
 
-	<div class="container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-4" style="float: left">
+	<div class="container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2" style="float: left">
 		<div class="container-content">
 			<%- include partials/content.html %>
 		</div>
