@@ -38,9 +38,36 @@
 		<img ng-show="currentGame._id == '_endgame'" class="logo" src="images/logo.svg" ng-click="setCurrentGame('_endgame')">
 		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
 	</div>
-	<div class="container st-12 lt-10 lt-push-1 sd-6 sd-push-3 ld-4 ld-push-4">
+
+	<div class="container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-4" style="float: left">
 		<div class="container-content">
 			<%- include partials/content.html %>
+		</div>
+	</div>
+
+
+	<div class="prio-container container sm-push-12 lt-4 sd-4 sd-push-2 ld-3">
+		<div class="container-content">
+			<h4>Next Priorities</h4>
+
+			<div class="no-games" ng-show="prios.length == 0">
+				No priorities for now
+			</div>
+
+			<ul>
+				<li ng-click="setCurrentGame(prio.doc._id)" ng-repeat="prio in prios">
+					<div class="game-wrap">
+						<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 8}}" class="fa fa-circle"></span>
+						<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 4}}" class="fa fa-dot-circle-o"></span>
+						<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 2}}" class="fa fa-circle-o"></span>
+						{{prio.doc.game}}
+					</div>
+					<div class="info-wrap">
+						<span am-time-ago="prio.doc.plays[prio.doc.plays.length-1].end"></span>
+					</div>
+				</li>
+			</ul>
+
 		</div>
 	</div>
 </body>

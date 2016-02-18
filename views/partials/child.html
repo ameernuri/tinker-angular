@@ -28,12 +28,13 @@
 
 <div class="info-wrap">
 	<span class="time-wrap">
-		<span ng-show="game.doc.repeat != '' && game.doc.repeat != undefined && game.doc.repeat != false">
-			<span class="fa fa-refresh"></span> {{game.doc.repeat | repeatTime}}
-		</span>
-
 		<span class="fa fa-clock-o icon"></span>
 		<span class="text" am-time-ago="game.doc.plays[game.doc.plays.length-1].end"></span>
+
+		<span ng-show="game.doc.repeat != '' && game.doc.repeat != undefined && game.doc.repeat != false">
+			<span class="fa fa-refresh"></span> {{game.doc.repeat | repeatTime}}
+			{{game.doc.end | relativeTime }}
+		</span>
 	</span>
 
 	<span ng-show="game.doc.plays.length > 1">

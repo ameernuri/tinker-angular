@@ -281,6 +281,50 @@ input {
 	}
 }
 
+.prio-container {
+	.container-content {
+		background: @dark6;
+
+		h4 {
+			background: @dark5;
+			padding: 5px 20px;
+			border-bottom: 1px solid @dark7;
+			margin-top: 20px;
+			font-size: 14px;
+			font-weight: normal;
+		}
+
+		.no-games {
+			font-style: italic;
+			text-align: center;
+		}
+
+		ul {
+			li {
+				padding: 5px 0;
+				margin: 0 20px;
+				list-style: none;
+				border-bottom: 1px solid @dark5;
+				cursor: pointer;
+
+				* {
+					cursor: pointer;
+				}
+
+				.game-wrap {
+					font-size: 16px;
+					color: @light6;
+				}
+
+				.info-wrap {
+					font-size: 12px;
+					color: @gray1;
+				}
+			}
+		}
+	}
+}
+
 .check-button {
 	label {
 		margin: 0;
@@ -819,7 +863,6 @@ input {
 		}
 
 		.switch-text {
-			font-weight: normal;
 			color: @gray3;
 		}
 
@@ -964,9 +1007,9 @@ input {
 						display: inline-block;
 
 						&.playing {
-							color: rgba(0, 0, 0, 0);
+							color: @gray1;
 							margin-top: -3px;
-							box-shadow: 0 0 0 2px @dark7 inset;
+							background: @dark7;
 
 							.fa:before {
 								content: "\f1db";
@@ -1027,7 +1070,7 @@ input {
 								font-size: 13px;
 								padding-top: 6px;
 								transition: .3s;
-								box-shadow: none;
+								background: none;
 								margin: 0;
 
 								.fa:before {

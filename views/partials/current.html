@@ -27,14 +27,15 @@
 						{{currentGame.plays.length}}
 					</span>
 
-					<div class="game-info-wrap">
+					<div class="game-info-wrap">						
+						<span class="fa fa-clock-o"></span>
+						<span am-time-ago="currentGame.plays[currentGame.plays.length-1].end"></span>
+
 						<span ng-show="currentGame.repeat != '' && currentGame.repeat != undefined && currentGame.repeat != false">
 							<span class="fa fa-refresh"></span> {{currentGame.repeat | repeatTime}}
 
 							{{currentGame.end | relativeTime}}
 						</span>
-						<span class="fa fa-clock-o"></span>
-						<span am-time-ago="currentGame.plays[currentGame.plays.length-1].end"></span>
 					</div>
 				</span>
 			</div>

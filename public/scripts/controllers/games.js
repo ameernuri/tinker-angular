@@ -51,12 +51,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	$scope.game.game = ''
 	$scope.game.end = ''
 	$scope.game.repeat = ''
-
-	if (sessionGame == '_endgame') {
-		$scope.game.priority = 8
-	} else {
-		$scope.game.priority = 4
-	}
+	$scope.game.priority = 4
 
 	$scope.addForm = {
 		game: {
@@ -107,9 +102,14 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	}
 
 	changes.on('change', function(change) {
+		$scope.fetchPrios($scope.currentGame._id, function(prios) {
+			$scope.prios = prios
+		})
+
 		$scope.fetchChildren($scope.currentGame._id, function(games) {
 			$scope.games = games
 		})
+
 		if ($scope.currentGame._id != '_endgame') {
 			$scope.fetchOne($scope.currentGame._id, function(doc) {
 				$scope.currentGame = doc
@@ -186,6 +186,40 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		// fetch path here
 	}
 
+	$scope.fetchPrios = function(parent, success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		prioMap = function(doc, emit) {
+		  if (
+				doc.parent != '_trash'
+				&& doc.plays[doc.plays.length-1].state == 'playing'
+				&& true /* is a descendent of parent */
+			) {
+				var now = Date.create().valueOf(),
+				time = Date.create(doc.plays[doc.plays.length-1].end).valueOf(),
+				priority = doc.plays[doc.plays.length-1].priority,
+				diff = now - time,
+				order = time - (diff - Math.abs(diff) * Math.log(Math.abs(diff))) / Math.log(800 + priority)
+
+		    emit([order])
+		  }
+		}
+
+		db.query(prioMap, {include_docs: true, limit: 15}).then(function(games) {
+
+			success(games.rows)
+		}).catch(function(err) {
+			error(err)
+		})
+	}
+
 	// set session game
 	if (sessionGame == undefined || sessionGame == '_endgame') {
 
@@ -198,6 +232,11 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 
 		window.sessionStorage.setItem('currentGame', '_endgame')
+
+		$scope.fetchPrios($scope.currentGame._id, function(prios) {
+			$scope.prios = prios
+		})
+
 		$scope.fetchChildren($scope.currentGame._id, function(games) {
 			$scope.games = games
 		})
@@ -205,6 +244,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$scope.fetchOne(sessionGame, function(doc) {
 			$scope.currentGame = doc
+
+			$scope.fetchPrios($scope.currentGame._id, function(prios) {
+				$scope.prios = prios
+			})
 
 			$scope.fetchChildren($scope.currentGame._id, function(games) {
 				$scope.games = games
@@ -231,6 +274,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			$scope.currentParent = {
 				_id: '_noparent'
 			}
+
+			$scope.fetchPrios($scope.currentGame._id, function(prios) {
+				$scope.prios = prios
+			})
 
 			$scope.fetchChildren($scope.currentGame._id, function(games) {
 				$scope.games = games
@@ -450,7 +497,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 					$scope.game.game = ''
 					$scope.game.end = ''
+					$scope.game.repeat = ''
 					$scope.game.priority = 4
+
+					$('.form-wrap .repeat-input').slideUp()
 				})
 			})
 		})
@@ -897,6 +947,11 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			.focus()
 	}
 
+	$scope.hideRepeatInput = function() {
+		$('.form-wrap .repeat-input')
+			.slideUp()
+	}
+
 	$scope.setCurrentGame = function(id) {
 		if ($scope.currentGame._id == id) {
 			return true
@@ -914,6 +969,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.addForm.time.info =
 		$scope.addForm.time.error =
 		$scope.addForm.time.typeahead = ''
+
+		$scope.fetchPrios(id, function(prios) {
+			$scope.prios = prios
+		})
 
 		$scope.fetchChildren(id, function(games) {
 			$scope.games = games
@@ -942,7 +1001,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		if (id == '_endgame') {
 			$scope.currentGame = { _id: id}
-			$scope.game.priority = 8
 			window.sessionStorage.setItem('currentGame', id)
 		} else {
 
