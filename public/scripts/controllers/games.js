@@ -1,6 +1,7 @@
 var app = angular.module('tinker', [
 	'pouchdb',
 	'angularMoment',
+	'hmTouchEvents'
 ])
 
 app.filter('repeatTime', function() {
@@ -982,6 +983,26 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	$scope.hideRepeatInput = function() {
 		$('.form-wrap .repeat-input')
 			.slideUp()
+	}
+
+	$scope.showPrio = function() {
+
+		if ($(window).width() <= 660) {
+
+			$('.prio-container').addClass('visible-tab')
+
+			$('.games-container').addClass('hidden-tab')
+		}
+	}
+
+	$scope.hidePrio = function() {
+
+		if ($(window).width() <= 660) {
+
+			$('.prio-container').removeClass('visible-tab')
+
+			$('.games-container').removeClass('hidden-tab')
+		}
 	}
 
 	$scope.setCurrentGame = function(id) {

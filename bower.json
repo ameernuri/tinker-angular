@@ -21,7 +21,8 @@
     "angular": "~1.4.8",
     "angular-pouchdb": "~4.0.0",
     "sugar": "sugarjs#~1.4.1",
-    "angular-route": "^1.5.0"
+    "angular-route": "^1.5.0",
+    "AngularHammer": "ryanmullins-angular-hammer#^2.1.10"
   },
   "resolutions": {
     "bootstrap": "~3.3.6",

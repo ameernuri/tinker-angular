@@ -23,6 +23,8 @@
 	<script type="text/javascript" src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="lib/moment/min/moment.min.js"></script>
 	<script type="text/javascript" src="lib/angular-moment/angular-moment.min.js"></script>
+	<script type="text/javascript" src="lib/hammerjs/hammer.min.js"></script>
+	<script type="text/javascript" src="lib/AngularHammer/angular.hammer.min.js"></script>
 
 	<script type="text/javascript" src="scripts/app.js"></script>
 	<script type="text/javascript" src="scripts/controllers/games.js"></script>
@@ -32,21 +34,21 @@
 		<div class="side-switch" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()">
 			<span class="fa fa-chevron-left"></span>
 		</div>
-		<div class="prio-switch">
+		<div class="prio-switch" ng-click="showPrio()">
 			<img src="images/triangle.svg">
 		</div>
 		<img ng-show="currentGame._id == '_endgame'" class="logo" src="images/logo.svg" ng-click="setCurrentGame('_endgame')">
 		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
 	</div>
 
-	<div class="container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2" style="float: left">
+	<div hm-swipeleft="showPrio()" hm-swiperight="hidePrio()" class="games-container container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2" style="float: left">
 		<div class="container-content">
 			<%- include partials/content.html %>
 		</div>
 	</div>
 
 
-	<div class="prio-container container sm-push-12 lt-4 sd-4 sd-push-2 ld-3">
+	<div hm-swiperight="hidePrio()" class="prio-container container sm-push-12 lt-4 sd-4 sd-push-2 ld-3">
 		<div class="container-content">
 			<h4>Next Priorities</h4>
 
