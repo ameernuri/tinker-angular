@@ -483,12 +483,17 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			doc: game
 		}
 
-		alert('games...')
+		if ($scope.games == undefined) {
+			$scope.games = []
+		}
+
+		$scope.games.reverse()
+		$scope.games.push(temp)
+		$scope.games.reverse()
+
+		alert('$scope.games...')
 		alert($scope.games)
 
-		// $scope.games.reverse()
-		// $scope.games.push(temp)
-		// $scope.games.reverse()
 		$scope.hideForm()
 
 		$scope.addForm.time.error = false
