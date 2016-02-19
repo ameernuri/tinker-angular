@@ -483,20 +483,18 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			doc: game
 		}
 
-		$scope.games.reverse()
-		$scope.games.push(temp)
-		$scope.games.reverse()
+		// $scope.games.reverse()
+		// $scope.games.push(temp)
+		// $scope.games.reverse()
 		$scope.hideForm()
 
 		$scope.addForm.time.error = false
 		$scope.addForm.time.success = false
 
-		alert('currentGame: ' + $scope.currentGame._id)
-
 		$scope.fetchChildren($scope.currentGame._id, function(children) {
 			alert('children fetched')
 			alert(children)
-			
+
 			var low = 1
 
 			$.each(children, function() {
