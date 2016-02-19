@@ -514,6 +514,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 					$('.form-wrap .repeat-input').slideUp()
 				})
+			}).catch(function(err) {
+				alert(err)
 			})
 		})
 	}
