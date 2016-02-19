@@ -1,7 +1,9 @@
 var tinker = angular.module('tinker', ['pouchDB'])
 
 tinker.run(function($pouchdb) {
-  $pouchdb.setDatabase("games")
+  $pouchdb.setDatabase("games").then(function() {
+		alert('database set')
+	})
 })
 
 var remote = 'https://penser:cloudant@penser.cloudant.com/games'
@@ -324,4 +326,7 @@ generateId = function() {
 PouchDB.sync('games', remote, {
 	live: true,
 	retry: true
+}).on('denied', function(info) {
+	alert('denied...')
+	alert(info)
 })

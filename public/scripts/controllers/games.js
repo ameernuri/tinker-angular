@@ -45,6 +45,13 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	changes = db.changes({live: true, since: 'now'}),
 	numChanges = 0
 
+	db.info().then(function (result) {
+	  alert('success')
+	}).catch(function (err) {
+	  alert('info error...')
+		alert(err)
+	})
+
 	sessionGame = window.sessionStorage.getItem('currentGame')
 
 	$scope.editTemp
