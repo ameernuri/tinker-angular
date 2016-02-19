@@ -483,6 +483,9 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			doc: game
 		}
 
+		alert('games...')
+		alert($scope.games)
+
 		// $scope.games.reverse()
 		// $scope.games.push(temp)
 		// $scope.games.reverse()
