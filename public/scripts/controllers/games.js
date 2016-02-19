@@ -397,8 +397,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		if ($scope.game.game == '') {
 			$('.form-wrap .game-input').focus()
 			$scope.addForm.game.error = 'what\'s the game?'
-			//removeme
-			alert('what\'s the game')
 			return false
 		}
 
@@ -414,9 +412,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			$('.form-wrap .time-input').focus()
 			$scope.addForm.time.error = v.error
 
-			//removeme
-			alert('v.error...')
-			alert(v.error)
 			return false
 		}
 
@@ -424,8 +419,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		end = parseTime($scope.game.end),
 		gameId = generateId(),
 		gameText = $scope.game.game.trim()
-
-		alert('checkpoint 1')
 
 		if ($scope.game.repeat != '') {
 			var repeat = parseTime($scope.game.repeat).getTime() - now.getTime(),
@@ -435,7 +428,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		if (end == false) {
 			$('.form-wrap .time-input').focus()
 			$scope.addForm.time.error = 'unknown error'
-			alert('unknown error: end == false')
 			return false
 		}
 
@@ -448,8 +440,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		// defining game and pushing to $scope.games here because the ui needs to be rendered as fast as possible
 
 		if (repeat != '' && repeat != undefined && repeat != false) {
-
-			alert('checkpoint2: repeat')
 
 			var game = {
 				_id: gameId,
@@ -470,8 +460,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				]
 			}
 		} else {
-
-			alert('checkpoint3: no repeat')
 
 			var game = {
 				_id: gameId,
@@ -495,8 +483,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			doc: game
 		}
 
-		alert('checkpoint4...')
-
 		$scope.games.reverse()
 		$scope.games.push(temp)
 		$scope.games.reverse()
@@ -505,7 +491,12 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.addForm.time.error = false
 		$scope.addForm.time.success = false
 
+		alert('currentGame: ' + $scope.currentGame._id)
+
 		$scope.fetchChildren($scope.currentGame._id, function(children) {
+			alert('children fetched')
+			alert(children)
+			
 			var low = 1
 
 			$.each(children, function() {
@@ -544,6 +535,9 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				alert('db.put() error...')
 				alert(err)
 			})
+		}).catch(function(err) {
+			alert('fetchChildren failed...')
+			alert(err)
 		})
 	}
 
