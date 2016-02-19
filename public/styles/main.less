@@ -131,8 +131,7 @@ div {
 html, body {
 	height: 100%;
 	width: 100%;
-	overflow-x: hidden;
-	overflow-y: auto;
+	overflow: auto;
 }
 
 body {
@@ -207,7 +206,7 @@ input {
 		}
 	}
 
-	.side-switch {
+	.back-button {
 		padding: 15px 10px;
 		left: 0;
 		top: 0;
@@ -228,14 +227,17 @@ input {
 		padding: 18px;
 		right: 0;
 		top: 0;
-		width: 60px;
 		height: 60px;
 		transition: .5s;
 		cursor: pointer;
-		margin-right: 10px;
 
-		&:hover {
-			color: @white9;
+		.switch-label {
+			display: none;
+			font-size: 20px;
+			font-weight: 300;
+			vertical-align: middle;
+			margin-left: 5px;
+			color: @white7;
 		}
 
 		.prio-button {
@@ -290,19 +292,66 @@ input {
 
 @media only screen and (max-width: @lt) {
 
-	.visible-tab {
-		width: 100%;
-		position: absolute;
-		top: 60px;
-		left: 0
-		transition: .5s;
-		z-index: 0;
-	}
+	.tab-2 {
+		.prio-switch {
+			left: 0;
+			text-align: left;
 
-	.hidden-tab {
-		position: absolute;
-		left: -100%;
-		transition: .5s
+			img {
+				display: inline-block;
+			}
+
+			.switch-label {
+				display: inline-block;
+			}
+		}
+
+		.logo, .back-button {
+			position: absolute;
+			left: -500px;
+		}
+
+		.prio-container {
+			@keyframes show {
+				0% {
+					margin-left: 100%;
+				}
+
+				100% {
+					margin-left: 0;
+				}
+			}
+
+			h4 {
+				display: none;
+			}
+
+			width: 100%;
+			top: 60px;
+			left: 0;
+			z-index: 0;
+			animation: show .3s ease-in;
+
+			.container-content {
+				padding-top: 20px;
+			}
+		}
+
+		.games-container {
+			@keyframes hide {
+				0% {
+					margin-left: 100%;
+				}
+
+				100% {
+					margin-left: 0;
+				}
+			}
+
+			position: absolute;
+			left: -100%;
+			animation: hide .3s ease-in;
+		}
 	}
 }
 
@@ -465,8 +514,7 @@ input {
 
 						&.time-input {
 							font-size: 15px;
-							padding-top: 5px;
-							padding-bottom: 5px;
+							padding: 5px 0;
 						}
 					}
 				}
@@ -743,14 +791,6 @@ input {
 						color: @gray3;
 						cursor: pointer;
 					}
-				}
-
-				.time-icon {
-					position: absolute;
-					margin-top: 8px;
-					font-size: 14px;
-					width: 20px;
-					text-align: center;
 				}
 
 				.repeat-switch {
@@ -1037,12 +1077,12 @@ input {
 						display: inline-block;
 
 						&.playing {
-							color: @gray1;
-							margin-top: -3px;
-							background: @dark7;
+							color: @dark6;
+							background: @dark6;
+							box-shadow: 0 0 0 1px @dark9 inset;
 
 							.fa:before {
-								content: "\f1db";
+								content: "\f111";
 							}
 						}
 
@@ -1101,6 +1141,7 @@ input {
 								padding-top: 6px;
 								transition: .3s;
 								background: none;
+								box-shadow: none;
 								margin: 0;
 
 								.fa:before {
@@ -1154,7 +1195,7 @@ input {
 
 		&.won-and-lost {
 			margin-top: 5px;
-			background: @dark6;
+			background: lighten(@dark5, .8%);
 
 			li.child {
 

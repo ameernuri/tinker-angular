@@ -31,24 +31,25 @@
 </head>
 <body ng-controller="GamesCtrl">
 	<div class="header sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2">
-		<div class="side-switch" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()">
+		<div class="back-button" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()">
 			<span class="fa fa-chevron-left"></span>
 		</div>
-		<div class="prio-switch" ng-click="showPrio()">
+		<div class="prio-switch" ng-click="tab2()">
 			<img src="images/triangle.svg">
+			<span class="switch-label">Next Priorities</span>
 		</div>
 		<img ng-show="currentGame._id == '_endgame'" class="logo" src="images/logo.svg" ng-click="setCurrentGame('_endgame')">
 		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
 	</div>
 
-	<div hm-swipeleft="showPrio()" hm-swiperight="hidePrio()" class="games-container container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2" style="float: left">
+	<div hm-swipeleft="tab2()" hm-swiperight="openCurrentParent()" class="games-container container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2" style="float: left">
 		<div class="container-content">
 			<%- include partials/content.html %>
 		</div>
 	</div>
 
 
-	<div hm-swiperight="hidePrio()" class="prio-container container sm-push-12 lt-4 sd-4 sd-push-2 ld-3">
+	<div hm-swiperight="tab1()" class="prio-container container sm-push-12 lt-4 sd-4 sd-push-2 ld-3">
 		<div class="container-content">
 			<h4>Next Priorities</h4>
 
@@ -57,7 +58,7 @@
 			</div>
 
 			<ul>
-				<li ng-click="setCurrentGame(prio.doc._id)" ng-repeat="prio in prios">
+				<li ng-click="setCurrentGame(prio.doc._id); tab1()" ng-repeat="prio in prios">
 					<div class="game-wrap">
 						<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 8}}" class="fa fa-circle"></span>
 						<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 4}}" class="fa fa-dot-circle-o"></span>

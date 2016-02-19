@@ -1,13 +1,13 @@
 <span class="game">
 	<span class="priority-wrap">
 		<span ng-show="game.doc.plays[game.doc.plays.length-1].priority == '8'" class="priority">
-			<span class="fa fa-circle icon rock"></span>
+			<span class="fa fa-circle icon high"></span>
 		</span>
 		<span ng-show="game.doc.plays[game.doc.plays.length-1].priority == '4'" class="priority">
-			<span class="fa fa-dot-circle-o icon sand"></span>
+			<span class="fa fa-dot-circle-o icon mid"></span>
 		</span>
 		<span ng-show="game.doc.plays[game.doc.plays.length-1].priority == '2'" class="priority">
-			<span class="fa fa-circle-o icon water"></span>
+			<span class="fa fa-circle-o icon low"></span>
 		</span>
 	</span>
 	{{game.doc.game}}
@@ -28,7 +28,6 @@
 
 <div class="info-wrap">
 	<span class="time-wrap">
-		<span class="fa fa-clock-o icon"></span>
 		<span class="text" am-time-ago="game.doc.plays[game.doc.plays.length-1].end"></span>
 
 		<span ng-show="game.doc.repeat != '' && game.doc.repeat != undefined && game.doc.repeat != false">

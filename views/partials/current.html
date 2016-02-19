@@ -27,8 +27,7 @@
 						{{currentGame.plays.length}}
 					</span>
 
-					<div class="game-info-wrap">						
-						<span class="fa fa-clock-o"></span>
+					<div class="game-info-wrap">
 						<span am-time-ago="currentGame.plays[currentGame.plays.length-1].end"></span>
 
 						<span ng-show="currentGame.repeat != '' && currentGame.repeat != undefined && currentGame.repeat != false">
@@ -54,7 +53,6 @@
 								<input ng-model="editForm.game.text" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's the Game?">
 							</div>
 							<div class="game-time-wrap">
-								<span class="fa fa-clock-o time-icon"></span>
 								<input ng-model="editForm.time.text" ng-keyup="validateEditTime()" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
 								<div ng-show="editForm.time.error != false && editForm.time.error != undefined" class="error time-error">
 									<span class="fa fa-circle"></span>
@@ -144,7 +142,6 @@
 						<form class="game-form" method="post" ng-submit="createReplay()">
 							<div class="game-form-content">
 								<div class="game-time-wrap">
-									<span class="fa fa-clock-o time-icon"></span>
 									<input ng-model="replayForm.time.text" ng-keyup="validateReplayTime()" type="text" name="end-time" placeholder="Replay End Time" class="time-input" autocomplete="off">
 									<div ng-show="replayForm.time.error != false && replayForm.time.error != undefined" class="error time-error">
 										<span class="fa fa-circle"></span>

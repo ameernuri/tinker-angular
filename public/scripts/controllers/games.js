@@ -154,13 +154,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		childrenMap = function(doc, emit) {
 		  if (doc.parent == parent) {
-				var now = Date.create().valueOf(),
-				time = Date.create(doc.plays[doc.plays.length-1].end).valueOf(),
-				priority = doc.plays[doc.plays.length-1].priority,
-				diff = now - time,
-				order = (time - (diff - Math.abs(diff)) * Math.log(Math.abs(diff))) / Math.log(1000 + priority)
 
-		    emit([order])
+		    emit([doc.position])
 		  }
 		}
 
@@ -222,13 +217,14 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				time = Date.create(doc.plays[doc.plays.length-1].end).valueOf(),
 				priority = doc.plays[doc.plays.length-1].priority,
 				diff = now - time,
-				order = (time - (diff - Math.abs(diff)) * Math.log(Math.abs(diff))) / Math.log(1000 + priority)
+				absDiff = Math.abs(diff)
+				order = (time - (diff - absDiff) * Math.log(absDiff)) / Math.log(2000 + (priority/2))
 
 		    emit([order])
 		  }
 		}
 
-		db.query(prioMap, {include_docs: true, limit: 15}).then(function(games) {
+		db.query(prioMap, {include_docs: true, limit: 25}).then(function(games) {
 
 			success(games.rows)
 		}).catch(function(err) {
@@ -985,23 +981,21 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			.slideUp()
 	}
 
-	$scope.showPrio = function() {
+	$scope.tab2 = function() {
 
 		if ($(window).width() <= 660) {
 
-			$('.prio-container').addClass('visible-tab')
-
-			$('.games-container').addClass('hidden-tab')
+			$('body').addClass('tab-2')
+			$('body').removeClass('tab-1')
 		}
 	}
 
-	$scope.hidePrio = function() {
+	$scope.tab1 = function() {
 
 		if ($(window).width() <= 660) {
 
-			$('.prio-container').removeClass('visible-tab')
-
-			$('.games-container').removeClass('hidden-tab')
+			$('body').addClass('tab-1')
+			$('body').removeClass('tab-2')
 		}
 	}
 
@@ -1102,7 +1096,9 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	}
 
 	$scope.openCurrentParent = function() {
-		$scope.setCurrentGame($scope.currentGame.parent)
+		if ($scope.currentGame._id != '_endgame') {
+			$scope.setCurrentGame($scope.currentGame.parent)
+		}
 	}
 
 	$scope.showStateButtons = function(e) {
