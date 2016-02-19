@@ -425,6 +425,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		gameId = generateId(),
 		gameText = $scope.game.game.trim()
 
+		alert('checkpoint 1')
+
 		if ($scope.game.repeat != '') {
 			var repeat = parseTime($scope.game.repeat).getTime() - now.getTime(),
 			repeatEnd = Date.create(Date.create().getTime() + repeat)
@@ -447,6 +449,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		if (repeat != '' && repeat != undefined && repeat != false) {
 
+			alert('checkpoint2: repeat')
+
 			var game = {
 				_id: gameId,
 				game: gameText,
@@ -466,6 +470,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				]
 			}
 		} else {
+
+			alert('checkpoint3: no repeat')
 
 			var game = {
 				_id: gameId,
@@ -488,6 +494,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		var temp = {
 			doc: game
 		}
+
+		alert('checkpoint4...')
 
 		$scope.games.reverse()
 		$scope.games.push(temp)
