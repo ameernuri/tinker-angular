@@ -45,6 +45,26 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	changes = db.changes({live: true, since: 'now'}),
 	numChanges = 0
 
+	db.replicate.to(remote, {
+		live: true,
+		retry: true
+	}).then(function() {
+		log('replicated to remote')
+	}).catch(function(err) {
+		alert('not able to replicate to remote')
+		alert(error)
+	})
+
+	db.replicate.from(remote, {
+		live: true,
+		retry: true
+	}).then(function() {
+		log('replicated from remote')
+	}).catch(function(err) {
+		alert('not able to replicate from remote')
+		alert(error)
+	})
+
 	db.info().catch(function (err) {
 		db = new PouchDB('https://penser:cloudant@penser.cloudant.com/games')
 	})
