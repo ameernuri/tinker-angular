@@ -45,6 +45,12 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	changes = db.changes({live: true, since: 'now'}),
 	numChanges = 0
 
+	if (!db.adapter) {
+		// neither websql nor idb supported
+	  // fall back to http-only (no offline)
+	  db = new PouchDB('https://penser:cloudant@penser.cloudant.com/games')
+	}
+
 	db.info().then(function (result) {
 	  alert('success')
 	}).catch(function (err) {
