@@ -392,9 +392,13 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 	$scope.add = function() {
 
+		alert('add function called')
+
 		if ($scope.game.game == '') {
 			$('.form-wrap .game-input').focus()
 			$scope.addForm.game.error = 'what\'s the game?'
+			//removeme
+			alert('what\'s the game')
 			return false
 		}
 
@@ -409,6 +413,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		if (v.error != false) {
 			$('.form-wrap .time-input').focus()
 			$scope.addForm.time.error = v.error
+
+			//removeme
+			alert('v.error...')
+			alert(v.error)
 			return false
 		}
 
@@ -425,6 +433,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		if (end == false) {
 			$('.form-wrap .time-input').focus()
 			$scope.addForm.time.error = 'unknown error'
+			alert('unknown error: end == false')
 			return false
 		}
 
@@ -502,7 +511,13 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			game.position = low - 1
 
 			db.put(game).then(function(meta) {
+				alert('db.put() called. response...')
+				alert(meta)
+
 				db.get(meta.id, {include_docs: true}).then(function(res) {
+
+					alert('db.get() called. response...')
+					alert(res)
 					var game = {
 						doc: res
 					}
@@ -513,8 +528,12 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 					$scope.game.priority = 4
 
 					$('.form-wrap .repeat-input').slideUp()
+				}).catch(function(err) {
+					alert('db.get() error...')
+					alert(err)
 				})
 			}).catch(function(err) {
+				alert('db.put() error...')
 				alert(err)
 			})
 		})
