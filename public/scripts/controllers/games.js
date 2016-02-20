@@ -1294,9 +1294,4 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			}
 		}
 	})
-
-
-	$(".container").on("dragright dragleft",function(e){
-		e.gesture.preventDefault();
-	})
 })
