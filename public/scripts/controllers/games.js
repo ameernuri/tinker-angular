@@ -1294,4 +1294,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			}
 		}
 	})
+
+	$scope.fixScroll() {
+		return false;
+	}
 })
