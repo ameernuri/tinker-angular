@@ -985,7 +985,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$('.edit-form-wrap').hide()
 		$('.editable-switch').fadeIn(500)
-		$('.edit-details-wrap').hide()
+		$('.game-form-content').show()
+		$('.edit-more-wrap').hide()
 
 		$scope.editing = false
 
@@ -1157,8 +1158,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			.addClass('ready')
 	}
 
-	$scope.showEditButtons = function() {
-		$('.edit-details-wrap').slideDown()
+	$scope.showEditMore = function() {
+		$('.game-form-content').hide()
+		$('.edit-more-wrap').fadeIn()
+
 		return false
 	}
 
@@ -1290,5 +1293,10 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				$scope.replaceTypeahead()
 			}
 		}
+	})
+
+
+	$(".container").on("dragright dragleft",function(e){
+		e.gesture.preventDefault();
 	})
 })

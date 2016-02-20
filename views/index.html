@@ -42,7 +42,12 @@
 		<img ng-show="currentGame._id != '_endgame'" class="logo simple" src="images/logo_icon.svg" ng-click="setCurrentGame('_endgame')">
 	</div>
 
-	<div hm-swipeleft="tab2()" hm-swiperight="openCurrentParent()" class="games-container container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2" style="float: left">
+	<div
+		hm-swipeleft="fixScroll();tab2()"
+		hm-swiperight="fixScroll();openCurrentParent()"
+		class="games-container container sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2"
+		style="float: left"
+	>
 		<div class="container-content">
 			<%- include partials/content.html %>
 		</div>

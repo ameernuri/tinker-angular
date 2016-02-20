@@ -486,12 +486,13 @@ input {
 
 						.ellipsis {
 							float: left;
-							font-size: 10px;
-							padding: 5px 0;
+							font-size: 13px;
+							font-weight: bold;
 							color: @gray6;
+							transition: .5s;
 
 							&:hover {
-								color: @white9;
+								color: @white6;
 							}
 						}
 					}
@@ -520,22 +521,52 @@ input {
 				}
 			}
 
-			.edit-details-wrap {
+			.edit-more-wrap {
 				display: none;
 				width: 100%;
-				border-top: 1px solid @dark5;
 				color: @dark10;
+				padding: 0 20px;
+
+				.current-game-text {
+					color: @white9;
+					padding: 10px 0;
+					display: block;
+				}
 
 				.button {
 					background: none;
-					padding: 10px 20px;
+					padding: 10px 0;
 					font-size: 12px;
-					display: block;
+					display: inline-block;
 					color: @light1;
 					transition: .5s;
 
 					&:hover {
-						color: @light6;
+						color: @white6;
+					}
+				}
+
+				.delete {
+					.fa {
+						color: @red;
+					}
+				}
+
+				.add-inbetween {
+					border: 1px solid @dark5;
+					border-width: 1px 0;
+					color: @gray3;
+					text-align: center;
+					font-size: 12px;
+					padding: 10px 0;
+					transition: .5s;
+
+					.fa-carret-down, .fa-carret-up {
+						color: @gray1;
+					}
+
+					&:hover {
+						color: @white6;
 					}
 				}
 			}
