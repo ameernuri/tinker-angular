@@ -5,6 +5,7 @@ tinker.run(function($pouchdb) {
 })
 
 var remote = 'https://penser:cloudant@penser.cloudant.com/games'
+var remote2 = '//penser:cloudant@penser.cloudant.com/games'
 
 getTypeahead = function(input) {
 	var output = input
@@ -322,6 +323,11 @@ generateId = function() {
 }
 
 PouchDB.sync('games', remote, {
+	live: true,
+	retry: true
+})
+
+PouchDB.sync('games', remote2, {
 	live: true,
 	retry: true
 })
