@@ -2,7 +2,6 @@ var app = angular.module('tinker', [
 	'pouchdb',
 	'ionic',
 	'angularMoment',
-	'hmTouchEvents'
 ]),
 
 remote = 'https://penser:cloudant@penser.cloudant.com/games'

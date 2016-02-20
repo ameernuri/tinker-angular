@@ -11,12 +11,10 @@
 	<link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" media="screen" charset="utf-8">
 
 	<link rel="stylesheet" href="lib/ionic/release/css/ionic.min.css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="styles/main.css" media="screen" charset="utf-8">
+	<!-- <link rel="stylesheet" href="styles/main.css" media="screen" charset="utf-8"> -->
 	<link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css" media="screen" charset="utf-8">
 
 	<script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
-	<script type="text/javascript" src="lib/jquery-ui/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="lib/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript" src="lib/angular/angular.min.js"></script>
 	<script type="text/javascript" src="lib/pouchdb/dist/pouchdb.min.js"></script>
 	<script type="text/javascript" src="lib/sugar/release/sugar.min.js"></script>
@@ -24,15 +22,26 @@
 	<script type="text/javascript" src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="lib/moment/min/moment.min.js"></script>
 	<script type="text/javascript" src="lib/angular-moment/angular-moment.min.js"></script>
-	<script type="text/javascript" src="lib/hammerjs/hammer.min.js"></script>
-	<script type="text/javascript" src="lib/AngularHammer/angular.hammer.min.js"></script>
 	<script type="text/javascript" src="lib/ionic/release/js/ionic.bundle.min.js"></script>
 
 	<script type="text/javascript" src="scripts/app.js"></script>
 	<script type="text/javascript" src="scripts/controllers/games.js"></script>
 </head>
 <body ng-controller="GamesCtrl">
-	<div class="header sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2">
+
+	<div class="bar bar-header bar-light">
+	  <h1 class="title">bar-light</h1>
+	</div>
+
+
+
+	<ion-nav-view>
+		<div class="container-content">
+			<%- include partials/content.html %>
+		</div>
+	</ion-nav-view>
+
+	<!-- <div class="header sm-12 st-12 lt-8 sd-6 sd-push-2 ld-5 ld-push-2">
 		<div class="back-button" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()">
 			<span class="fa fa-chevron-left"></span>
 		</div>
@@ -79,6 +88,6 @@
 			</ul>
 
 		</div>
-	</div>
+	</div> -->
 </body>
 </html>
