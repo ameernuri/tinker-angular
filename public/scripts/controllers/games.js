@@ -1,5 +1,6 @@
 var app = angular.module('tinker', [
 	'pouchdb',
+	'ionic',
 	'angularMoment',
 	'hmTouchEvents'
 ]),

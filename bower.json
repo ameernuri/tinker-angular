@@ -1,6 +1,6 @@
 {
   "name": "Tinker",
-  "description": "The Tinker App",
+  "description": "Tinker...",
   "main": "app.js",
   "authors": [
     "Ameer Nuri"
@@ -22,7 +22,8 @@
     "angular-pouchdb": "~4.0.0",
     "sugar": "sugarjs#~1.4.1",
     "angular-route": "^1.5.0",
-    "AngularHammer": "ryanmullins-angular-hammer#^2.1.10"
+    "AngularHammer": "ryanmullins-angular-hammer#^2.1.10",
+    "ionic": "^1.2.4"
   },
   "resolutions": {
     "bootstrap": "~3.3.6",
