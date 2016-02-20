@@ -1,9 +1,5 @@
 var tinker = angular.module('tinker', ['pouchDB'])
 
-tinker.run(function($pouchdb) {
-  $pouchdb.setDatabase("games")
-})
-
 var remote = 'https://penser:cloudant@penser.cloudant.com/games'
 var remote2 = '//penser:cloudant@penser.cloudant.com/games'
 
