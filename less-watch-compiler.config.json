@@ -1,7 +1,7 @@
 {
   "allowedExtensions":[".less"],
   "defaults": {
-    "watchFolder": "public/styles",
-    "outputFolder": "public/styles"
+    "watchFolder": "www/css",
+    "outputFolder": "www/css"
   }
 }

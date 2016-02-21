@@ -9,7 +9,7 @@
 	<span ng-show="currentGame._id != '_endgame'">
 		<span class="editable">
 			<div ng-click="showEditForm()" class="editable-switch">
-				<%- include currentGameText.html %>
+				<div ng-include src="'templates/currentGameText.html'"></div>
 			</div>
 
 			<div class="edit-form-wrap">
@@ -22,8 +22,7 @@
 								Add Above
 							</div>
 
-							<%- include currentGameText.html %>
-
+							<div ng-include src="'templates/currentGameText.html'"></div>
 
 							<div class="add-inbetween add-below">
 								<span class="fa fa-plus-circle"></span>

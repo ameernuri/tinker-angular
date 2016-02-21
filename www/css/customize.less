@@ -1,0 +1,47 @@
+@import "components/_colors";
+
+* {
+	font-family: 'lato', 'helvetica neue';
+}
+
+.bar.bar-header {
+	border: none;
+	background: @dark4;
+	color: @white5;
+
+	h1 {
+		color: @white5;
+	}
+
+	&.side-header {
+		background: @dark5;
+
+		h1 {
+			text-align: left;
+			font-weight: normal;
+			margin-left: 20px;
+		}
+	}
+
+	.logo {
+		max-height: 100%;
+		padding: 8px;
+	}
+
+	.simple-logo {
+		width: 40px;
+		padding: 4px;
+	}
+
+	.buttons {
+		margin-left: 15px;
+
+		.button {
+			font-size: 25px;
+		}
+	}
+}
+
+.main-content.scroll-content {
+	background: @dark5;
+}

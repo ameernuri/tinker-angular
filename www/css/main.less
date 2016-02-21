@@ -128,12 +128,6 @@ div {
 	font-weight: 500;
 }
 
-html, body {
-	height: 100%;
-	width: 100%;
-	overflow: auto;
-}
-
 body {
 	font-family: 'lato', 'helvetica neue';
 	font-weight: 200;
@@ -273,23 +267,6 @@ input {
 	left: 100%;
 }
 
-.container {
-	margin: 0 auto;
-	height: 100%;
-	padding: 0;
-	overflow: auto;
-	max-width: inherit;
-
-	.container-content {
-		width: 100%;
-		min-height: 100%;
-		background: @dark5;
-		margin: 0 auto;
-		margin-top: 60px;
-		overflow: auto;
-	}
-}
-
 @media only screen and (max-width: @lt) {
 
 	.tab-2 {
@@ -356,47 +333,42 @@ input {
 }
 
 .prio-container {
-  z-index: 200;
+	background: @dark6;
 
-	.container-content {
-		margin: 0;
-		background: @dark6;
+	h4 {
+		background: @dark5;
+		padding: 5px 20px;
+		border-bottom: 1px solid @dark7;
+		margin-top: 20px;
+		font-size: 14px;
+		font-weight: normal;
+	}
 
-		h4 {
-			background: @dark5;
-			padding: 5px 20px;
-			border-bottom: 1px solid @dark7;
-			margin-top: 20px;
-			font-size: 14px;
-			font-weight: normal;
-		}
+	.no-games {
+		font-style: italic;
+		text-align: center;
+	}
 
-		.no-games {
-			font-style: italic;
-			text-align: center;
-		}
+	ul {
+		li {
+			padding: 5px 0;
+			margin: 0 20px;
+			list-style: none;
+			border-bottom: 1px solid @dark5;
+			cursor: pointer;
 
-		ul {
-			li {
-				padding: 5px 0;
-				margin: 0 20px;
-				list-style: none;
-				border-bottom: 1px solid @dark5;
+			* {
 				cursor: pointer;
+			}
 
-				* {
-					cursor: pointer;
-				}
+			.game-wrap {
+				font-size: 16px;
+				color: @light6;
+			}
 
-				.game-wrap {
-					font-size: 16px;
-					color: @light6;
-				}
-
-				.info-wrap {
-					font-size: 12px;
-					color: @gray1;
-				}
+			.info-wrap {
+				font-size: 12px;
+				color: @gray1;
 			}
 		}
 	}
