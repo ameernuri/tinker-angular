@@ -461,6 +461,7 @@ input {
 							font-size: 13px;
 							color: @gray6;
 							transition: .5s;
+							font-weight: normal;
 
 							&:hover {
 								color: @white6;
@@ -480,7 +481,7 @@ input {
 
 						&.game-input {
 							font-size: 25px;
-							padding: 0 20px 5px 28px;
+							padding: 0 20px 5px 8px;
 							color: @white7;
 						}
 
@@ -529,8 +530,16 @@ input {
 					color: @gray3;
 					text-align: center;
 					font-size: 12px;
-					padding: 10px 0;
+					padding: 4px 0;
 					transition: .5s;
+
+					&.add-above {
+						margin-bottom: 5px;
+					}
+
+					&.add-below {
+						margin-top: 5px;
+					}
 
 					.fa-carret-down, .fa-carret-up {
 						color: @gray1;
@@ -552,6 +561,7 @@ input {
 		.game-info-wrap {
 			color: @gray3;
 			font-size: 15px;
+			margin-top: 5px;
 
 			.fa {
 				width: 20px;
@@ -713,6 +723,7 @@ input {
 
 		.game-text-priority {
 			cursor: pointer;
+			margin-top: 2px;
 
 			.fa {
 				animation: popIn .5s ease;
@@ -771,7 +782,7 @@ input {
 				.game-text-priority {
 					position: absolute;
 					left: 20px;
-					top: 15px;
+					top: 5px;
 					color: @white7;
 					font-size: 18px;
 				}
@@ -782,8 +793,8 @@ input {
 
 				.typeahead {
 					position: absolute;
-					left: 22.5px;
-					top: 5px;
+					left: 23px;
+					top: 8px;
 
 					.typeahead-puhser {
 						visibility: hidden;
@@ -849,7 +860,7 @@ input {
 
 				&.game-input {
 					font-size: 18px;
-					padding: 15px 20px 10px 40px;
+					margin: 5px 20px;
 				}
 
 				&.time-input, &.repeat-input {
@@ -885,6 +896,7 @@ input {
 					.button-icon {
 						font-size: 20px;
 						color: @green;
+						padding: 0;
 					}
 
 					.button-text {
@@ -972,7 +984,7 @@ input {
 		li.child {
 			list-style: none;
 			padding: 5px;
-			margin: 0 15px;
+			margin: 0 15px 0 25px;
 			overflow: auto;
 			position: relative;
 			min-height: 70px;

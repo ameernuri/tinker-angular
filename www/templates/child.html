@@ -16,13 +16,13 @@
 <span class="state-wrap" ng-mouseover="showStateButtons($event)" ng-mouseleave="hideStateButtons($event)">
 	<span class="touch-block"></span>
 	<span ng-class="{active: game.doc.plays[game.doc.plays.length-1].state == 'lost'}" class="state lost" ng-click="setState(game.doc._id, 'lost')">
-		<span class="fa fa-times"></span>
+		<span class="ion-close"></span>
 	</span>
 	<span ng-class="{active: game.doc.plays[game.doc.plays.length-1].state == 'playing'}" class="state playing" ng-click="setState(game.doc._id, 'playing')">
 		<span class="fa fa-circle-o"></span>
 	</span>
 	<span ng-class="{active: game.doc.plays[game.doc.plays.length-1].state == 'won'}" class="state won" ng-click="setState(game.doc._id, 'won')">
-		<span class="fa fa-check"></span>
+		<span class="ion-checkmark"></span>
 	</span>
 </span>
 

@@ -186,13 +186,13 @@
 
 			<span class="current-game-state">
 				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'lost'}" class="game-state lost" ng-click="setState(currentGame._id, 'lost')">
-					<span class="fa fa-times"></span>
+					<span class="ion-close"></span>
 				</span>
 				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'playing'}" class="game-state playing" ng-click="setState(currentGame._id, 'playing')">
 					<span class="fa fa-circle-o"></span>
 				</span>
 				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'won'}" class="game-state won" ng-click="setState(currentGame._id, 'won')">
-					<span class="fa fa-check"></span>
+					<span class="ion-checkmark"></span>
 				</span>
 			</span>
 		</div>

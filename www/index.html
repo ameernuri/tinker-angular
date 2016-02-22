@@ -45,15 +45,14 @@
 				</button>
       </ion-header-bar>
       <ion-content on-swipe-right="openCurrentParent()" class="main-content">
-		    <ion-refresher pulling-text="Sync" on-refresh="">
+		    <ion-refresher pulling-text="Sync" on-refresh="doSync()" pulling-icon="ion-android-sync">
 				</ion-refresher>
 
 				<div ng-include="" src="&apos;templates/content.html&apos;"></div>
-
       </ion-content>
     </ion-side-menu-content>
 
-    <ion-side-menu expose-aside-when="large" maxwidth="50" side="right">
+    <ion-side-menu expose-aside-when="large" side="right">
       <ion-header-bar class="side-header">
         <h1 class="title">Next Priorities</h1>
       </ion-header-bar>
