@@ -1,48 +1,7 @@
+@import "components/_colors";
+@import "components/_fonts";
 @import "components/_grid";
 @import "components/_screens";
-
-@dark1: darken(@dark2, 1%);
-@dark2: darken(@dark3, 1%);
-@dark3: darken(@dark4, 1%);
-@dark4: darken(@dark5, 3%);
-@dark5: #202427;
-@dark6: lighten(@dark5, 2%);
-@dark7: lighten(@dark6, 3%);
-@dark8: lighten(@dark7, 3%);
-@dark9: lighten(@dark8, 3%);
-@dark10: lighten(@dark9, 3%);
-@dark11: lighten(@dark10, 3%);
-@dark12: lighten(@dark11, 3%);
-
-@gray1: #4f5254;
-@gray2: lighten(@gray1, 3%);
-@gray3: lighten(@gray2, 4%);
-@gray4: lighten(@gray3, 5%);
-@gray5: lighten(@gray4, 5%);
-@gray6: lighten(@gray5, 5%);
-
-@light1: #646566;
-@light2: lighten(@light1, 3%);
-@light3: lighten(@light2, 4%);
-@light4: lighten(@light3, 5%);
-@light5: lighten(@light4, 5%);
-@light6: lighten(@light5, 5%);
-
-@white1: #999a9b;
-@white2: lighten(@white1, 3%);
-@white3: lighten(@white2, 4%);
-@white4: lighten(@white3, 4%);
-@white5: lighten(@white4, 5%);
-@white6: lighten(@white5, 5%);
-@white7: lighten(@white6, 5%);
-@white8: lighten(@white7, 5%);
-@white9: lighten(@white8, 5%);
-
-
-@green: #6a5;
-@red: #e36;
-@yellow: #ed2;
-@blue: #35a;
 
 @keyframes popIn {
 	0% {
@@ -67,6 +26,7 @@
 * {
 	padding: 0;
 	margin: 0;
+	font-family: 'lato', 'helvetica neue';
 
 	&:focus {
 		outline: none;
@@ -86,52 +46,13 @@ div {
 	cursor: default;
 }
 
-@font-face {
-	font-family: 'Lato';
-	src: url('../fonts/Lato/Lato-Light.woff2');
-	font-style: normal;
-	font-weight: 200;
-}
-
-@font-face {
-	font-family: 'Lato';
-	src: url('../fonts/Lato/Lato-LightItalic.woff2');
-	font-style: italic;
-	font-weight: 200;
-}
-
-@font-face {
-	font-family: 'Lato';
-	src: url('../fonts/Lato/Lato-Regular.woff2');
-	font-style: normal;
-	font-weight: normal;
-}
-
-@font-face {
-	font-family: 'Lato';
-	src: url('../fonts/Lato/Lato-Italic.woff2');
-	font-style: italic;
-	font-weight: normal;
-}
-
-@font-face {
-	font-family: 'Lato';
-	src: url('../fonts/Lato/Lato-Semibold.woff2');
-	font-style: normal;
-	font-weight: 500;
-}
-
-@font-face {
-	font-family: 'Lato';
-	src: url('../fonts/Lato/Lato-SemiboldItalic.woff2');
-	font-style: italic;
-	font-weight: 500;
+html, body {
+	background: @dark3;
 }
 
 body {
 	font-family: 'lato', 'helvetica neue';
 	font-weight: 200;
-	background: @dark3;
 	color: @gray3;
 	-webkit-overflow-scrolling: touch;
 }
@@ -833,6 +754,7 @@ input {
 				color: @gray6;
 				padding: 5px 20px;
 				font-size: 15px;
+				font-weight: 100;
 				transition: .5s;
 				display: block;
 
@@ -861,6 +783,23 @@ input {
 				&.game-input {
 					font-size: 18px;
 					margin: 5px 20px;
+
+
+					&::-webkit-input-placeholder {
+						padding-top: 3px;
+					}
+
+					&:-moz-placeholder {
+						padding-top: 3px;
+					}
+
+					&::-moz-placeholder {
+						padding-top: 3px;
+					}
+
+					&:-ms-input-placeholder {
+						padding-top: 3px;
+					}
 				}
 
 				&.time-input, &.repeat-input {

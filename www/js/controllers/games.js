@@ -26,22 +26,6 @@ app.filter('repeatTime', function() {
   }
 })
 
-app.directive(
-	'appLoaderWrap',
-	function($animate) {
-		return({
-			link: link,
-			restrict: 'C'
-		})
-
-		function link(scope, element, attributes) {
-			element.find('.app-loader').animate({opacity: 0}, function() {
-				element.remove()
-			})
-		}
-	}
-)
-
 app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	var db = pouchDB('games'),
 	changes = db.changes({live: true, since: 'now'}),
@@ -548,7 +532,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 					$scope.game.repeat = ''
 					$scope.game.priority = 4
 
-					$('.form-wrap .repeat-input').slideUp()
+					$('.form-wrap .repeat-input').hide()
 				}).catch(function(err) {
 					console.log(err)
 				})
@@ -937,34 +921,19 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 	$scope.showForm = function() {
 		$('.form-wrap .form-content-wrap')
-			.css('opacity', 0)
-			.slideDown()
-			.animate({
-				opacity: 1
-			})
+			.show()
 			.find('.game-input').focus()
+
 		$('.form-wrap .form-switch')
 			.hide()
-			.css('opacity', 0)
 	}
 
 	$scope.hideForm = function() {
-		$('.form-wrap .form-content-wrap')
-			.animate({
-				opacity: 0
-			})
-			.slideUp(function() {
-				$('.form-wrap .form-switch')
-					.fadeIn(200)
-					.css('opacity', 1)
-			})
+		$('.form-wrap .form-content-wrap').hide()
+		$('.form-wrap .form-switch').show()
 
-			$('.form-wrap .form-switch').animate({
-				opacity: 1
-			})
-
-			$scope.addForm.time.error = false
-			$scope.addForm.time.success = false
+		$scope.addForm.time.error = false
+		$scope.addForm.time.success = false
 
 	}
 
@@ -1015,13 +984,13 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 	$scope.showRepeatInput = function() {
 		$('.form-wrap .repeat-input')
-			.slideDown()
+			.toggle()
 			.focus()
 	}
 
 	$scope.hideRepeatInput = function() {
 		$('.form-wrap .repeat-input')
-			.slideUp()
+			.hide()
 	}
 
 	$scope.tab2 = function() {
@@ -1066,25 +1035,8 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$scope.fetchChildren(id, function(games) {
 			$scope.games = games
-			$('.children').css({
-				'margin-left': 60,
-				opacity: 0
-			}).animate({
-				'margin-left': 0,
-				opacity: 1
-			})
 
 			$('.no-games').css('opacity', 1)
-		})
-
-		$('.current-game-text').css({
-			'margin-left': -60,
-			'zoom': .6,
-			opacity: 0
-		}).animate({
-			'margin-left': 0,
-			'zoom': 1,
-			opacity: 1
 		})
 
 		$('.no-games').css('opacity', 0)
@@ -1115,9 +1067,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				console.error(err)
 			})
 		}
-
-		$('.container').animate({ scrollTop: 0})
-		$('body').animate({ scrollTop: 0})
 
 		$.each($('.children .child'), function() {
 			$(this).css({
