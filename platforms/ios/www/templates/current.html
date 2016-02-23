@@ -1,0 +1,201 @@
+<div class="current-game">
+	<span ng-show="currentGame._id == '_endgame'" class="end-game-text">
+		<span class="current-game-text">
+			<span class="fa fa-stop end-icon"></span>
+			End Games
+		</span>
+	</span>
+
+	<span ng-show="currentGame._id != '_endgame'">
+		<span class="editable">
+			<div ng-click="showEditForm()" class="editable-switch">
+				<div ng-include src="'templates/currentGameText.html'"></div>
+			</div>
+
+			<div class="edit-form-wrap">
+				<div class="form-content-wrap">
+					<form class="game-form" method="post" ng-submit="saveEdit()">
+
+						<div class="edit-more-wrap">
+							<div class="add-inbetween add-above">
+								<span class="ion-plus-circled"></span>
+								Add Above
+							</div>
+
+							<div ng-include src="'templates/currentGameText.html'"></div>
+
+							<div class="add-inbetween add-below">
+								<span class="ion-plus-circled"></span>
+								Add Below
+							</div>
+							<span class="delete button" ng-click="delete()">
+								<span class="fa fa-trash"></span>
+								Delete Game
+							</span>
+							<span class="move button">
+								<span class="ion-shuffle"></span>
+								Change Parent
+							</span>
+						</div>
+
+						<div class="game-form-content">
+							<div class="game-text-wrap">
+								<span class="game-text-priority" ng-click="nextEditPriority()">
+									<span ng-show="editForm.priority.value == 8" class="fa fa-circle"></span>
+									<span ng-show="editForm.priority.value == 4" class="fa fa-dot-circle-o"></span>
+									<span ng-show="editForm.priority.value == 2" class="fa fa-circle-o"></span>
+								</span>
+
+								<input ng-model="editForm.game.text" type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's the Game?">
+							</div>
+							<div class="game-time-wrap">
+								<input ng-model="editForm.time.text" ng-keyup="validateEditTime()" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off">
+								<div ng-show="editForm.time.error != false && editForm.time.error != undefined" class="error time-error">
+									<span class="fa fa-circle"></span>
+									{{editForm.time.error}}
+								</div>
+								<div ng-show="editForm.time.success != false && editForm.time.success != undefined" class="success">
+									<span class="fa fa-circle"></span>
+									ends {{editForm.time.success}}
+								</div>
+							</div>
+
+							<div class="game-priority">
+								<span class="field-label">Priority:</span>
+								<label for="edit-high-radio">
+									<input id="edit-high-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="8" ng-click="focusOnEditGame()">
+									<span>
+										<span class="fa fa-circle"></span>
+										High
+									</span>
+								</label>
+
+								<label for="edit-mid-radio">
+									<input id="edit-mid-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="4" ng-click="focusOnEditGame()">
+									<span>
+										<span class="fa fa-dot-circle-o"></span>
+										Mid
+									</span>
+								</label>
+
+								<label for="edit-low-radio">
+									<input id="edit-low-radio" type="radio" ng-model="editForm.priority.value" name="priority" ng-value="2" ng-click="focusOnEditGame()">
+									<span>
+										<span class="fa fa-circle-o"></span>
+										Low
+									</span>
+								</label>
+							</div>
+						</div>
+
+						<div class="buttons-wrap">
+							<span class="ellipsis" ng-click="showEditMore()">
+								<span class="button-icon">&bull;&bull;&bull;</span>
+								<span class="button-text">more</span>
+							</span>
+
+							<button type="submit" class="submit-button">
+								<span class="button-text">
+									Save
+								</span>
+								<span class="ion-checkmark-circled button-icon">
+								</span>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</span>
+
+		<div class="game-state-wrap">
+			<div class="replay-wrap" ng-show="currentGame.plays[currentGame.plays.length-1].state != 'playing' && (currentGame.repeat == '' || currentGame.repeat == undefined || currentGame.repeat == false)">
+				<button class="replay-form-switch" ng-click="showReplayForm()">
+					<span class="fa fa-rotate-right"></span>
+					<span>Play Again</span>
+				</button>
+
+
+				<div class="replay-form-wrap">
+					<div class="game-text-wrap" ng-click="focusOnReplayTime()">
+						<span class="game-text-priority" ng-click="nextReplayPriority()">
+							<span ng-show="replayForm.priority.value == 8" class="fa fa-circle"></span>
+							<span ng-show="replayForm.priority.value == 4" class="fa fa-dot-circle-o"></span>
+							<span ng-show="replayForm.priority.value == 2" class="fa fa-circle-o"></span>
+						</span>
+
+						<span type="text" name="game" class="game-input" autofocus="autofocus" autocomplete="off" placeholder="What's the Game?">
+							{{currentGame.game}}
+						</span>
+					</div>
+
+					<div class="form-content-wrap">
+						<form class="game-form" method="post" ng-submit="createReplay()">
+							<div class="game-form-content">
+								<div class="game-time-wrap">
+									<input ng-model="replayForm.time.text" ng-keyup="validateReplayTime()" type="text" name="end-time" placeholder="Replay End Time" class="time-input" autocomplete="off">
+									<div ng-show="replayForm.time.error != false && replayForm.time.error != undefined" class="error time-error">
+										<span class="fa fa-circle"></span>
+										{{replayForm.time.error}}
+									</div>
+									<div ng-show="replayForm.time.success != false && replayForm.time.success != undefined" class="success">
+										<span class="fa fa-circle"></span>
+										ends {{replayForm.time.success}}
+									</div>
+								</div>
+
+								<div class="game-priority">
+									<span class="field-label">Priority:</span>
+									<label for="replay-high-radio">
+										<input id="replay-high-radio" type="radio" ng-model="replayForm.priority.value" name="priority" ng-value="8" ng-click="focusOnReplayTime()">
+										<span>
+											<span class="fa fa-circle"></span>
+											High
+										</span>
+									</label>
+
+									<label for="replay-mid-radio">
+										<input id="replay-mid-radio" type="radio" ng-model="replayForm.priority.value" name="priority" ng-value="4" ng-click="focusOnReplayTime()">
+										<span>
+											<span class="fa fa-dot-circle-o"></span>
+											Mid
+										</span>
+									</label>
+
+									<label for="replay-low-radio">
+										<input id="replay-low-radio" type="radio" ng-model="replayForm.priority.value" name="priority" ng-value="2" ng-click="focusOnReplayTime()">
+										<span>
+											<span class="fa fa-circle-o"></span>
+											Low
+										</span>
+									</label>
+								</div>
+							</div>
+
+							<div class="buttons-wrap">
+								<button type="submit" class="submit-button">
+									<span class="button-text">
+										Create Replay
+									</span>
+									<span class="ion-plus-circled button-icon">
+									</span>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<span class="current-game-state">
+				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'lost'}" class="game-state lost" ng-click="setState(currentGame._id, 'lost')">
+					<span class="ion-close"></span>
+				</span>
+				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'playing'}" class="game-state playing" ng-click="setState(currentGame._id, 'playing')">
+					<span class="fa fa-circle-o"></span>
+				</span>
+				<span ng-class="{active: currentGame.plays[currentGame.plays.length-1].state == 'won'}" class="game-state won" ng-click="setState(currentGame._id, 'won')">
+					<span class="ion-checkmark"></span>
+				</span>
+			</span>
+		</div>
+	</span>
+</div>

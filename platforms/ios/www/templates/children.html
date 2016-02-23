@@ -1,0 +1,51 @@
+<div class="children-wrap">
+	<div class="no-games" ng-show="games.length == 0">
+		No
+		<span ng-show="currentGame._id == '_endgame'">end</span>
+		<span ng-show="currentGame._id != '_endgame'">sub</span>
+		games added yet
+	</div>
+
+	<ul class="sortable children">
+		<li class="child"
+			ng-class="{
+				done: game.doc.plays[game.doc.plays.length-1].state != 'playing'
+			}"
+			ng-repeat="game in games"
+			data-pos="{{game.doc.position}}"
+			data-id="{{game.doc._id}}"
+			ng-click="openGame($event)"
+			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'playing'"
+		>
+			<div ng-include src="'templates/child.html'"></div>
+		</li>
+	</ul>
+
+	<ul class="sortable children won-and-lost">
+		<li class="child"
+			ng-class="{
+				done: game.doc.plays[game.doc.plays.length-1].state != 'playing'
+			}"
+			ng-repeat="game in games"
+			data-pos="{{game.doc.position}}"
+			data-id="{{game.doc._id}}"
+			ng-click="openGame($event)"
+			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'won'"
+		>
+			<div ng-include src="'templates/child.html'"></div>
+		</li>
+
+		<li class="child"
+			ng-class="{
+				done: game.doc.plays[game.doc.plays.length-1].state != 'playing'
+			}"
+			ng-repeat="game in games"
+			data-pos="{{game.doc.position}}"
+			data-id="{{game.doc._id}}"
+			ng-click="openGame($event)"
+			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'lost'"
+		>
+			<div ng-include src="'templates/child.html'"></div>
+		</li>
+	</ul>
+</div>

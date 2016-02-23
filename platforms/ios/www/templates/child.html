@@ -1,0 +1,45 @@
+<span class="game">
+	<span class="priority-wrap">
+		<span ng-show="game.doc.plays[game.doc.plays.length-1].priority == '8'" class="priority">
+			<span class="fa fa-circle icon high"></span>
+		</span>
+		<span ng-show="game.doc.plays[game.doc.plays.length-1].priority == '4'" class="priority">
+			<span class="fa fa-dot-circle-o icon mid"></span>
+		</span>
+		<span ng-show="game.doc.plays[game.doc.plays.length-1].priority == '2'" class="priority">
+			<span class="fa fa-circle-o icon low"></span>
+		</span>
+	</span>
+	{{game.doc.game}}
+</span>
+
+<span class="state-wrap" ng-mouseover="showStateButtons($event)" ng-mouseleave="hideStateButtons($event)">
+	<span class="touch-block"></span>
+	<span ng-class="{active: game.doc.plays[game.doc.plays.length-1].state == 'lost'}" class="state lost" ng-click="setState(game.doc._id, 'lost')">
+		<span class="ion-close"></span>
+	</span>
+	<span ng-class="{active: game.doc.plays[game.doc.plays.length-1].state == 'playing'}" class="state playing" ng-click="setState(game.doc._id, 'playing')">
+		<span class="fa fa-circle-o"></span>
+	</span>
+	<span ng-class="{active: game.doc.plays[game.doc.plays.length-1].state == 'won'}" class="state won" ng-click="setState(game.doc._id, 'won')">
+		<span class="ion-checkmark"></span>
+	</span>
+</span>
+
+<div class="info-wrap">
+	<span class="time-wrap">
+		<span class="text" am-time-ago="game.doc.plays[game.doc.plays.length-1].end"></span>
+
+		<span ng-show="game.doc.repeat != '' && game.doc.repeat != undefined && game.doc.repeat != false">
+			<span class="fa fa-refresh"></span> {{game.doc.repeat | repeatTime}}
+			{{game.doc.end | relativeTime }}
+		</span>
+	</span>
+
+	<span ng-show="game.doc.plays.length > 1">
+		&bull;
+
+		<span class="fa fa-rotate-right replay-icon"></span>
+		{{game.doc.plays.length}}
+	</span>
+</div>
