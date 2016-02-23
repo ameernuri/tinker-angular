@@ -1,10 +1,8 @@
 var app = angular.module('tinker', [
 	'pouchdb',
 	'ionic',
-	'angularMoment',
-]),
-
-remote = 'https://penser:cloudant@penser.cloudant.com/games'
+	'angularMoment'
+])
 
 app.filter('repeatTime', function() {
   return function(input) {
@@ -46,10 +44,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	var db = pouchDB('games'),
 	changes = db.changes({live: true, since: 'now'}),
 	numChanges = 0
-
-	db.info().catch(function (err) {
-		db = new PouchDB(remote)
-	})
 
 	sessionGame = window.sessionStorage.getItem('currentGame')
 
@@ -108,6 +102,39 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	}
 
+<<<<<<< HEAD
+	changes.on('change', function(change) {
+
+		$scope.findTrashed(function(trashed) {
+			$.each(trashed.rows, function() {
+				console.log($(this))
+				// $scope.delete(trashed.doc._id)
+			})
+		})
+
+
+		$scope.fetchPrios($scope.currentGame._id, function(prios) {
+			$scope.prios = prios
+		})
+
+		$scope.fetchChildren($scope.currentGame._id, function(games) {
+			$scope.games = games
+		})
+
+		if ($scope.currentGame._id != '_endgame') {
+			$scope.fetchOne($scope.currentGame._id, function(doc) {
+				$scope.currentGame = doc
+			}, function(err) {
+
+				if (err.status == 404) {
+					$scope.currentGame = {
+						_id: '_endgame'
+					}
+				} else {
+					console.error(err)
+				}
+			})
+=======
 	$scope.doSync = function() {
 
 		// db.replicate.to(remote, {
@@ -169,6 +196,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		ionContent.finishPullToRefresh()
 	}
+>>>>>>> ionic
 
 	changes.on('change', function(change) {
 		doSync()
@@ -560,8 +588,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			}).catch(function(err) {
 				console.log(err)
 			})
-		}).catch(function(err) {
-			console.log(err)
 		})
 	}
 

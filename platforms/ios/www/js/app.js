@@ -1,7 +1,6 @@
 var tinker = angular.module('tinker', ['pouchDB'])
 
-var remote = 'https://penser:cloudant@penser.cloudant.com/games'
-var remote2 = '//penser:cloudant@penser.cloudant.com/games'
+var remote = 'https://lvertedeeperedindewinger:9b259f919a413189f79794d9b5f0f3986f90d980@penser.cloudant.com/games'
 
 getTypeahead = function(input) {
 	var output = input
@@ -319,11 +318,6 @@ generateId = function() {
 }
 
 PouchDB.sync('games', remote, {
-	live: true,
-	retry: true
-})
-
-PouchDB.sync('games', remote2, {
 	live: true,
 	retry: true
 })
