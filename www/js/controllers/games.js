@@ -1,7 +1,7 @@
 var app = angular.module('tinker', [
 	'pouchdb',
 	'ionic',
-	'angularMoment',
+	'angularMoment'
 ]),
 
 remote = 'https://penser:cloudant@penser.cloudant.com/games'
@@ -92,36 +92,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	}
 
-	changes.on('change', function(change) {
-
-
-		db.replicate.to(remote, {
-			live: true,
-			retry: true
-		}).then(function() {
-			alert('replicated to remote')
-		}).catch(function(err) {
-			alert('not able to replicate to remote')
-			alert(error)
-		})
-
-		db.replicate.from(remote, {
-			live: true,
-			retry: true
-		}).then(function() {
-			alert('replicated from remote')
-		}).catch(function(err) {
-			alert('not able to replicate from remote')
-			alert(error)
-		})
-
-		$scope.findTrashed(function(trashed) {
-			$.each(trashed.rows, function() {
-				console.log($(this))
-				// $scope.delete(trashed.doc._id)
-			})
-		})
-
+	$scope.doSync = function() {
 
 		$scope.fetchPrios($scope.currentGame._id, function(prios) {
 			$scope.prios = prios
@@ -151,6 +122,12 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				console.error(err)
 			})
 		}
+
+    $scope.$broadcast('scroll.refreshComplete');
+	}
+
+	changes.on('change', function(change) {
+		$scope.doSync()
 	})
 
 	$scope.fetchChildren = function(parent, success, error) {
@@ -920,12 +897,11 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	}
 
 	$scope.showForm = function() {
-		$('.form-wrap .form-content-wrap')
-			.show()
-			.find('.game-input').focus()
+		$('.form-wrap .form-content-wrap').show(function() {
 
-		$('.form-wrap .form-switch')
-			.hide()
+			$('.form-wrap .game-input').focus()
+		})
+		$('.form-wrap .form-switch').hide()
 	}
 
 	$scope.hideForm = function() {
@@ -938,8 +914,9 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	}
 
 	$scope.showEditForm = function() {
-		$('.edit-form-wrap').fadeIn(500)
-		$('.edit-form-wrap .game-input').focus()
+		$('.edit-form-wrap').fadeIn(500, function() {
+			$('.edit-form-wrap .game-input').focus()
+		})
 		$('.editable-switch').hide()
 
 		$scope.editForm.game.text = $scope.currentGame.game
@@ -964,8 +941,9 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	}
 
 	$scope.showReplayForm = function() {
-		$('.replay-form-wrap').fadeIn(500)
-		$('.replay-form-wrap .time-input').focus()
+		$('.replay-form-wrap').fadeIn(500, function() {
+			$('.replay-form-wrap .time-input').focus()
+		})
 		$('.editable').hide()
 		$('.replay-form-switch').hide()
 
@@ -983,9 +961,9 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	}
 
 	$scope.showRepeatInput = function() {
-		$('.form-wrap .repeat-input')
-			.toggle()
-			.focus()
+		$('.form-wrap .repeat-input').toggle(function() {
+			$(this).focus()
+		})
 	}
 
 	$scope.hideRepeatInput = function() {

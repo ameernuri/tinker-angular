@@ -18,23 +18,23 @@
 
 						<div class="edit-more-wrap">
 							<div class="add-inbetween add-above">
-								<span class="fa fa-plus-circle"></span>
+								<span class="ion-plus-circled"></span>
 								Add Above
 							</div>
 
 							<div ng-include src="'templates/currentGameText.html'"></div>
 
 							<div class="add-inbetween add-below">
-								<span class="fa fa-plus-circle"></span>
+								<span class="ion-plus-circled"></span>
 								Add Below
 							</div>
 							<span class="delete button" ng-click="delete()">
 								<span class="fa fa-trash"></span>
 								Delete Game
 							</span>
-							<span class="move button" ng-click="delete()">
-								<span class="fa fa-arrows"></span>
-								Move Game
+							<span class="move button">
+								<span class="ion-shuffle"></span>
+								Change Parent
 							</span>
 						</div>
 
@@ -90,14 +90,15 @@
 
 						<div class="buttons-wrap">
 							<span class="ellipsis" ng-click="showEditMore()">
-								&bull;&bull;&bull; More
+								<span class="button-icon">&bull;&bull;&bull;</span>
+								<span class="button-text">more</span>
 							</span>
 
 							<button type="submit" class="submit-button">
 								<span class="button-text">
 									Save
 								</span>
-								<span class="fa fa-check-circle button-icon">
+								<span class="ion-checkmark-circled button-icon">
 								</span>
 							</button>
 						</div>
@@ -175,7 +176,7 @@
 									<span class="button-text">
 										Create Replay
 									</span>
-									<span class="fa fa-plus-circle button-icon">
+									<span class="ion-plus-circled button-icon">
 									</span>
 								</button>
 							</div>

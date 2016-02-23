@@ -40,7 +40,7 @@
 			  <h1 class="title" ng-show="currentGame._id == &apos;_endgame&apos;" ng-click="setCurrentGame(&apos;_endgame&apos;)">
 					<img class="logo" src="img/logo.svg">
 				</h1>
-				<button class="button button-clear" menu-toggle="right" ng-hide="$exposeAside.active">
+				<button class="button button-clear prio-switch" menu-toggle="right" ng-hide="$exposeAside.active">
 					<img src="img/triangle.svg">
 				</button>
       </ion-header-bar>
@@ -63,7 +63,7 @@
 				</div>
 
 				<ul>
-					<li ng-click="setCurrentGame(prio.doc._id); tab1()" ng-repeat="prio in prios">
+					<li menu-toggle="right" ng-click="setCurrentGame(prio.doc._id);" ng-repeat="prio in prios">
 						<div class="game-wrap">
 							<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 8}}" class="fa fa-circle"></span>
 							<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 4}}" class="fa fa-dot-circle-o"></span>
