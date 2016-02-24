@@ -6,6 +6,13 @@ var app = angular.module('tinker', [
 
 remote = 'https://penser:cloudant@penser.cloudant.com/games'
 
+app.config(function($ionicConfigProvider) {
+	$ionicConfigProvider.spinner.icon('crescent')
+  $ionicConfigProvider.views.transition('ios')
+  $ionicConfigProvider.tabs.style('standard').position('bottom')
+  $ionicConfigProvider.navBar.alignTitle('center').positionPrimaryButtons('left')
+})
+
 app.filter('repeatTime', function() {
   return function(input) {
     return 'every ' + Date.create(Date.create().getTime() + input).relative()
@@ -996,6 +1003,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$('.form-wrap .game-input').val('')
 		$('.form-wrap .time-input').val('')
+		$('.children-wrap').css('opacity', 0)
 
 		$scope.addForm.game.text =
 		$scope.addForm.game.success =
@@ -1006,18 +1014,28 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.addForm.time.info =
 		$scope.addForm.time.error =
 		$scope.addForm.time.typeahead = ''
-
-		$scope.fetchPrios(id, function(prios) {
-			$scope.prios = prios
-		})
+		$scope.games = []
+		
+		$('.children-wrap .no-games').hide()
 
 		$scope.fetchChildren(id, function(games) {
 			$scope.games = games
 
-			$('.no-games').css('opacity', 1)
-		})
+			$('.children-wrap .child')
+			.css('padding-bottom', 30)
+			.animate({
+				'padding-bottom': 0
+			})
 
-		$('.no-games').css('opacity', 0)
+			$('.children-wrap')
+			.animate({
+				'opacity': 1
+			}, function() {
+				setTimeout(function () {
+					$('.children-wrap .no-games').slideDown()
+				}, 500)
+			})
+		})
 
 		if (id == '_endgame') {
 			$scope.currentGame = { _id: id}
@@ -1043,15 +1061,9 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				}
 			}, function(err) {
 				console.error(err)
+				$('.children-wrap').css('opacity', 1)
 			})
 		}
-
-		$.each($('.children .child'), function() {
-			$(this).css({
-				opacity: 0,
-				'margin-left': -$(this).offset().top*.8
-			})
-		})
 	}
 
 	$scope.openGame = function(e) {

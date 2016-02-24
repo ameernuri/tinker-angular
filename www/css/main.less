@@ -98,12 +98,12 @@ input {
 
 			.game-wrap {
 				font-size: 16px;
-				color: @light6;
+				color: @white5;
 			}
 
 			.info-wrap {
 				font-size: 12px;
-				color: @gray1;
+				color: @light1;
 			}
 		}
 	}
@@ -250,7 +250,7 @@ input {
 					background: none;
 					padding: 10px 0;
 					font-size: 12px;
-					display: inline-block;
+					display: initial;
 					color: @light1;
 					transition: .5s;
 
@@ -474,6 +474,7 @@ input {
 		text-align: left;
 
 		.game-form {
+			overflow: auto;
 
 			.game-form-content {
 				margin-bottom: 10px;
@@ -735,7 +736,8 @@ input {
 
 		li.child {
 			list-style: none;
-			padding: 5px;
+			padding: 15px 5px 5px;
+			padding-right: 40px;
 			margin: 0 15px 0 25px;
 			overflow: auto;
 			position: relative;
@@ -773,10 +775,9 @@ input {
 			.info-wrap {
 				margin-top: 5px;
 				font-size: 14px;
+				color: @gray3;
 
 				.time-wrap {
-					color: @gray3;
-
 					.fa {
 						width: 14px;
 						text-align: center;

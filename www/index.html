@@ -33,11 +33,11 @@
     <ion-side-menu-content>
       <ion-header-bar class="main-header">
 			  <div class="buttons">
-			    <button class="button button-clear ion-chevron-left" ng-show="currentGame._id != &apos;_endgame&apos;" ng-click="openCurrentParent()"></button>
-					<img class="simple-logo" src="img/logo_icon.svg" ng-show="currentGame._id != &apos;_endgame&apos;" ng-click="setCurrentGame(&apos;_endgame&apos;)">
+			    <button class="button button-clear ion-chevron-left" ng-show="currentGame._id != '_endgame'" ng-click="openCurrentParent()"></button>
+					<img class="simple-logo" src="img/logo_icon.svg" ng-show="currentGame._id != '_endgame'" ng-click="setCurrentGame('_endgame')">
 				</div>
 
-			  <h1 class="title" ng-show="currentGame._id == &apos;_endgame&apos;" ng-click="setCurrentGame(&apos;_endgame&apos;)">
+			  <h1 class="title" ng-show="currentGame._id == '_endgame'" ng-click="setCurrentGame('_endgame')">
 					<img class="logo" src="img/logo.svg">
 				</h1>
 				<button class="button button-clear prio-switch" menu-toggle="right" ng-hide="$exposeAside.active">
@@ -48,11 +48,11 @@
 		    <ion-refresher pulling-text="Sync" on-refresh="doSync()" pulling-icon="ion-android-sync">
 				</ion-refresher>
 
-				<div ng-include="" src="&apos;templates/content.html&apos;"></div>
+				<div ng-include="" src="'templates/content.html'"></div>
       </ion-content>
     </ion-side-menu-content>
 
-    <ion-side-menu expose-aside-when="large" side="right">
+    <ion-side-menu expose-aside-when="(min-width: 660px)" side="right">
       <ion-header-bar class="side-header">
         <h1 class="title">Next Priorities</h1>
       </ion-header-bar>

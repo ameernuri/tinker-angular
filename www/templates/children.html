@@ -8,6 +8,7 @@
 
 	<ul class="sortable children">
 		<li class="child"
+			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'playing'"
 			ng-class="{
 				done: game.doc.plays[game.doc.plays.length-1].state != 'playing'
 			}"
@@ -15,7 +16,6 @@
 			data-pos="{{game.doc.position}}"
 			data-id="{{game.doc._id}}"
 			ng-click="openGame($event)"
-			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'playing'"
 		>
 			<div ng-include src="'templates/child.html'"></div>
 		</li>
@@ -23,6 +23,7 @@
 
 	<ul class="sortable children won-and-lost">
 		<li class="child"
+			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'won'"
 			ng-class="{
 				done: game.doc.plays[game.doc.plays.length-1].state != 'playing'
 			}"
@@ -30,12 +31,12 @@
 			data-pos="{{game.doc.position}}"
 			data-id="{{game.doc._id}}"
 			ng-click="openGame($event)"
-			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'won'"
 		>
 			<div ng-include src="'templates/child.html'"></div>
 		</li>
 
 		<li class="child"
+			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'lost'"
 			ng-class="{
 				done: game.doc.plays[game.doc.plays.length-1].state != 'playing'
 			}"
@@ -43,7 +44,6 @@
 			data-pos="{{game.doc.position}}"
 			data-id="{{game.doc._id}}"
 			ng-click="openGame($event)"
-			ng-show="game.doc.plays[game.doc.plays.length-1].state == 'lost'"
 		>
 			<div ng-include src="'templates/child.html'"></div>
 		</li>
