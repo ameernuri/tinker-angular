@@ -13,7 +13,12 @@
 	{{game.doc.game}}
 </span>
 
-<span class="state-wrap" ng-mouseover="showStateButtons($event)" ng-mouseleave="hideStateButtons($event)">
+<span
+	class="state-wrap"
+	on-tap="showStateButtons($event)" 
+	ng-mouseover="showStateButtons($event)"
+	ng-mouseleave="hideStateButtons($event)"
+>
 	<span class="touch-block"></span>
 	<span ng-class="{active: game.doc.plays[game.doc.plays.length-1].state == 'lost'}" class="state lost" ng-click="setState(game.doc._id, 'lost')">
 		<span class="ion-close"></span>

@@ -101,17 +101,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 	$scope.doSync = function() {
 
-		$scope.fetchChildrenState($scope.currentGame._id, 'playing', function(games) {
-			$scope.playingGames = games
-		})
-
-		$scope.fetchChildrenState($scope.currentGame._id, 'won', function(games) {
-			$scope.wonGames = games
-		})
-
-		$scope.fetchChildrenState($scope.currentGame._id, 'lost', function(games) {
-			$scope.lostGames = games
-		})
+		$scope.fetchChildrenState($scope.currentGame._id)
 
 		$scope.fetchPrios($scope.currentGame._id, function(prios) {
 			$scope.prios = prios
@@ -169,7 +159,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		})
 	}
 
-	$scope.fetchChildrenState = function(parent, state, success, error) {
+	$scope.fetchChildrenState = function(parent, success, error) {
 
 		if (success == undefined) {
 			success = function() {}
@@ -180,10 +170,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 
 		childrenMap = function(doc, emit) {
-		  if (
-				doc.parent == parent
-				&& doc.plays[doc.plays.length-1].state == state
-			) {
+		  if (doc.parent == parent) {
 
 		    emit([doc.position])
 		  }
@@ -193,10 +180,32 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			childrenMap,
 			{include_docs: true}
 		).then(function(games) {
+
+			$scope.playingGames = []
+			$scope.wonGames = []
+			$scope.lostGames = []
+
+			$.each(games.rows, function() {
+				var game = $(this)[0].doc
+
+				if (game.plays[game.plays.length-1].state == 'playing') {
+					$scope.playingGames.push($(this)[0])
+				}
+
+				if (game.plays[game.plays.length-1].state == 'won') {
+					$scope.wonGames.push($(this)[0])
+				}
+
+				if (game.plays[game.plays.length-1].state == 'lost') {
+					$scope.lostGames.push($(this)[0])
+				}
+			})
+
 			success(games.rows)
 		}).catch(function(err) {
 			error(err)
 		})
+
 	}
 
 	$scope.fetchOne = function(id, success, error) {
@@ -278,18 +287,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		window.sessionStorage.setItem('currentGame', '_endgame')
 
-		$scope.fetchChildrenState($scope.currentGame._id, 'playing', function(games) {
-			$scope.playingGames = games
-		})
-
-		$scope.fetchChildrenState($scope.currentGame._id, 'won', function(games) {
-			$scope.wonGames = games
-		})
-
-		$scope.fetchChildrenState($scope.currentGame._id, 'lost', function(games) {
-			$scope.lostGames = games
-		})
-
+		$scope.fetchChildrenState($scope.currentGame._id)
 		$scope.fetchPrios($scope.currentGame._id, function(prios) {
 			$scope.prios = prios
 		})
@@ -298,18 +296,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.fetchOne(sessionGame, function(doc) {
 			$scope.currentGame = doc
 
-			$scope.fetchChildrenState($scope.currentGame._id, 'playing', function(games) {
-				$scope.playingGames = games
-			})
-
-			$scope.fetchChildrenState($scope.currentGame._id, 'won', function(games) {
-				$scope.wonGames = games
-			})
-
-			$scope.fetchChildrenState($scope.currentGame._id, 'lost', function(games) {
-				$scope.lostGames = games
-			})
-
+			$scope.fetchChildrenState($scope.currentGame._id)
 			$scope.fetchPrios($scope.currentGame._id, function(prios) {
 				$scope.prios = prios
 			})
@@ -336,18 +323,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				_id: '_noparent'
 			}
 
-			$scope.fetchChildrenState($scope.currentGame._id, 'playing', function(games) {
-				$scope.playingGames = games
-			})
-
-			$scope.fetchChildrenState($scope.currentGame._id, 'won', function(games) {
-				$scope.wonGames = games
-			})
-
-			$scope.fetchChildrenState($scope.currentGame._id, 'lost', function(games) {
-				$scope.lostGames = games
-			})
-
+			$scope.fetchChildrenState($scope.currentGame._id)
 			$scope.fetchPrios($scope.currentGame._id, function(prios) {
 				$scope.prios = prios
 			})
@@ -1040,24 +1016,6 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			.hide()
 	}
 
-	$scope.tab2 = function() {
-
-		if ($(window).width() <= 660) {
-
-			$('body').addClass('tab-2')
-			$('body').removeClass('tab-1')
-		}
-	}
-
-	$scope.tab1 = function() {
-
-		if ($(window).width() <= 660) {
-
-			$('body').addClass('tab-1')
-			$('body').removeClass('tab-2')
-		}
-	}
-
 	$scope.setCurrentGame = function(id) {
 		if ($scope.currentGame._id == id) {
 			return true
@@ -1078,37 +1036,22 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.addForm.time.typeahead = ''
 
 		$scope.playingGames = []
+		$scope.wonGames = []
+		$scope.lostGames = []
 
 		$('.children-wrap .no-games').hide()
 
-
-		$scope.fetchChildrenState(id, 'playing', function(games) {
-			$scope.playingGames = games
-		})
-
-		$scope.fetchChildrenState(id, 'won', function(games) {
-			$scope.wonGames = games
-		})
-
-		$scope.fetchChildrenState(id, 'lost', function(games) {
-			$scope.lostGames = games
-		})
-
-		$scope.fetchChildren(id, function(games) {
-
-			$('.children-wrap .child')
-			.css('padding-bottom', 30)
-			.animate({
-				'padding-bottom': 0
-			})
+		$scope.fetchChildrenState(id, function() {
 
 			$('.children-wrap')
+			.css('margin-top', 50)
 			.animate({
+				'margin-top': 0,
 				'opacity': 1
 			}, function() {
 				setTimeout(function () {
-					$('.children-wrap .no-games').slideDown()
-				}, 500)
+					$('.children-wrap .no-games').fadeIn()
+				}, 300)
 			})
 		})
 

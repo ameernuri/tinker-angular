@@ -1,5 +1,12 @@
 <div class="children-wrap">
-	<div class="no-games" ng-show="games.length == 0">
+	<div
+		class="no-games"
+		ng-show="
+			playingGames.length == 0
+			&& wonGames.length == 0
+			&& lostGames.length == 0
+		"
+		>
 		No
 		<span ng-show="currentGame._id == '_endgame'">end</span>
 		<span ng-show="currentGame._id != '_endgame'">sub</span>
