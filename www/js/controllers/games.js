@@ -101,12 +101,20 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 	$scope.doSync = function() {
 
-		$scope.fetchPrios($scope.currentGame._id, function(prios) {
-			$scope.prios = prios
+		$scope.fetchChildrenState($scope.currentGame._id, 'playing', function(games) {
+			$scope.playingGames = games
 		})
 
-		$scope.fetchChildren($scope.currentGame._id, function(games) {
-			$scope.games = games
+		$scope.fetchChildrenState($scope.currentGame._id, 'won', function(games) {
+			$scope.wonGames = games
+		})
+
+		$scope.fetchChildrenState($scope.currentGame._id, 'lost', function(games) {
+			$scope.lostGames = games
+		})
+
+		$scope.fetchPrios($scope.currentGame._id, function(prios) {
+			$scope.prios = prios
 		})
 
 		if ($scope.currentGame._id != '_endgame') {
@@ -155,6 +163,36 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 
 		db.query(childrenMap, {include_docs: true}).then(function(games) {
+			success(games.rows)
+		}).catch(function(err) {
+			error(err)
+		})
+	}
+
+	$scope.fetchChildrenState = function(parent, state, success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		childrenMap = function(doc, emit) {
+		  if (
+				doc.parent == parent
+				&& doc.plays[doc.plays.length-1].state == state
+			) {
+
+		    emit([doc.position])
+		  }
+		}
+
+		db.query(
+			childrenMap,
+			{include_docs: true}
+		).then(function(games) {
 			success(games.rows)
 		}).catch(function(err) {
 			error(err)
@@ -240,24 +278,40 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		window.sessionStorage.setItem('currentGame', '_endgame')
 
-		$scope.fetchPrios($scope.currentGame._id, function(prios) {
-			$scope.prios = prios
+		$scope.fetchChildrenState($scope.currentGame._id, 'playing', function(games) {
+			$scope.playingGames = games
 		})
 
-		$scope.fetchChildren($scope.currentGame._id, function(games) {
-			$scope.games = games
+		$scope.fetchChildrenState($scope.currentGame._id, 'won', function(games) {
+			$scope.wonGames = games
+		})
+
+		$scope.fetchChildrenState($scope.currentGame._id, 'lost', function(games) {
+			$scope.lostGames = games
+		})
+
+		$scope.fetchPrios($scope.currentGame._id, function(prios) {
+			$scope.prios = prios
 		})
 	} else {
 
 		$scope.fetchOne(sessionGame, function(doc) {
 			$scope.currentGame = doc
 
-			$scope.fetchPrios($scope.currentGame._id, function(prios) {
-				$scope.prios = prios
+			$scope.fetchChildrenState($scope.currentGame._id, 'playing', function(games) {
+				$scope.playingGames = games
 			})
 
-			$scope.fetchChildren($scope.currentGame._id, function(games) {
-				$scope.games = games
+			$scope.fetchChildrenState($scope.currentGame._id, 'won', function(games) {
+				$scope.wonGames = games
+			})
+
+			$scope.fetchChildrenState($scope.currentGame._id, 'lost', function(games) {
+				$scope.lostGames = games
+			})
+
+			$scope.fetchPrios($scope.currentGame._id, function(prios) {
+				$scope.prios = prios
 			})
 
 			if ($scope.currentGame.parent == '_endgame') {
@@ -282,12 +336,20 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				_id: '_noparent'
 			}
 
-			$scope.fetchPrios($scope.currentGame._id, function(prios) {
-				$scope.prios = prios
+			$scope.fetchChildrenState($scope.currentGame._id, 'playing', function(games) {
+				$scope.playingGames = games
 			})
 
-			$scope.fetchChildren($scope.currentGame._id, function(games) {
-				$scope.games = games
+			$scope.fetchChildrenState($scope.currentGame._id, 'won', function(games) {
+				$scope.wonGames = games
+			})
+
+			$scope.fetchChildrenState($scope.currentGame._id, 'lost', function(games) {
+				$scope.lostGames = games
+			})
+
+			$scope.fetchPrios($scope.currentGame._id, function(prios) {
+				$scope.prios = prios
 			})
 		})
 	}
@@ -430,7 +492,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			}
 		}
 
-		// defining game and pushing to $scope.games here because the ui needs to be rendered as fast as possible
+		// defining game and pushing to $scope.playingGames here because the ui needs to be rendered as fast as possible
 
 		if (repeat != '' && repeat != undefined && repeat != false) {
 
@@ -476,13 +538,13 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			doc: game
 		}
 
-		if ($scope.games == undefined) {
-			$scope.games = []
+		if ($scope.playingGames == undefined) {
+			$scope.playingGames = []
 		}
 
-		$scope.games.reverse()
-		$scope.games.push(temp)
-		$scope.games.reverse()
+		$scope.playingGames.reverse()
+		$scope.playingGames.push(temp)
+		$scope.playingGames.reverse()
 
 		$scope.hideForm()
 
@@ -869,7 +931,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 			return db.put(updatedDoc, doc._id, doc._rev).then(function() {
 				// updates the ui, the actual result is slow
-				$.each($scope.games, function() {
+				$.each($scope.playingGames, function() {
 					if ($(this)[0].doc._id == id) {
 						$(this)[0].doc = updatedDoc
 					}
@@ -1014,12 +1076,25 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.addForm.time.info =
 		$scope.addForm.time.error =
 		$scope.addForm.time.typeahead = ''
-		$scope.games = []
-		
+
+		$scope.playingGames = []
+
 		$('.children-wrap .no-games').hide()
 
+
+		$scope.fetchChildrenState(id, 'playing', function(games) {
+			$scope.playingGames = games
+		})
+
+		$scope.fetchChildrenState(id, 'won', function(games) {
+			$scope.wonGames = games
+		})
+
+		$scope.fetchChildrenState(id, 'lost', function(games) {
+			$scope.lostGames = games
+		})
+
 		$scope.fetchChildren(id, function(games) {
-			$scope.games = games
 
 			$('.children-wrap .child')
 			.css('padding-bottom', 30)
