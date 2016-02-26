@@ -1,0 +1,28 @@
+<span class="current-game-text">
+	<span ng-show="currentGame.plays[currentGame.plays.length-1].priority == '8'" class="priority">
+		<span class="fa fa-circle icon high"></span>
+	</span>
+	<span ng-show="currentGame.plays[currentGame.plays.length-1].priority == '4'" class="priority">
+		<span class="fa fa-dot-circle-o icon mid"></span>
+	</span>
+	<span ng-show="currentGame.plays[currentGame.plays.length-1].priority == '2'" class="priority">
+		<span class="fa fa-circle-o icon low"></span>
+	</span>
+
+	{{currentGame.game}}
+
+	<span class="replay-count-wrap" ng-show="currentGame.plays.length > 1">
+		<span class="fa fa-rotate-right replay-icon"></span>
+		{{currentGame.plays.length}}
+	</span>
+
+	<div class="game-info-wrap">
+		<span am-time-ago="currentGame.plays[currentGame.plays.length-1].end"></span>
+
+		<span ng-show="currentGame.repeat != '' && currentGame.repeat != undefined && currentGame.repeat != false">
+			<span class="fa fa-refresh"></span> {{currentGame.repeat | repeatTime}}
+
+			{{currentGame.end | relativeTime}}
+		</span>
+	</div>
+</span>

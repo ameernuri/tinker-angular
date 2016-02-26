@@ -1,8 +1,6 @@
 var express = require('express')
 var app = express()
 
-app.engine('html', require('ejs').renderFile)
-app.set('view engine', 'ejs')
 app.use(express.static('www'))
 
 var lessMiddleware = require('less-middleware')

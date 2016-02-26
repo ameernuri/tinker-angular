@@ -1,0 +1,15 @@
+<div ng-show="currentGame._id != '_endgame'" class="game-path-wrap">
+	<span ng-click="setCurrentGame('_endgame')" class="game-path">
+		<span class="fa fa-stop end-icon"></span> End Games
+	</span>
+
+	<span ng-show="currentGame._id != '_endgame' && currentGame.parent != '_endgame'">
+		<span class="ion-chevron-right"></span>
+		<span class="ellipsis">&bull;&bull;&bull;</span>
+		<span class="ion-chevron-right"></span>
+		<span ng-click="setCurrentGame(currentGame.parent)" class="game-path current-parent">
+			{{currentParent.game}}
+		</span>
+		<span class="ion-chevron-right"></span>
+	</span>
+</div>

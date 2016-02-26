@@ -1,0 +1,28 @@
+<ion-header-bar class="side-header">
+  
+  <h1 class="title" ng-click="setCurrentGame('_endgame'); modal.hide();" menu-toggle="left">
+		<div class="is-online">
+			<div>
+				<span>			
+					<span class="indicator online">&bull;</span> Online
+
+					<span class="online-message">
+						- Sign in to sync
+					</span>
+				</span>
+			</div>
+		</div>
+	</h1>
+</ion-header-bar>
+
+<ion-content class="left-container">
+	<ul>
+		<li menu-toggle="left" ng-click="signInModal.show()">
+			Sign In
+		</li>
+		<li menu-toggle="left" ng-click="signUpModal.show()">
+			Create Account
+		</li>
+	</ul>
+
+</ion-content>

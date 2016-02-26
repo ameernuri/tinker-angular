@@ -66,8 +66,26 @@ input {
 	font-family: "lato", "helvetica neue";
 }
 
-.prio-container {
+.prio-container, .left-container {
 	background: @dark6;
+
+	ul {
+		li {
+			padding: 10px 5px;
+			margin: 0 20px;
+			list-style: none;
+			border-bottom: 1px solid @dark5;
+			cursor: pointer;
+			color: @white5;
+
+			* {
+				cursor: pointer;
+			}
+		}
+	}
+}
+
+.prio-container {
 
 	h4 {
 		background: @dark5;
@@ -75,7 +93,6 @@ input {
 		border-bottom: 1px solid @dark7;
 		margin-top: 20px;
 		font-size: 14px;
-		font-weight: normal;
 	}
 
 	.no-games {
@@ -86,15 +103,8 @@ input {
 
 	ul {
 		li {
-			padding: 5px 0;
-			margin: 0 20px;
-			list-style: none;
-			border-bottom: 1px solid @dark5;
-			cursor: pointer;
-
-			* {
-				cursor: pointer;
-			}
+			padding: 5px;
+			margin: 0 15px;
 
 			.game-wrap {
 				font-size: 16px;
@@ -105,6 +115,14 @@ input {
 				font-size: 12px;
 				color: @light1;
 			}
+		}
+	}
+}
+
+.left-container {
+	ul {
+		li {
+			font-weight: 500;
 		}
 	}
 }
@@ -139,6 +157,18 @@ input {
 	}
 }
 
+.sync-message {
+	text-align: center;
+	padding: 5px;
+	font-style: italic;
+	font-size: 14px;
+	display: none;
+
+	&.error {
+		color: @red;
+	}
+}
+
 .game-top-wrap {
 	padding: 20px 0 0;
 
@@ -166,6 +196,10 @@ input {
 
 		.end-game-text {
 			margin: 0 20px;
+
+			.end-icon {
+				color: @gray1;
+			}
 		}
 
 		.edit-form-wrap {
@@ -222,7 +256,7 @@ input {
 
 						&.game-input {
 							font-size: 25px;
-							padding: 0 20px 5px 8px;
+							padding: 0 20px 5px 30px;
 							color: @white7;
 						}
 
@@ -599,7 +633,8 @@ input {
 
 				&.game-input {
 					font-size: 18px;
-					margin: 5px 20px;
+					margin: 5px 0;
+					padding: 5px 20px 5px 40px;
 
 
 					&::-webkit-input-placeholder {

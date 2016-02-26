@@ -1,0 +1,989 @@
+@import "components/_colors";
+@import "components/_fonts";
+@import "components/_grid";
+@import "components/_screens";
+
+* {
+	padding: 0;
+	margin: 0;
+	font-family: 'lato', 'helvetica neue';
+
+	&:focus {
+		outline: none;
+	}
+}
+
+*:not(input) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+div {
+	cursor: default;
+}
+
+html, body {
+	background: @dark3;
+}
+
+body {
+	font-family: 'lato', 'helvetica neue';
+	font-weight: 200;
+	color: @gray3;
+	-webkit-overflow-scrolling: touch;
+}
+
+input[type=submit], button {
+	border: none;
+	background: @white7;
+	color: @gray3;
+	border-radius: 30px;
+	padding: 8px 16px;
+	font-size: 13px;
+	cursor: pointer;
+	transition: .5s;
+	font-weight: 400;
+
+	&:hover {
+		background: @white7;
+		color: @gray3;
+	}
+
+	&:focus {
+		outline: none;
+	}
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 100;
+}
+
+input {
+	font-family: "lato", "helvetica neue";
+}
+
+.prio-container {
+	background: @dark6;
+
+	h4 {
+		background: @dark5;
+		padding: 5px 20px;
+		border-bottom: 1px solid @dark7;
+		margin-top: 20px;
+		font-size: 14px;
+		font-weight: normal;
+	}
+
+	.no-games {
+		font-style: italic;
+		text-align: center;
+		margin-top: 15px;
+	}
+
+	ul {
+		li {
+			padding: 5px 0;
+			margin: 0 20px;
+			list-style: none;
+			border-bottom: 1px solid @dark5;
+			cursor: pointer;
+
+			* {
+				cursor: pointer;
+			}
+
+			.game-wrap {
+				font-size: 16px;
+				color: @white5;
+			}
+
+			.info-wrap {
+				font-size: 12px;
+				color: @light1;
+			}
+		}
+	}
+}
+
+.check-button {
+	label {
+		margin: 0;
+
+		input[type=radio], input[type=checkbox] {
+			display: none;
+
+			& + span {
+				cursor: pointer;
+				color: @gray1;
+				display: inline-block;
+				font-size: 12px;
+				padding: 0 2px;
+				border-radius: 50px;
+				background: none;
+				font-weight: normal;
+				transition: .5s;
+
+				&:hover {
+					color: @gray6;
+				}
+			}
+
+			&:checked + span {
+				color: @white5;
+			}
+		}
+	}
+}
+
+.game-top-wrap {
+	padding: 20px 0 0;
+
+	.current-game {
+		font-size: 25px;
+		color: @white7;
+
+		.editable {
+			cursor: pointer;
+
+			.editable-switch {
+				margin: 0 20px;
+			}
+
+			& div {
+				cursor: pointer;
+			}
+
+			.replay-count-wrap {
+				font-size: 13px;
+				color: @light3;
+				font-weight: 100;
+			}
+		}
+
+		.end-game-text {
+			margin: 0 20px;
+
+			.end-icon {
+				color: @gray1;
+			}
+		}
+
+		.edit-form-wrap {
+			background: @dark4;
+
+			.game-form-basic;
+
+			.form-content-wrap {
+				.game-form {
+					.game-form-content {
+						padding: 8px 20px;
+					}
+
+					.game-text-wrap {
+						.game-text-priority {
+							top: 0;
+							left: 0;
+							font-size: 25px;
+						}
+					}
+
+					.buttons-wrap {
+						padding: 9px 20px;
+						background: @dark6;
+						overflow: auto;
+
+						.ellipsis {
+							float: left;
+							font-size: 13px;
+							color: @gray6;
+							transition: .5s;
+							font-weight: normal;
+							padding: 4px 0;
+
+							.button-icon {
+								padding: 0;
+							}
+
+							&:hover {
+								color: @white6;
+							}
+						}
+					}
+
+					.success, .info, .error {
+						padding: 3px 0;
+					}
+
+					input[type=text] {
+
+						&:focus {
+							background: none;
+						}
+
+						&.game-input {
+							font-size: 25px;
+							padding: 0 20px 5px 8px;
+							color: @white7;
+						}
+
+						&.time-input {
+							font-size: 15px;
+							padding: 5px 0;
+						}
+					}
+				}
+			}
+
+			.edit-more-wrap {
+				display: none;
+				width: 100%;
+				color: @dark10;
+				padding: 0 20px;
+
+				.current-game-text {
+					color: @white9;
+					padding: 10px 0;
+					display: block;
+				}
+
+				.button {
+					background: none;
+					padding: 10px 0;
+					font-size: 12px;
+					display: initial;
+					color: @light1;
+					transition: .5s;
+
+					&:hover {
+						color: @white6;
+					}
+				}
+
+				.delete {
+					.fa {
+						color: @red;
+					}
+				}
+
+				.add-inbetween {
+					border: 1px solid @dark5;
+					border-width: 1px 0;
+					color: @gray3;
+					text-align: center;
+					font-size: 12px;
+					padding: 4px 0;
+					transition: .5s;
+
+					&.add-above {
+						margin-bottom: 5px;
+					}
+
+					&.add-below {
+						margin-top: 5px;
+					}
+
+					.fa-carret-down, .fa-carret-up {
+						color: @gray1;
+					}
+
+					&:hover {
+						color: @white6;
+					}
+				}
+			}
+
+			display: none;
+		}
+
+		.end-icon {
+			color: @white3;
+		}
+
+		.game-info-wrap {
+			color: @gray3;
+			font-size: 15px;
+			margin-top: 5px;
+
+			.fa {
+				width: 20px;
+				text-align: center;
+				margin-right: -3px;
+			}
+		}
+
+		.game-state-wrap {
+			text-align: center;
+			margin: 5px 0;
+
+			.current-game-state {
+				background: @dark7;
+				border-radius: 20px;
+				display: inline-flex;
+
+				.game-state {
+					cursor: pointer;
+					font-size: 12px;
+					padding: 6px 0 0;
+					border-radius: 20px;
+					display: inline-block;
+					transition: .5s;
+					width: 30px;
+					height: 30px;
+					text-align: center;
+					color: @gray3;
+
+					&:not(.active) {
+
+						&:hover {
+							box-shadow: 0 0 0 17px white inset;
+
+							&.won {
+								color: @green;
+							}
+
+							&.lost {
+								color: @red;
+							}
+
+							&.playing {
+								box-shadow: none;
+								color: @white9;
+							}
+						}
+					}
+
+					&.active {
+						color: @white9;
+
+						&.won {
+							box-shadow: 0 0 0 17px @green inset;
+						}
+
+						&.lost {
+							box-shadow: 0 0 0 17px @red inset;
+						}
+
+						&.playing {
+							color: @white9;
+
+							.fa:before {
+								content: "\f111";
+							}
+						}
+					}
+
+					&:hover {
+
+						&.playing {
+							.fa:before {
+								content: "\f111";
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.replay-wrap {
+			@keyframes replaySlide {
+				from {
+					margin-top: -20px;
+					opacity: 0;
+				}
+
+				to {
+					margin-top: 5px;
+					opacity: 1;
+				}
+			}
+
+			animation: replaySlide .5s;
+			margin: 5px 0;
+
+			button {
+				color: @gray6;
+				border: 2px solid @dark7;
+				background: none;
+				font-size: 12px;
+
+				.fa {
+					margin-right: 4px;
+				}
+
+				&:hover {
+					color: @white7;
+					background: @dark7;
+				}
+			}
+
+			.replay-form-wrap {
+				.edit-form-wrap;
+
+				.game-text-wrap {
+					text-align: left;
+					padding: 5px 20px;
+					background: @dark5;
+				}
+			}
+		}
+	}
+
+	.game-path-wrap {
+		margin: 0 20px 10px;
+
+		.game-path {
+			cursor: pointer;
+			color: @gray6;
+			transition: .5s;
+
+			&:hover {
+				color: @white7;
+			}
+		}
+
+		.ellipsis {
+			color: @white7;
+			letter-spacing: -2px;
+			transition: .5s;
+			cursor: pointer;
+
+			&:hover {
+				color: @white9;
+			}
+		}
+
+		.current-parent {
+			transition: .5s;
+		}
+	}
+}
+
+.game-form-basic {
+
+	.game-text-wrap {
+
+		.game-text-priority {
+			cursor: pointer;
+			margin-top: 2px;
+		}
+	}
+
+	.form-content-wrap {
+		overflow: hidden;
+		position: relative;
+		text-align: left;
+
+		.game-form {
+			overflow: auto;
+
+			.game-form-content {
+				margin-bottom: 10px;
+			}
+
+			.error, .success, .info, .warn {
+				@keyframes slideDown {
+					from {
+						opacity: 0;
+					}
+
+					to {
+						opacity: 1;
+					}
+				}
+
+				padding: 3px 20px;
+				font-size: 12px;
+				color: @gray3;
+				transition: .5s;
+				animation: slideDown .5s;
+
+				.fa {
+					font-size: 10px;
+				}
+			}
+
+			.error .fa {
+				color: @red;
+			}
+
+			.success .fa {
+				color: @green;
+			}
+
+			.warn .fa {
+				color: @yellow;
+			}
+
+			.game-text-wrap {
+				position: relative;
+
+				.game-text-priority {
+					position: absolute;
+					left: 20px;
+					top: 5px;
+					color: @white7;
+					font-size: 18px;
+				}
+			}
+
+			.game-time-wrap {
+				position: relative;
+
+				.typeahead {
+					position: absolute;
+					left: 23px;
+					top: 8px;
+
+					.typeahead-puhser {
+						visibility: hidden;
+					}
+
+					.typeahead-text {
+						color: @gray3;
+						cursor: pointer;
+					}
+				}
+
+				.repeat-switch {
+				  position: absolute;
+				  top: 0;
+				  right: 0;
+				  cursor: pointer;
+				  transition: .5s;
+				  padding: 4px 15px;
+				  background: #2b3135;
+				  border-radius: 20px;
+				  font-size: 12px;
+				  margin-top: 2px;
+				  margin-right: 20px;
+
+					&:hover {
+						color: @white7;
+						background: @dark9;
+					}
+				}
+			}
+
+			input[type=text] {
+				width: 100%;
+				border: none;
+				background: none;
+				color: @gray6;
+				padding: 5px 20px;
+				font-size: 15px;
+				font-weight: 100;
+				transition: .5s;
+				display: block;
+
+				&::-webkit-input-placeholder {
+					color: @gray3;
+				}
+
+				&:-moz-placeholder {
+					color: @gray3;
+				}
+
+				&::-moz-placeholder {
+					color: @gray3;
+				}
+
+				&:-ms-input-placeholder {
+					color: @gray3;
+				}
+
+				&:focus {
+					outline: none;
+					background: @dark4;
+					color: @white7;
+				}
+
+				&.game-input {
+					font-size: 18px;
+					margin: 5px 20px;
+
+
+					&::-webkit-input-placeholder {
+						padding-top: 3px;
+					}
+
+					&:-moz-placeholder {
+						padding-top: 3px;
+					}
+
+					&::-moz-placeholder {
+						padding-top: 3px;
+					}
+
+					&:-ms-input-placeholder {
+						padding-top: 3px;
+					}
+				}
+
+				&.time-input, &.repeat-input {
+					font-size: 14px;
+					padding-left: 22px;
+				}
+
+				&.repeat-input {
+					display: none;
+				}
+			}
+
+			.buttons-wrap {
+				overflow: auto;
+				padding: 0 8px;
+
+				button {
+					border: none;
+					background: none;
+					color: @gray3;
+					float: right;
+					padding: 0;
+					vertical-align: middle;
+
+					&.submit-button {
+						float: right;
+					}
+
+					.button-icon {
+						font-size: 20px;
+						color: @green;
+						padding: 0;
+						vertical-align: middle;
+					}
+
+					.button-text {
+						font-size: 14px;
+						margin: 0 3px;
+						vertical-align: middle;
+					}
+
+					&:hover {
+						color: @white7;
+					}
+
+					&:focus {
+						outline: none;
+					}
+				}
+			}
+
+			.game-priority {
+				.field-label {
+					font-size: 12px;
+					color: @white3;
+				}
+
+				.check-button;
+			}
+		}
+	}
+}
+
+.form-wrap {
+	border-radius: 5px;
+	background: @dark4;
+	margin: 20px 10px 10px;
+	overflow: auto;
+	.game-form-basic;
+
+	.form-switch {
+		padding: 14px 20px;
+		font-size: 18px;
+		cursor: pointer;
+		transition: .5s;
+
+		.switch-icon, .switch-text {
+			transition: .5s;
+			color: @white4;
+		}
+
+		.switch-text {
+			color: @gray3;
+		}
+
+		&:hover {
+			background: @dark3;
+
+			.switch-text {
+				color: @gray6;
+			}
+		}
+	}
+
+	.game-priority {
+		padding: 10px 20px;
+	}
+
+	.buttons-wrap {
+		background: @dark6;
+		padding: 4px 0;
+
+		button {
+			margin: 10px 12px;
+		}
+	}
+
+	.form-content-wrap {
+		display: none;
+		min-height: 50px;
+	}
+}
+
+.children-wrap {
+	ul {
+		margin: 0;
+
+		li.child {
+			list-style: none;
+			padding: 10px 5px 5px;
+			padding-right: 40px;
+			margin: 0 15px 0 25px;
+			overflow: auto;
+			position: relative;
+			min-height: 70px;
+			cursor: pointer;
+			border-top: 2px solid rgba(0, 0, 0, 0);
+			transition: .2s;
+			border-bottom: 1px solid @dark4;
+
+			* {
+				cursor: pointer;
+			}
+
+			.game {
+				cursor: pointer;
+				font-size: 18px;
+				color: @white5;
+				display: block;
+				padding-right: 10px;
+				transition: .5s;
+			}
+
+			&.done {
+				.game {
+					color: @light4;
+				}
+
+				&:hover {
+					.game {
+						color: @white4;
+					}
+				}
+			}
+
+			.info-wrap {
+				margin-top: 5px;
+				font-size: 14px;
+				color: @gray3;
+
+				.time-wrap {
+					.fa {
+						width: 14px;
+						text-align: center;
+					}
+				}
+
+				.replay-icon {
+					font-size: 10px;
+				}
+			}
+
+			.state-wrap {
+				position: absolute;
+				right: 5px;
+				top: 20px;
+				display: inline-flex;
+				border-radius: 20px;
+				transition: .5s;
+				cursor: pointer;
+
+				.touch-block {
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					border-radius: 20px;
+					z-index: 100;
+					opacity: 0;
+					color: red;
+					opacity: .5;
+				}
+
+				&:hover {
+					@keyframes removeBlock {
+						0% {
+							width: 100%;
+						}
+
+						99% {
+							width: 100%;
+						}
+
+						100% {
+							width: 0;
+						}
+					}
+
+					.touch-block {
+						animation: removeBlock .4s;
+						width: 0;
+					}
+				}
+
+				.state {
+					display: none;
+					cursor: pointer;
+					transition: .5s;
+					border-radius: 20px;
+					padding: 6px;
+					width: 30px;
+					height: 30px;
+					font-size: 13px;
+					text-align: center;
+
+					&.active {
+						display: inline-block;
+
+						&.playing {
+							color: @dark6;
+							background: @dark6;
+							box-shadow: 0 0 0 1px @dark9 inset;
+
+							.fa:before {
+								content: "\f111";
+							}
+						}
+
+						&.won {
+							color: @green;
+							background: @dark7;
+						}
+
+						&.lost {
+							color: @red;
+							background: @dark7;
+						}
+					}
+				}
+
+				&.activate {
+					background: @dark6;
+
+					.state {
+						display: inline-block;
+
+						&:not(.active){
+							@keyframes slide {
+								0% {
+									margin-right: -15px;
+									opacity: 0;
+								}
+
+								60% {
+									margin-right: 1px;
+								}
+
+								100% {
+									margin-right: 0;
+									opacity: 1;
+								}
+							}
+
+							animation: slide .5s ease-out;
+						}
+
+						&.active, &.active:hover {
+							color: @white9;
+
+							&.won {
+								box-shadow: 0 0 0 17px @green inset;
+							}
+
+							&.lost {
+								box-shadow: 0 0 0 17px @red inset;
+							}
+
+							&.playing {
+								color: @white9;
+								font-size: 13px;
+								padding-top: 6px;
+								transition: .3s;
+								background: none;
+								box-shadow: none;
+								margin: 0;
+
+								.fa:before {
+									content: "\f111";
+								}
+							}
+						}
+
+						&:hover {
+							&.won {
+								color: @green;
+								box-shadow: 0 0 0 17px white inset;
+							}
+
+							&.lost {
+								color: @red;
+								box-shadow: 0 0 0 17px white inset;
+							}
+
+							&.playing {
+								color: @white9;
+								background: none;
+
+								.fa:before {
+									content: "\f111";
+								}
+							}
+
+							&.active {
+								color: @white9;
+							}
+						}
+					}
+				}
+			}
+
+			&.ui-sortable-helper {
+				outline: dashed @dark9;
+				outline-width: 1px;
+				transition: none;
+			}
+
+			&:hover, &.ui-sortable-helper {
+				color: @light3;
+
+				.game {
+					color: @white9;
+				}
+			}
+		}
+
+		&.won-and-lost {
+			margin-top: 5px;
+			background: lighten(@dark5, .8%);
+
+			li.child {
+
+				&:hover {
+					color: @white9;
+				}
+			}
+		}
+	}
+
+	.no-games {
+		text-align: center;
+		background: none;
+		font-style: italic;
+		color: @gray2;
+		padding: 20px 10px;
+		transition: .5s;
+	}
+}

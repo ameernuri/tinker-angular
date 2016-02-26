@@ -1,0 +1,26 @@
+<ion-header-bar class="side-header">
+  <h1 class="title">
+		<img src="img/triangle.svg" class="prio-icon">
+  	Next Priorities
+  </h1>
+</ion-header-bar>
+
+<ion-content class="prio-container">
+	<div class="no-games" ng-show="prios.length == 0">
+		No priorities for now
+	</div>
+
+	<ul>
+		<li menu-toggle="right" ng-click="setCurrentGame(prio.doc._id);" ng-repeat="prio in prios">
+			<div class="game-wrap">
+				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 8}}" class="fa fa-circle"></span>
+				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 4}}" class="fa fa-dot-circle-o"></span>
+				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 2}}" class="fa fa-circle-o"></span>
+				{{prio.doc.game}}
+			</div>
+			<div class="info-wrap">
+				<span am-time-ago="prio.doc.plays[prio.doc.plays.length-1].end"></span>
+			</div>
+		</li>
+	</ul>
+</ion-content>

@@ -1,0 +1,46 @@
+<div class="children-wrap">
+	<div
+		class="no-games"
+		ng-show="
+			playingGames.length == 0
+			&& wonGames.length == 0
+			&& lostGames.length == 0
+		"
+		>
+		No
+		<span ng-show="currentGame._id == '_endgame'">end</span>
+		<span ng-show="currentGame._id != '_endgame'">sub</span>
+		games added yet
+	</div>
+
+	<ul class="sortable children">
+		<li class="child"
+			ng-repeat="game in playingGames"
+			data-pos="{{game.doc.position}}"
+			data-id="{{game.doc._id}}"
+			ng-click="openGame($event)"
+		>
+			<div ng-include src="'templates/child.html'"></div>
+		</li>
+	</ul>
+
+	<ul class="sortable children won-and-lost">
+		<li class="child done"
+			ng-repeat="game in wonGames"
+			data-pos="{{game.doc.position}}"
+			data-id="{{game.doc._id}}"
+			ng-click="openGame($event)"
+		>
+			<div ng-include src="'templates/child.html'"></div>
+		</li>
+
+		<li class="child done"
+			ng-repeat="game in lostGames"
+			data-pos="{{game.doc.position}}"
+			data-id="{{game.doc._id}}"
+			ng-click="openGame($event)"
+		>
+			<div ng-include src="'templates/child.html'"></div>
+		</li>
+	</ul>
+</div>

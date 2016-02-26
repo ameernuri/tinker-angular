@@ -39,43 +39,104 @@
 			  <h1 class="title" ng-show="currentGame._id == &apos;_endgame&apos;" ng-click="setCurrentGame(&apos;_endgame&apos;)">
 					<img class="logo" src="img/logo.svg">
 				</h1>
-				<button class="button button-clear prio-switch" menu-toggle="right" ng-hide="$exposeAside.active">
+				<button class="button button-clear prio-switch" menu-toggle="right" ng-hide="$exposeAside.active || isRightSideBarOpen()">
 					<img src="img/triangle.svg">
 				</button>
       </ion-header-bar>
       <ion-content on-swipe-right="openCurrentParent()" class="main-content">
-		    <ion-refresher pulling-text="Sync" on-refresh="doSync()" pulling-icon="ion-android-sync">
+		    <ion-refresher pulling-text="Sync" on-refresh="pullToSync()" pulling-icon="ion-android-sync">
 				</ion-refresher>
+
+				<div class="sync-message">
+					{{syncMessage}}
+				</div>
+
+
+				<script id="signInModal.html" type="text/ng-template">
+			  	<div class="modal">
+			  	  <ion-header-bar>
+			  	    <h1 class="title" ng-click="hideModal()">Sign In</h1>
+
+        			<button class="button button-clear button-primary" ng-click="modal.hide()">
+        				&times;
+      				</button>
+			  	  </ion-header-bar>
+			  	  <ion-content>
+
+					  <div class="list">
+					    <label class="item item-input item-floating-label">
+					      <span class="input-label">Username or Email</span>
+					      <input type="text" placeholder="Username or Email">
+					    </label>
+					    <label class="item item-input item-floating-label">
+					      <span class="input-label">Password</span>
+					      <input type="password" placeholder="Your Password">
+					    </label>
+
+					    <div class="item input-item">
+					    	<input type="submit" value="Sign In">
+					    </div>
+
+					    <div class="item input-item alt-switch">
+					    	Not Yet a Member? 
+					    	<button ng-click="signUpModal.show()">Create an Account</button>
+					    </div>
+					  </div>
+			  	  </ion-content>
+			  	</div>
+				</script>
+
+				<script id="signUpModal.html" type="text/ng-template">
+			  	<div class="modal">
+			  	  <ion-header-bar>
+			  	    <h1 class="title" ng-click="hideModal()">Create Account</h1>
+
+        			<button class="button button-clear button-primary" ng-click="modal.hide()">
+        				&times;
+      				</button>
+			  	  </ion-header-bar>
+			  	  <ion-content>
+
+					  <div class="list">
+					    <label class="item item-input item-floating-label">
+					      <span class="input-label">Name</span>
+					      <input type="text" placeholder="Your Name">
+					    </label>
+					    <label class="item item-input item-floating-label">
+					      <span class="input-label">Username</span>
+					      <input type="text" placeholder="Select Username">
+					    </label>
+					    <label class="item item-input item-floating-label">
+					      <span class="input-label">Email</span>
+					      <input type="email" placeholder="you@example.com">
+					    </label>
+					    <label class="item item-input item-floating-label">
+					      <span class="input-label">Password</span>
+					      <input type="password" placeholder="New Password">
+					    </label>
+
+					    <div class="item input-item">
+					    	<input type="submit" value="Create Account">
+					    </div>
+
+					    <div class="item input-item alt-switch">
+					    	Already a Member? 
+					    	<button ng-click="signInModal.show()">Sign In</button>
+					    </div>
+					  </div>
+			  	  </ion-content>
+			  	</div>
+				</script>
 
 				<div ng-include="" src="&apos;templates/content.html&apos;"></div>
       </ion-content>
     </ion-side-menu-content>
 
-    <ion-side-menu expose-aside-when="(min-width: 660px)" side="right">
-      <ion-header-bar class="side-header">
-        <h1 class="title">Next Priorities</h1>
-      </ion-header-bar>
+		<ion-side-menu expose-aside-when="(min-width: 660px)" side="right" on-swipe-right="toggleRightMenu()" ng-include="" src="&apos;templates/rightSideBar.html&apos;">
+		</ion-side-menu>
 
-      <ion-content class="prio-container">
-				<div class="no-games" ng-show="prios.length == 0">
-					No priorities for now
-				</div>
-
-				<ul>
-					<li menu-toggle="right" ng-click="setCurrentGame(prio.doc._id);" ng-repeat="prio in prios">
-						<div class="game-wrap">
-							<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 8}}" class="fa fa-circle"></span>
-							<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 4}}" class="fa fa-dot-circle-o"></span>
-							<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 2}}" class="fa fa-circle-o"></span>
-							{{prio.doc.game}}
-						</div>
-						<div class="info-wrap">
-							<span am-time-ago="prio.doc.plays[prio.doc.plays.length-1].end"></span>
-						</div>
-					</li>
-				</ul>
-      </ion-content>
-    </ion-side-menu>
+		<ion-side-menu expose-aside-when="(min-width: 900px)" side="left" on-swipe-left="toggleLeftMenu()" ng-include="" src="&apos;templates/leftSideBar.html&apos;">
+		</ion-side-menu>
   </ion-side-menus>
 </body>
 </html>

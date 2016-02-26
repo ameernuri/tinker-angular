@@ -4,14 +4,16 @@ var app = angular.module('tinker', [
 	'angularMoment'
 ]),
 
-remote = 'https://penser:cloudant@penser.cloudant.com/games'
+// remote = 'localhost:5984/games'
+remote = '//penser:cloudant@penser.cloudant.com/games'
 
 app.config(function($ionicConfigProvider) {
-	$ionicConfigProvider.spinner.icon('crescent')
+	$ionicConfigProvider.spinner.icon('ripple')
   $ionicConfigProvider.views.transition('ios')
   $ionicConfigProvider.tabs.style('standard').position('bottom')
   $ionicConfigProvider.navBar.alignTitle('center').positionPrimaryButtons('left')
 })
+
 
 app.filter('repeatTime', function() {
   return function(input) {
@@ -33,7 +35,9 @@ app.filter('repeatTime', function() {
   }
 })
 
-app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
+app.controller('GamesCtrl', function(
+	$log, $scope, $http, $ionicSideMenuDelegate, $ionicModal, pouchDB
+) {
 	var db = pouchDB('games'),
 	changes = db.changes({live: true, since: 'now'}),
 	numChanges = 0
@@ -43,6 +47,18 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 	})
 
 	sessionGame = window.sessionStorage.getItem('currentGame')
+
+  $ionicModal.fromTemplateUrl('signInModal.html', function(modal) {
+    $scope.signInModal = modal;
+  }, {
+    focusFirstInput: true
+  })
+
+  $ionicModal.fromTemplateUrl('signUpModal.html', function(modal) {
+    $scope.signUpModal = modal;
+  }, {
+    focusFirstInput: true
+  })
 
 	$scope.editTemp
 	$scope.game = []
@@ -99,13 +115,62 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		}
 	}
 
-	$scope.doSync = function() {
+	$scope.doSync = function(success, error) {
 
-		$scope.fetchChildrenState($scope.currentGame._id)
+		if (success == undefined) {
+			success = function() {}
+		}
 
-		$scope.fetchPrios($scope.currentGame._id, function(prios) {
-			$scope.prios = prios
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		$scope.syncMessage = ''
+
+		db.sync(remote).on('change', function(change) {
+
+    	$scope.$broadcast('scroll.refreshComplete')
+    	$scope.syncMessage = 'Sync Complete'
+
+    	success()
+		}).on('paused', function(info) {
+    	$scope.$broadcast('scroll.refreshComplete')
+    	$scope.syncMessage = 'No Connection'
+
+    	error()
+		}).on('active', function(info) {
+		  // replication was resumed
+    	$scope.syncMessage = 'Syncing...'
+
+    	success()
+		}).on('error', function(err) {
+    	$scope.$broadcast('scroll.refreshComplete')
+    	$scope.syncMessage = 'Sync Failed'
+
+    	error()
 		})
+	}
+
+	$scope.pullToSync = function() {
+		$scope.doSync(function() {
+
+	  	$('.sync-message').fadeIn()
+	  	setTimeout(function() {
+	  		$('.sync-message').slideUp()
+	  	}, 3000)
+		}, function() {
+
+	  	$('.sync-message').fadeIn()
+	  	setTimeout(function() {
+	  		$('.sync-message').slideUp()
+	  		$scope.signUpModal.show()
+	  	}, 3000)
+		})
+
+	}
+
+	changes.on('change', function(change) {
+		$scope.doSync()
 
 		if ($scope.currentGame._id != '_endgame') {
 			$scope.fetchOne($scope.currentGame._id, function(doc) {
@@ -128,11 +193,11 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 			})
 		}
 
-    $scope.$broadcast('scroll.refreshComplete');
-	}
+		$scope.fetchChildrenWithState($scope.currentGame._id)
 
-	changes.on('change', function(change) {
-		$scope.doSync()
+		$scope.fetchPrios($scope.currentGame._id, function(prios) {
+			$scope.prios = prios
+		})
 	})
 
 	$scope.fetchChildren = function(parent, success, error) {
@@ -159,7 +224,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		})
 	}
 
-	$scope.fetchChildrenState = function(parent, success, error) {
+	$scope.fetchChildrenWithState = function(parent, success, error) {
 
 		if (success == undefined) {
 			success = function() {}
@@ -287,7 +352,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		window.sessionStorage.setItem('currentGame', '_endgame')
 
-		$scope.fetchChildrenState($scope.currentGame._id)
+		$scope.fetchChildrenWithState($scope.currentGame._id)
 		$scope.fetchPrios($scope.currentGame._id, function(prios) {
 			$scope.prios = prios
 		})
@@ -296,7 +361,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		$scope.fetchOne(sessionGame, function(doc) {
 			$scope.currentGame = doc
 
-			$scope.fetchChildrenState($scope.currentGame._id)
+			$scope.fetchChildrenWithState($scope.currentGame._id)
 			$scope.fetchPrios($scope.currentGame._id, function(prios) {
 				$scope.prios = prios
 			})
@@ -323,7 +388,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 				_id: '_noparent'
 			}
 
-			$scope.fetchChildrenState($scope.currentGame._id)
+			$scope.fetchChildrenWithState($scope.currentGame._id)
 			$scope.fetchPrios($scope.currentGame._id, function(prios) {
 				$scope.prios = prios
 			})
@@ -941,6 +1006,27 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 		})
 	}
 
+  $scope.closeModal = function() {
+  	alert('closing...')
+    $scope.modal.hide();
+  }
+
+	$scope.isRightSideBarOpen = function() {
+		return $ionicSideMenuDelegate.isOpenRight()
+	}
+
+	$scope.isLeftSideBarOpen = function() {
+		return $ionicSideMenuDelegate.isOpenLeft()
+	}
+
+	$scope.toggleRightMenu = function() {
+		$ionicSideMenuDelegate.toggleRight()
+	}
+
+	$scope.toggleLeftMenu = function() {
+		$ionicSideMenuDelegate.toggleLeft()
+	}
+
 	$scope.showForm = function() {
 		$('.form-wrap .form-content-wrap').show(function() {
 
@@ -1041,7 +1127,7 @@ app.controller('GamesCtrl', function($log, $scope, $http, pouchDB) {
 
 		$('.children-wrap .no-games').hide()
 
-		$scope.fetchChildrenState(id, function() {
+		$scope.fetchChildrenWithState(id, function() {
 
 			$('.children-wrap')
 			.css('margin-top', 50)
