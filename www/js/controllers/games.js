@@ -4,14 +4,35 @@ var app = angular.module('tinker', [
 	'angularMoment'
 ]),
 
-// remote = 'localhost:5984/games'
-remote = '//penser:cloudant@penser.cloudant.com/games'
+// remote = 'http://localhost:5984/games'
+remote = 'https://penser:cloudant@penser.cloudant.com/games'
 
 app.config(function($ionicConfigProvider) {
 	$ionicConfigProvider.spinner.icon('ripple')
   $ionicConfigProvider.views.transition('ios')
   $ionicConfigProvider.tabs.style('standard').position('bottom')
   $ionicConfigProvider.navBar.alignTitle('center').positionPrimaryButtons('left')
+})
+
+app.directive('focusMe', function ($timeout) {
+  return {
+    link: function (scope, element, attrs) {
+      if (attrs.focusMeDisable === "true") {
+        return
+      }
+
+      $timeout(function () {
+        element[0].focus()
+        if (
+        	window.cordova 
+        	&& window.cordova.plugins 
+        	&& window.cordova.plugins.Keyboard
+        ) {
+          cordova.plugins.Keyboard.show()
+        }
+      }, 350)
+    }
+  }
 })
 
 
@@ -35,18 +56,37 @@ app.filter('repeatTime', function() {
   }
 })
 
+app.run(function($window, $rootScope) {
+	$rootScope.online = navigator.onLine
+
+	$window.addEventListener('offline', function() {
+		$rootScope.$apply(function() {
+			$rootScope.online = false
+		})
+	}, false)
+
+	$window.addEventListener('online', function() {
+		$rootScope.$apply(function() {
+			$rootScope.online = true
+		})
+	}, false)
+})
+
 app.controller('GamesCtrl', function(
 	$log, $scope, $http, $ionicSideMenuDelegate, $ionicModal, pouchDB
 ) {
-	var db = pouchDB('games'),
-	changes = db.changes({live: true, since: 'now'}),
+	var gamesDB = pouchDB('games'),
+	usersDB = pouchDB('games'),
+	changes = gamesDB.changes({live: true, since: 'now'}),
 	numChanges = 0
 
-	db.info().catch(function (err) {
-		db = new PouchDB(remote)
+	gamesDB.info().catch(function (err) {
+		gamesDB = new PouchDB(remote)
 	})
 
 	sessionGame = window.sessionStorage.getItem('currentGame')
+
+	var currentUser = window.sessionStorage.getItem('currentUser')
 
   $ionicModal.fromTemplateUrl('signInModal.html', function(modal) {
     $scope.signInModal = modal;
@@ -127,7 +167,7 @@ app.controller('GamesCtrl', function(
 
 		$scope.syncMessage = ''
 
-		db.sync(remote).on('change', function(change) {
+		gamesDB.sync(remote).on('change', function(change) {
 
     	$scope.$broadcast('scroll.refreshComplete')
     	$scope.syncMessage = 'Sync Complete'
@@ -175,6 +215,7 @@ app.controller('GamesCtrl', function(
 		if ($scope.currentGame._id != '_endgame') {
 			$scope.fetchOne($scope.currentGame._id, function(doc) {
 				$scope.currentGame = doc
+				$scope.fetchPath($scope.currentGame._id)
 			}, function(err) {
 
 				if (err.status == 404) {
@@ -211,13 +252,13 @@ app.controller('GamesCtrl', function(
 		}
 
 		childrenMap = function(doc, emit) {
-		  if (doc.parent == parent) {
+		  if (doc.parent == parent && doc.user == currentUser) {
 
 		    emit([doc.position])
 		  }
 		}
 
-		db.query(childrenMap, {include_docs: true}).then(function(games) {
+		gamesDB.query(childrenMap, {include_docs: true}).then(function(games) {
 			success(games.rows)
 		}).catch(function(err) {
 			error(err)
@@ -235,13 +276,13 @@ app.controller('GamesCtrl', function(
 		}
 
 		childrenMap = function(doc, emit) {
-		  if (doc.parent == parent) {
+		  if (doc.parent == parent && doc.user == currentUser) {
 
 		    emit([doc.position])
 		  }
 		}
 
-		db.query(
+		gamesDB.query(
 			childrenMap,
 			{include_docs: true}
 		).then(function(games) {
@@ -283,7 +324,7 @@ app.controller('GamesCtrl', function(
 			error = function() {}
 		}
 
-		db.get(id).then(function(doc) {
+		gamesDB.get(id).then(function(doc) {
 			success(doc)
 			return doc
 		}).catch(function(err) {
@@ -293,6 +334,8 @@ app.controller('GamesCtrl', function(
 
 	$scope.fetchPath = function(id, success, error) {
 
+		var tempPath = []
+
 		if (success == undefined) {
 			success = function() {}
 		}
@@ -301,7 +344,22 @@ app.controller('GamesCtrl', function(
 			error = function() {}
 		}
 
-		// fetch path here
+		(function insertToPath(i, parent) {
+   		
+   		gamesDB.get(parent, {include_docs: true}, function(err, current) {
+         
+      	if (--i > 0 && parent != '_endgame') {
+
+      		if (id != current._id) {
+      			tempPath.splice(0, 0, current)
+      		}
+	      	
+	      	insertToPath(i, current.parent)
+      	} else {
+    			$scope.currentPath = tempPath
+    		}
+   		}) 
+		})(30, id)
 	}
 
 	$scope.fetchPrios = function(parent, success, error) {
@@ -317,6 +375,7 @@ app.controller('GamesCtrl', function(
 		prioMap = function(doc, emit) {
 		  if (
 				doc.parent != '_trash'
+				&& doc.user == currentUser
 				&& doc.plays[doc.plays.length-1].state == 'playing'
 				&& true /* is a descendent of parent */
 			) {
@@ -331,7 +390,7 @@ app.controller('GamesCtrl', function(
 		  }
 		}
 
-		db.query(prioMap, {include_docs: true, limit: 25}).then(function(games) {
+		gamesDB.query(prioMap, {include_docs: true, limit: 25}).then(function(games) {
 
 			success(games.rows)
 		}).catch(function(err) {
@@ -377,6 +436,9 @@ app.controller('GamesCtrl', function(
 					$scope.currentParent = doc
 				})
 			}
+
+			$scope.fetchPath(doc._id)
+
 		}, function(err) {
 			window.sessionStorage.setItem('currentGame', '_endgame')
 
@@ -528,7 +590,7 @@ app.controller('GamesCtrl', function(
 		}
 
 		countMap = function(doc, emit) {
-			if(doc.parent == parent) {
+			if(doc.parent == parent && doc.user == currentUser) {
 				emit()
 			}
 		}
@@ -539,6 +601,7 @@ app.controller('GamesCtrl', function(
 
 			var game = {
 				_id: gameId,
+				user: currentUser,
 				game: gameText,
 				parent: $scope.currentGame._id,
 				repeat: repeat,
@@ -559,6 +622,7 @@ app.controller('GamesCtrl', function(
 
 			var game = {
 				_id: gameId,
+				user: currentUser,
 				game: gameText,
 				parent: $scope.currentGame._id,
 				repeat: repeat,
@@ -606,9 +670,9 @@ app.controller('GamesCtrl', function(
 
 			game.position = low - 1
 
-			db.put(game).then(function(meta) {
+			gamesDB.put(game).then(function(meta) {
 
-				db.get(meta.id, {include_docs: true}).then(function(res) {
+				gamesDB.get(meta.id, {include_docs: true}).then(function(res) {
 
 					var game = {
 						doc: res
@@ -626,8 +690,6 @@ app.controller('GamesCtrl', function(
 			}).catch(function(err) {
 				console.log(err)
 			})
-		}).catch(function(err) {
-			console.log(err)
 		})
 	}
 
@@ -648,12 +710,12 @@ app.controller('GamesCtrl', function(
 		}
 
 		var trashedMap = function(doc, emit) {
-		  if (doc.game == '_trash') {
+		  if (doc.game == '_trash' && doc.user == currentUser) {
 		    emit([doc])
 		  }
 		}
 
-		db.query(trashedMap, {include_docs: true}).then(function(trashed) {
+		gamesDB.query(trashedMap, {include_docs: true}).then(function(trashed) {
 			success(trashed)
 		}).catch(function(err) {
 			error(err)
@@ -670,7 +732,7 @@ app.controller('GamesCtrl', function(
 			error = function() {}
 		}
 
-		db.remove(id).then(function(game) {
+		gamesDB.remove(id).then(function(game) {
 			success(game)
 		}).catch(function(err) {
 			error(err)
@@ -688,12 +750,12 @@ app.controller('GamesCtrl', function(
 		}
 
 		var childrenMap = function(doc, emit) {
-		  if (doc.parent == id) {
+		  if (doc.parent == id && doc.user == currentUser) {
 		    emit([doc])
 		  }
 		}
 
-		db.query(childrenMap, {include_docs: true}).then(function(children) {
+		gamesDB.query(childrenMap, {include_docs: true}).then(function(children) {
 			success(children)
 		}).catch(function(err) {
 			error(err)
@@ -740,11 +802,11 @@ app.controller('GamesCtrl', function(
 			error = function() {}
 		}
 
-		db.get($scope.currentGame._id).then(function(edited) {
+		gamesDB.get($scope.currentGame._id).then(function(edited) {
 
 			edited.parent = parent
 
-			db.put(edited, edited._id, edited._rev).then(function(doc) {
+			gamesDB.put(edited, edited._id, edited._rev).then(function(doc) {
 				success(doc)
 			}).catch(function(err) {
 				error(err)
@@ -797,7 +859,7 @@ app.controller('GamesCtrl', function(
 			return false
 		}
 
-		db.get($scope.currentGame._id).then(function(edited) {
+		gamesDB.get($scope.currentGame._id).then(function(edited) {
 			var gameText = $scope.editForm.game.text
 			priority = $scope.editForm.priority.value
 
@@ -817,7 +879,7 @@ app.controller('GamesCtrl', function(
 				edited.plays[edited.plays.length-1].priority = priority
 			}
 
-			db.put(edited, edited._id, edited._rev).then(function(doc) {
+			gamesDB.put(edited, edited._id, edited._rev).then(function(doc) {
 				success(doc)
 			}).catch(function(err) {
 
@@ -839,7 +901,7 @@ app.controller('GamesCtrl', function(
 			error = function() {}
 		}
 
-		db.get(id).then(function(repeated) {
+		gamesDB.get(id).then(function(repeated) {
 
 			var end = Date.create(
 				Date.create(repeated.plays[repeated.plays.length-1].end)
@@ -866,7 +928,7 @@ app.controller('GamesCtrl', function(
 
 			repeated.plays.push(replay)
 
-			db.put(repeated, repeated._id, repeated._rev).then(function(doc) {
+			gamesDB.put(repeated, repeated._id, repeated._rev).then(function(doc) {
 				success(doc)
 			}).catch(function(err) {
 				error(err)
@@ -914,7 +976,7 @@ app.controller('GamesCtrl', function(
 			return false
 		}
 
-		db.get($scope.currentGame._id).then(function(edited) {
+		gamesDB.get($scope.currentGame._id).then(function(edited) {
 			console.log('checkpoint 1: ' + edited)
 			var	priority = $scope.replayForm.priority.value,
 			now = Date.create()
@@ -932,7 +994,7 @@ app.controller('GamesCtrl', function(
 
 			edited.plays.push(replay)
 
-			db.put(edited, edited._id, edited._rev).then(function(doc) {
+			gamesDB.put(edited, edited._id, edited._rev).then(function(doc) {
 
 				$scope.replayForm.time.text = ''
 
@@ -964,13 +1026,13 @@ app.controller('GamesCtrl', function(
 
 		$('.state-wrap.activate').removeClass('activate')
 
-		db.get(id).then(function(doc) {
+		gamesDB.get(id).then(function(doc) {
 			var updatedDoc = doc
 
 			updatedDoc.plays[updatedDoc.plays.length-1].state = state
 			console.log(updatedDoc)
 
-			return db.put(updatedDoc, doc._id, doc._rev).then(function() {
+			return gamesDB.put(updatedDoc, doc._id, doc._rev).then(function() {
 				// updates the ui, the actual result is slow
 				$.each($scope.playingGames, function() {
 					if ($(this)[0].doc._id == id) {
@@ -994,11 +1056,11 @@ app.controller('GamesCtrl', function(
 
 	$scope.setPosition = function(id, pos) {
 
-		db.get(id).then(function(doc) {
+		gamesDB.get(id).then(function(doc) {
 			var updatedDoc = doc
 			updatedDoc.position = pos
 
-			return db.put(updatedDoc, doc._id, doc._rev).then(function() {
+			return gamesDB.put(updatedDoc, doc._id, doc._rev).then(function() {
 				console.log('updated')
 			}).catch(function(err) {
 				console.error(err)
@@ -1007,7 +1069,6 @@ app.controller('GamesCtrl', function(
 	}
 
   $scope.closeModal = function() {
-  	alert('closing...')
     $scope.modal.hide();
   }
 
@@ -1107,9 +1168,10 @@ app.controller('GamesCtrl', function(
 			return true
 		}
 
+		$scope.fetchPath(id)
+
 		$('.form-wrap .game-input').val('')
 		$('.form-wrap .time-input').val('')
-		$('.children-wrap').css('opacity', 0)
 
 		$scope.addForm.game.text =
 		$scope.addForm.game.success =
@@ -1121,6 +1183,9 @@ app.controller('GamesCtrl', function(
 		$scope.addForm.time.error =
 		$scope.addForm.time.typeahead = ''
 
+		$scope.currentPath = []
+
+
 		$scope.playingGames = []
 		$scope.wonGames = []
 		$scope.lostGames = []
@@ -1130,7 +1195,9 @@ app.controller('GamesCtrl', function(
 		$scope.fetchChildrenWithState(id, function() {
 
 			$('.children-wrap')
-			.css('margin-top', 50)
+			.css({
+				'margin-top': 20
+			})
 			.animate({
 				'margin-top': 0,
 				'opacity': 1
@@ -1283,6 +1350,12 @@ app.controller('GamesCtrl', function(
 		}
 	}
 
+	$scope.isPast = function(time) {
+		var d = Date.create(time)
+
+		return d.isPast()
+	}
+
 	$(document).on('mouseup click touch', function(e) {
 		var target = e.target,
 		form = $('.form-wrap'),
@@ -1316,6 +1389,8 @@ app.controller('GamesCtrl', function(
 			$scope.hideForm()
 			$scope.hideEditForm()
 			$scope.hideReplayForm()
+			$scope.signInModal.hide()
+			$scope.signUpModal.hide()
 			return false
 		}
 
@@ -1337,4 +1412,6 @@ app.controller('GamesCtrl', function(
 			}
 		}
 	})
+
+	
 })

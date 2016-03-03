@@ -30,7 +30,7 @@
 						<span class="typeahead-pusher" style="visibility: hidden;">{{game.end}}</span><span class="typeahead-text" ng-click="replaceTypeahead()" ng-keyup=" replaceTypeahead()">{{addForm.time.typeahead}}</span>
 					</span>
 
-					<input ng-required="required" ng-trim="false" ng-model="game.end" ng-focus="hideTypeahead()" ng-keydown="hideTypeahead()" ng-change="validateTime($event)" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off" spellcheck="false">
+					<input ng-required="required" focus-me ng-trim="false" ng-model="game.end" ng-focus="hideTypeahead()" ng-keydown="hideTypeahead()" ng-change="validateTime($event)" type="text" name="end-time" placeholder="End Time" class="time-input" autocomplete="off" spellcheck="false">
 
 					<div ng-show="addForm.time.error != false && addForm.time.error != undefined" class="error time-error">
 						<span class="fa fa-circle"></span>

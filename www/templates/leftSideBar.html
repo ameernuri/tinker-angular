@@ -1,14 +1,19 @@
-<ion-header-bar class="side-header">
-  
+<ion-header-bar class="side-header left-side">
   <h1 class="title" ng-click="setCurrentGame('_endgame'); modal.hide();" menu-toggle="left">
 		<div class="is-online">
 			<div>
-				<span>			
+				<span ng-show="online">
 					<span class="indicator online">&bull;</span> Online
 
-					<span class="online-message">
-						- Sign in to sync
+					<span ng-controller="UsersCtrl">
+						<span class="online-message" ng-show="signedIn == 'local'">
+							- Sign in to sync
+						</span>
 					</span>
+				</span>
+
+				<span ng-hide="online">			
+					<span class="indicator offline">&bull;</span> Offline
 				</span>
 			</div>
 		</div>
@@ -16,13 +21,23 @@
 </ion-header-bar>
 
 <ion-content class="left-container">
-	<ul>
-		<li menu-toggle="left" ng-click="signInModal.show()">
-			Sign In
-		</li>
-		<li menu-toggle="left" ng-click="signUpModal.show()">
-			Create Account
-		</li>
-	</ul>
+	<div ng-controller="UsersCtrl">
+		<ul ng-show="signedIn == 'local'">
+			<li menu-toggle="left" ng-click="signInModal.show()">
+				Sign In
+			</li>
+			<li menu-toggle="left" ng-click="signUpModal.show()">
+				Create Account
+			</li>
+		</ul>
 
+		<ul ng-hide="signedIn == 'local'">
+			<li menu-toggle="left">
+				{{signedIn}}
+			</li>
+			<li menu-toggle="left" ng-click="signOut()">
+				Sign Out
+			</li>
+		</ul>
+	</div>
 </ion-content>

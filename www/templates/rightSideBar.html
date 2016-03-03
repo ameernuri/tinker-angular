@@ -11,12 +11,21 @@
 	</div>
 
 	<ul>
-		<li menu-toggle="right" ng-click="setCurrentGame(prio.doc._id);" ng-repeat="prio in prios">
+		<li 
+			menu-toggle="right" 
+			ng-click="setCurrentGame(prio.doc._id);" 
+			ng-repeat="prio in prios"
+			ng-class="{
+				past: isPast(prio.doc.plays[prio.doc.plays.length-1].end)
+			}"
+		>
 			<div class="game-wrap">
-				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 8}}" class="fa fa-circle"></span>
-				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 4}}" class="fa fa-dot-circle-o"></span>
-				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 2}}" class="fa fa-circle-o"></span>
-				{{prio.doc.game}}
+				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 8}}" class="fa fa-circle prio-icon"></span>
+				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 4}}" class="fa fa-dot-circle-o prio-icon"></span>
+				<span ng-show="{{prio.doc.plays[prio.doc.plays.length-1].priority == 2}}" class="fa fa-circle-o prio-icon"></span>
+				{{Date.create(
+						prio.doc.plays[prio.doc.plays.lenght-1].end
+					).isPast()}}{{prio.doc.game}}
 			</div>
 			<div class="info-wrap">
 				<span am-time-ago="prio.doc.plays[prio.doc.plays.length-1].end"></span>

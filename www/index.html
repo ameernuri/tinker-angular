@@ -12,7 +12,6 @@
 
 	<link rel="stylesheet" href="lib/ionic/release/css/ionic.min.css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="css/main.css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="css/customize.css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css" media="screen" charset="utf-8">
 
 	<script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
@@ -26,6 +25,7 @@
 
 	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript" src="js/controllers/games.js"></script>
+	<script type="text/javascript" src="js/controllers/users.js"></script>
 </head>
 <body ng-controller="GamesCtrl">
   <ion-side-menus>
@@ -33,24 +33,22 @@
       <ion-header-bar class="main-header">
 			  <div class="buttons">
 			    <button class="button button-clear ion-chevron-left" ng-show="currentGame._id != &apos;_endgame&apos;" ng-click="openCurrentParent()"></button>
-					<img class="simple-logo" src="img/logo_icon.svg" ng-show="currentGame._id != &apos;_endgame&apos;" ng-click="setCurrentGame(&apos;_endgame&apos;)">
 				</div>
 
-			  <h1 class="title" ng-show="currentGame._id == &apos;_endgame&apos;" ng-click="setCurrentGame(&apos;_endgame&apos;)">
+			  <h1 class="title" ng-click="setCurrentGame(&apos;_endgame&apos;)">
 					<img class="logo" src="img/logo.svg">
 				</h1>
 				<button class="button button-clear prio-switch" menu-toggle="right" ng-hide="$exposeAside.active || isRightSideBarOpen()">
 					<img src="img/triangle.svg">
 				</button>
       </ion-header-bar>
-      <ion-content on-swipe-right="openCurrentParent()" class="main-content">
+      <ion-content class="main-content">
 		    <ion-refresher pulling-text="Sync" on-refresh="pullToSync()" pulling-icon="ion-android-sync">
 				</ion-refresher>
 
 				<div class="sync-message">
 					{{syncMessage}}
 				</div>
-
 
 				<script id="signInModal.html" type="text/ng-template">
 			  	<div class="modal">
@@ -61,27 +59,39 @@
         				&times;
       				</button>
 			  	  </ion-header-bar>
+
 			  	  <ion-content>
+				  	  <div ng-controller="UsersCtrl">				  	  	
+					  	  <form method="post" ng-submit="signIn()">
+								  <div class="list">
+								    <label class="item item-input item-floating-label">
+								      <span class="input-label">Username or Email</span>
+								      <input 
+								      	type="text"
+								      	placeholder="Username or Email"
+								      	ng-model="signInUsernameOrEmail"
+								      >
+								    </label>
+								    <label class="item item-input item-floating-label">
+								      <span class="input-label">Password</span>
+								      <input 
+								      	type="password" 
+								      	placeholder="Your Password"
+								      	ng-model="signInPassword"
+								      >
+								    </label>
 
-					  <div class="list">
-					    <label class="item item-input item-floating-label">
-					      <span class="input-label">Username or Email</span>
-					      <input type="text" placeholder="Username or Email">
-					    </label>
-					    <label class="item item-input item-floating-label">
-					      <span class="input-label">Password</span>
-					      <input type="password" placeholder="Your Password">
-					    </label>
+								    <div class="item input-item">
+								    	<input type="submit" value="Sign In">
+								    </div>
 
-					    <div class="item input-item">
-					    	<input type="submit" value="Sign In">
-					    </div>
-
-					    <div class="item input-item alt-switch">
-					    	Not Yet a Member? 
-					    	<button ng-click="signUpModal.show()">Create an Account</button>
-					    </div>
-					  </div>
+								    <div class="item input-item alt-switch">
+								    	Not Yet a Member? 
+								    	<button ng-click="signUpModal.show()">Create an Account</button>
+								    </div>
+								  </div>					  	  	
+						  	</form>
+				  	  </div>
 			  	  </ion-content>
 			  	</div>
 				</script>
@@ -96,34 +106,53 @@
       				</button>
 			  	  </ion-header-bar>
 			  	  <ion-content>
+			  	  	<div ng-controller="UsersCtrl">
+					  	  <form method="post" ng-submit="signUp()">
+								  <div class="list">
+								    <label class="item item-input item-floating-label">
+								      <span class="input-label">Name</span>
+								      <input 
+								      	type="text" 
+								      	placeholder="Your Name" 
+								      	ng-model="signUpName"
+								      >
+								    </label>
+								    <label class="item item-input item-floating-label">
+								      <span class="input-label">Username</span>
+								      <input 
+								      	type="text" 
+								      	placeholder="Select Username" 
+								      	ng-model="signUpUsername"
+								      >
+								    </label>
+								    <label class="item item-input item-floating-label">
+								      <span class="input-label">Email</span>
+								      <input 
+								      	type="email" 
+								      	placeholder="you@example.com" 
+								      	ng-model="signUpEmail"
+								      >
+								    </label>
+								    <label class="item item-input item-floating-label">
+								      <span class="input-label">Password</span>
+								      <input 
+								      	type="password" 
+								      	placeholder="New Password" 
+								      	ng-model="signUpPassword"
+								      >
+								    </label>
 
-					  <div class="list">
-					    <label class="item item-input item-floating-label">
-					      <span class="input-label">Name</span>
-					      <input type="text" placeholder="Your Name">
-					    </label>
-					    <label class="item item-input item-floating-label">
-					      <span class="input-label">Username</span>
-					      <input type="text" placeholder="Select Username">
-					    </label>
-					    <label class="item item-input item-floating-label">
-					      <span class="input-label">Email</span>
-					      <input type="email" placeholder="you@example.com">
-					    </label>
-					    <label class="item item-input item-floating-label">
-					      <span class="input-label">Password</span>
-					      <input type="password" placeholder="New Password">
-					    </label>
+								    <div class="item input-item">
+								    	<input type="submit" value="Create Account">
+								    </div>
 
-					    <div class="item input-item">
-					    	<input type="submit" value="Create Account">
-					    </div>
-
-					    <div class="item input-item alt-switch">
-					    	Already a Member? 
-					    	<button ng-click="signInModal.show()">Sign In</button>
-					    </div>
-					  </div>
+								    <div class="item input-item alt-switch">
+								    	Already a Member? 
+								    	<button ng-click="signInModal.show()">Sign In</button>
+								    </div>
+								  </div>
+								</form>			  	  		
+			  	  	</div>
 			  	  </ion-content>
 			  	</div>
 				</script>

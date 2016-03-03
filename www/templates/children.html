@@ -19,6 +19,10 @@
 			data-pos="{{game.doc.position}}"
 			data-id="{{game.doc._id}}"
 			ng-click="openGame($event)"
+			ng-class="{
+				past: isPast(game.doc.plays[game.doc.plays.length-1].end)
+				&& game.doc.plays[game.doc.plays.length-1].state == 'playing'
+			}"
 		>
 			<div ng-include src="'templates/child.html'"></div>
 		</li>

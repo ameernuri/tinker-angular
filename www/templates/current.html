@@ -1,4 +1,10 @@
-<div class="current-game">
+<div 
+	class="current-game"
+	ng-class="{
+		past: isPast(currentGame.plays[currentGame.plays.length-1].end)
+		&& currentGame.plays[currentGame.plays.length-1].state == 'playing'
+	}"
+>
 	<span ng-show="currentGame._id == '_endgame'" class="end-game-text">
 		<span class="current-game-text">
 			<span class="fa fa-stop end-icon"></span>
@@ -33,7 +39,7 @@
 								Delete Game
 							</span>
 							<span class="move button">
-								<span class="ion-shuffle"></span>
+								<span class="ion-network"></span>
 								Change Parent
 							</span>
 						</div>
@@ -108,6 +114,15 @@
 		</span>
 
 		<div class="game-state-wrap">
+
+
+
+			<div class="replay-wrap" ng-show="currentGame.plays[currentGame.plays.length-1].state == 'playing'">
+				<button class="replay-form-switch">
+					<span class="ion-play"></span>
+					<span>Start Timebox</span>
+				</button>
+			</div>
 			<div class="replay-wrap" ng-show="currentGame.plays[currentGame.plays.length-1].state != 'playing' && (currentGame.repeat == '' || currentGame.repeat == undefined || currentGame.repeat == false)">
 				<button class="replay-form-switch" ng-click="showReplayForm()">
 					<span class="fa fa-rotate-right"></span>

@@ -1,15 +1,25 @@
 <div ng-show="currentGame._id != '_endgame'" class="game-path-wrap">
-	<span ng-click="setCurrentGame('_endgame')" class="game-path">
+	<!-- <span ng-click="setCurrentGame('_endgame')" class="game-path">
 		<span class="fa fa-stop end-icon"></span> End Games
-	</span>
+	</span> -->
 
-	<span ng-show="currentGame._id != '_endgame' && currentGame.parent != '_endgame'">
-		<span class="ion-chevron-right"></span>
-		<span class="ellipsis">&bull;&bull;&bull;</span>
-		<span class="ion-chevron-right"></span>
-		<span ng-click="setCurrentGame(currentGame.parent)" class="game-path current-parent">
-			{{currentParent.game}}
-		</span>
-		<span class="ion-chevron-right"></span>
-	</span>
+	<ul class="path-list">
+		<li ng-click="setCurrentGame('_endgame')" class="end-game">
+			<span class="fa fa-stop end-icon"></span> End Games
+		</li>
+		<li 
+			ng-repeat="path in currentPath"
+			ng-click="setCurrentGame(path._id)"
+		>
+			<span 
+				class="path-content"
+				ng-class="{
+					past: isPast(path.plays[path.plays.length-1].end)
+				}"
+			>
+				<span class="ion-chevron-right chevron"></span>
+				{{path.game}}
+			</span>
+		</li>
+	</ul>
 </div>

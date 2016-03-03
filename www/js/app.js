@@ -1,6 +1,7 @@
 var tinker = angular.module('tinker', ['pouchDB'])
 
 var remote = 'https://penser:cloudant@penser.cloudant.com/games'
+var remote2 = 'https://penser:cloudant@penser.cloudant.com/users'
 
 getTypeahead = function(input) {
 	var output = input
@@ -314,10 +315,33 @@ randomChars = function() {
 }
 
 generateId = function() {
-	return Date.create() + '-' + randomChars()
+	return Date.create().getTime() + '_' + randomChars()
+}
+
+
+createDesignDoc = function(name, mapFn) {
+  var ddoc = {
+    _id: '_design/' + name,
+    views: {
+    }
+  }
+  ddoc.views[name] = { 
+  	map: mapFn.toString() 
+  }
+  return ddoc;
 }
 
 PouchDB.sync('games', remote, {
+	live: true,
+	retry: true
+}).on('complete', function () {
+  console.log('sync complete')
+}).on('error', function (err) {
+  alert('sync error...')
+  alert(err)
+})
+
+PouchDB.sync('users', remote2, {
 	live: true,
 	retry: true
 }).on('complete', function () {

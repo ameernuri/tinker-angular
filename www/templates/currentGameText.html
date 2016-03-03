@@ -20,7 +20,7 @@
 		<span am-time-ago="currentGame.plays[currentGame.plays.length-1].end"></span>
 
 		<span ng-show="currentGame.repeat != '' && currentGame.repeat != undefined && currentGame.repeat != false">
-			<span class="fa fa-refresh"></span> {{currentGame.repeat | repeatTime}}
+			<span class="ion-android-sync"></span> {{currentGame.repeat | repeatTime}}
 
 			{{currentGame.end | relativeTime}}
 		</span>
