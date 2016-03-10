@@ -3,7 +3,13 @@
 		<div class="is-online">
 			<div>
 				<span ng-show="online">
-					<span class="indicator online">&bull;</span> Online
+					<span class="indicator online fa fa-circle"></span> 
+
+					<span ng-controller="UsersCtrl">
+						<span ng-show="signedIn == 'local'">
+							Online
+						</span>
+					</span>
 
 					<span ng-controller="UsersCtrl">
 						<span class="online-message" ng-show="signedIn == 'local'">
@@ -13,7 +19,19 @@
 				</span>
 
 				<span ng-hide="online">			
-					<span class="indicator offline">&bull;</span> Offline
+					<span class="indicator offline fa fa-circle"></span>
+
+					<span ng-controller="UsersCtrl">
+						<span ng-show="signedIn == 'local'">
+							Offline
+						</span>
+					</span>
+				</span>
+
+				<span ng-controller="UsersCtrl">
+					<span class="online-message signed-in" ng-show="signedIn != 'local'">
+						{{signedInUser.name}}
+					</span>
 				</span>
 			</div>
 		</div>
@@ -33,7 +51,7 @@
 
 		<ul ng-hide="signedIn == 'local'">
 			<li menu-toggle="left">
-				{{signedIn}}
+				Account Settings
 			</li>
 			<li menu-toggle="left" ng-click="signOut()">
 				Sign Out

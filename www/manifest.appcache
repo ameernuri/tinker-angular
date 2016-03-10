@@ -1,0 +1,42 @@
+CACHE MANIFEST
+
+#app-version: 0.0.1
+#refresh: .....................
+
+CACHE:
+# /img/favicon.png
+# /img/logo.svg
+# /img/logo_icon.svg
+# /img/triangle.svg
+# /css/main.css
+# /js/controllers/games.js
+# /js/controllers/users.js
+# /js/app.js
+# /lib/jquery/dist/jquery.min.js
+# /lib/ionic/release/js/ionic.bundle.min.js
+# /lib/pouchdb/dist/pouchdb.min.js
+# /lib/sugar/release/sugar.min.js
+# /lib/moment/min/moment.min.js
+# /lib/angular-pouchdb/angular-pouchdb.min.js
+# /lib/angular-moment/angular-moment.min.js
+# /lib/bootstrap/dist/js/bootstrap.min.js
+# /lib/font-awesome/css/font-awesome.min.css
+# /lib/ionic/release/css/ionic.min.css
+# /lib/bootstrap/dist/css/bootstrap.min.css
+# /lib/font-awesome/fonts/fontawesome-webfont.woff2?v=4.5.0
+# /lib/ionic/release/fonts/ionicons.ttf?v=2.0.1
+# /fonts/Lato/Lato-Light.woff2
+# /fonts/Lato/Lato-Semibold.woff2
+# /templates/rightSideBar.html
+# /templates/leftSideBar.html
+# /templates/child.html
+# /templates/children.html
+# /templates/content.html
+# /templates/current.html
+# /templates/currentGameText.html
+# /templates/form.html
+# /templates/path.html
+# /index.html
+
+NETWORK:
+*

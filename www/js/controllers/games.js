@@ -8,7 +8,7 @@ var app = angular.module('tinker', [
 remote = 'https://penser:cloudant@penser.cloudant.com/games'
 
 app.config(function($ionicConfigProvider) {
-	$ionicConfigProvider.spinner.icon('ripple')
+	$ionicConfigProvider.spinner.icon('none')
   $ionicConfigProvider.views.transition('ios')
   $ionicConfigProvider.tabs.style('standard').position('bottom')
   $ionicConfigProvider.navBar.alignTitle('center').positionPrimaryButtons('left')
@@ -55,6 +55,23 @@ app.filter('repeatTime', function() {
 		.replace(' from now', '')
   }
 })
+.filter('toMinutes', function() {
+  return function(input) {
+
+		return zeroPad(parseInt(input/60))
+  }
+})
+.filter('toSeconds', function() {
+  return function(input) {
+
+		return zeroPad(parseInt(input%60))
+  }
+})
+
+function zeroPad(num) {
+  var zero = 2 - num.toString().length + 1;
+  return Array(+(zero > 0 && zero)).join("0") + num;
+}
 
 app.run(function($window, $rootScope) {
 	$rootScope.online = navigator.onLine
@@ -73,8 +90,13 @@ app.run(function($window, $rootScope) {
 })
 
 app.controller('GamesCtrl', function(
-	$log, $scope, $http, $ionicSideMenuDelegate, $ionicModal, pouchDB
+	$log, $scope, $http, $ionicSideMenuDelegate, 
+	$ionicModal, $ionicPopover, pouchDB, $timeout
 ) {
+	$scope.timeboxStarted = false
+	$scope.currentTimebox = {}
+
+
 	var gamesDB = pouchDB('games'),
 	usersDB = pouchDB('games'),
 	changes = gamesDB.changes({live: true, since: 'now'}),
@@ -99,6 +121,22 @@ app.controller('GamesCtrl', function(
   }, {
     focusFirstInput: true
   })
+
+  $ionicPopover.fromTemplateUrl('editPopover.html').then(function(popover) {
+    $scope.popover = popover
+  })
+
+  $scope.openPopover = function($event) {
+    $scope.popover.show($event);
+  };
+
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  });
 
 	$scope.editTemp
 	$scope.game = []
@@ -203,10 +241,19 @@ app.controller('GamesCtrl', function(
 	  	$('.sync-message').fadeIn()
 	  	setTimeout(function() {
 	  		$('.sync-message').slideUp()
-	  		$scope.signUpModal.show()
+
+	  		if (window.sessionStorage.getItem('local') == 'local') {
+
+		  		$scope.signUpModal.show()
+	  		}
 	  	}, 3000)
 		})
 
+	}
+
+	$scope.pullToOpenParent = function() {
+		$scope.openCurrentParent()
+    $scope.$broadcast('scroll.refreshComplete')
 	}
 
 	changes.on('change', function(change) {
@@ -356,6 +403,7 @@ app.controller('GamesCtrl', function(
 	      	
 	      	insertToPath(i, current.parent)
       	} else {
+    			$scope.currentPath = []
     			$scope.currentPath = tempPath
     		}
    		}) 
@@ -1192,20 +1240,26 @@ app.controller('GamesCtrl', function(
 
 		$('.children-wrap .no-games').hide()
 
-		$scope.fetchChildrenWithState(id, function() {
+		$scope.fetchChildrenWithState(id, function(children) {
 
-			$('.children-wrap')
-			.css({
-				'margin-top': 20
-			})
-			.animate({
-				'margin-top': 0,
-				'opacity': 1
-			}, function() {
-				setTimeout(function () {
-					$('.children-wrap .no-games').fadeIn()
-				}, 300)
-			})
+			if (
+				children[0] != undefined 
+				&& children[0].doc.parent == $scope.currentGame._id
+			) {
+
+				$('.children-wrap')
+				.css({
+					'margin-top': 20
+				})
+				.animate({
+					'margin-top': 0,
+					'opacity': 1
+				}, function() {
+					setTimeout(function () {
+						$('.children-wrap .no-games').fadeIn()
+					}, 300)
+				})
+			}
 		})
 
 		if (id == '_endgame') {
@@ -1356,6 +1410,106 @@ app.controller('GamesCtrl', function(
 		return d.isPast()
 	}
 
+	$scope.startTimebox = function(id) {
+
+		if (!$scope.timeboxStarted) {
+			$scope.startTime = Date.create().getTime()
+			$scope.counter = 3600
+			window.sessionStorage.setItem('currentTimebox', id)
+			$scope.currentTimebox._id = window.sessionStorage.getItem('currentTimebox')
+
+			$scope.fetchOne(id, function(doc) {
+				$scope.currentTimebox = doc
+			})
+
+			$scope.timeboxTimeout = $timeout($scope.onTimeout, 1000)
+
+			$scope.timeboxStarted = true
+		} else {
+			$scope.setCurrentGame(id)
+		}
+
+	}
+
+	$scope.startTimeboxOnCurrentGame = function() {
+		$scope.startTimebox($scope.currentGame._id)
+	}
+
+	$scope.closeNotif = function(id) {
+
+		$scope.notifs.remove(
+			$scope.notifs.find({id: id})
+		)
+	}
+
+	$scope.stopTimebox = function() {
+		$timeout.cancel($scope.timeboxTimeout)
+
+		var now = parseInt(Date.create().getTime()/1000),
+		startTime = parseInt($scope.startTime/1000)
+		
+		var duration = now - startTime
+
+		if (duration >= 60) {
+			duration = parseInt(duration/60)
+
+			if (duration == 1) {
+				duration = '1 minute'
+			} else {
+				duration =  duration + ' minutes'
+			}
+		}
+
+		if (duration < 60) {
+
+			if (duration == 1) {
+				duration = '1 second'
+			} else {
+				duration = duration + ' seconds'
+			}
+		}
+
+		notif = {
+			message: {
+				a: $scope.currentTimebox.game,
+				b: $scope.currentTimebox._id,
+				c: duration
+			},
+			time: Date.create(),
+			tag: 'success',
+			type: 'timeboxEnded',
+			id: 'notif-' + generateId()
+		},
+		length = 1
+
+		if ($scope.notifs == undefined) {
+			$scope.notifs = [notif]
+		} else {
+			$scope.notifs.remove(
+				$scope.notifs.find({message: {b: $scope.currentTimebox._id}})
+			)
+			$scope.notifs.push(notif)
+			length = $scope.notifs.length
+		}
+
+		window.sessionStorage.setItem('currentTimebox', '')
+		$scope.currentTimebox._id = ''
+
+		$scope.timeboxStarted = false
+	}
+
+	$scope.onTimeout = function() {
+		var now = parseInt(Date.create().getTime()/1000),
+		startTime = parseInt($scope.startTime/1000)
+		$scope.counter = 3600 - (now - startTime)
+		$scope.timeboxTimeout = $timeout($scope.onTimeout, 1000)
+
+		if ($scope.counter <= 0) {
+
+			$scope.stopTimebox()
+		}
+	}
+
 	$(document).on('mouseup click touch', function(e) {
 		var target = e.target,
 		form = $('.form-wrap'),
@@ -1413,5 +1567,5 @@ app.controller('GamesCtrl', function(
 		}
 	})
 
-	
+
 })

@@ -133,6 +133,22 @@ input {
 	}
 }
 
+.loader-container {
+	display: table;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+
+	.loader-content {
+		width: 100%;
+		height: 100%;
+		display: table-cell;
+		text-align: center;
+		vertical-align: middle;
+		color: @white1;
+	}
+}
+
 .check-button {
 	label {
 		margin: 0;
@@ -353,7 +369,21 @@ input {
 
 		.game-state-wrap {
 			text-align: center;
-			margin: 5px 0;
+
+			.timebox {
+				padding: 15px 20px 5px;
+				font-size: 15px;
+				text-align: left;
+
+				.progress-wrap {
+					margin: 10px 0;
+				}
+			}
+
+			.timebox-switch.started {
+				background: @dark6;
+				border-color: @dark6;
+			}
 
 			.current-game-state {
 				background: @dark7;
@@ -425,13 +455,14 @@ input {
 		}
 
 		.replay-wrap {
-			margin: 15px 0 10px;
+			margin: 0 0 10px;
 
 			button {
 				color: @gray6;
 				border: 2px solid @dark7;
 				background: none;
 				font-size: 12px;
+				margin-top: 15px;
 
 				.fa {
 					margin-right: 4px;
@@ -448,7 +479,7 @@ input {
 
 				.game-text-wrap {
 					text-align: left;
-					padding: 5px 20px;
+					padding: 0 20px 10px;
 					background: @dark5;
 				}
 			}
@@ -469,7 +500,7 @@ input {
 	}
 
 	.game-path-wrap {
-		margin: 0 20px 10px;
+		margin: 0 20px;
 
 		.game-path {
 			cursor: pointer;
@@ -479,6 +510,9 @@ input {
 
 		ul.path-list {
 			transition: .5s;
+			border-left: 1px solid @gray1;
+			padding-bottom: 6px;
+			margin-left: 10px;
 
 			@keyframes slide {
 				0% {
@@ -491,8 +525,7 @@ input {
 			}
 
 			li {
-				padding: 3px 5px;
-				border-bottom: 1px solid @dark4;
+				padding: 2px 5px 3px 0;
 				cursor: pointer;
 
 				.path-content {
@@ -503,14 +536,49 @@ input {
 							color: @yellow;
 						}
 					}
+
+					&.won {
+						.chevron {
+							color: @green;
+						}
+					}
+
+					&.lost {
+						.chevron {
+							color: @red;
+						}
+					}
+
+					&.won, &.lost, &.past {
+						.chevron:before {
+							opacity: .4;
+						}
+					}
+
+					.chevron {
+						margin-left: -7.25px;
+						background: @dark5;
+						padding: 2px;
+						font-size: 12px;
+					}
 				}
 
 				&.end-game {
-					padding: 3px 0;
+					padding-top: 0;
+
+					.end-icon {
+						margin-left: -6.5px;
+						padding: 5px 2px 2px 0;
+						background: @dark5;
+					}
 				}
 
 				&:hover {
 					color: @white7;
+					
+					.path-content .chevron:before {
+						opacity: 1;
+					}
 				}
 			}
 		}
@@ -528,6 +596,90 @@ input {
 
 		.current-parent {
 			transition: .5s;
+		}
+	}
+}
+
+.timebox-top {
+	width: 100%;
+	background: @dark7;
+
+	&.timebox {
+		padding: 10px 20px;
+	}
+}
+
+.timebox {
+	font-size: 15px;
+	padding: 15px 20px;
+	color: @white1;
+
+	.progress-wrap {
+		height: 2px;
+		background: @gray1;
+		border-radius: 10px;
+		margin: 10px 0;
+
+		.progress {
+			height: 2px;
+			border-radius: 10px;
+			transition: 1s;
+
+			&.done {
+				background: @green;
+				width: 50%;
+			}
+		}
+	}
+}
+
+.top-notifs {
+	background: @dark8;
+
+	li {
+		font-weight: normal;
+		padding: 10px 20px;
+		border-bottom: 1px solid @dark6;
+		color: @white1;
+		font-size: 15px;
+
+		.close-button {
+			float: right;
+			color: @gray6;
+			font-size: 20px;
+			cursor: pointer;
+		}
+
+		.action-buttons {
+			padding-top: 10px;
+
+			button {
+				padding: 0;
+				background: none;
+				transition: none;
+			}
+		}
+
+		.message {
+			font-size: 13px;
+		}
+
+		.time {
+			font-size: 12px;
+			font-style: italic;
+			color: @gray3;
+		}
+
+		&.success .message {
+			color: @green;
+		}
+
+		&.error .message {
+			color: @red;
+		}
+
+		&.info .message {
+			color: @white9;
 		}
 	}
 }
@@ -555,36 +707,25 @@ input {
 			}
 
 			.error, .success, .info, .warn {
-				@keyframes slideDown {
-					from {
-						opacity: 0;
-					}
-
-					to {
-						opacity: 1;
-					}
-				}
-
 				padding: 3px 20px;
 				font-size: 12px;
+				font-weight: normal;
 				color: @gray3;
-				transition: .5s;
-				animation: slideDown .5s;
 
 				.fa {
 					font-size: 10px;
 				}
 			}
 
-			.error .fa {
+			.error {
 				color: @red;
 			}
 
-			.success .fa {
+			.success {
 				color: @green;
 			}
 
-			.warn .fa {
+			.warn {
 				color: @yellow;
 			}
 

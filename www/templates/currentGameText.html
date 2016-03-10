@@ -17,9 +17,22 @@
 	</span>
 
 	<div class="game-info-wrap">
+		<span 
+			class="ion-ios-rewind" 
+			ng-show="
+				isPast(currentGame.plays[currentGame.plays.length-1].end)
+				&& currentGame.plays[currentGame.plays.length-1].state == 'playing'
+			"
+		></span>
+	
 		<span am-time-ago="currentGame.plays[currentGame.plays.length-1].end"></span>
 
-		<span ng-show="currentGame.repeat != '' && currentGame.repeat != undefined && currentGame.repeat != false">
+		<span 
+			ng-show="currentGame.repeat != '' 
+				&& currentGame.repeat != undefined 
+				&& currentGame.repeat != false
+			"
+		>
 			<span class="ion-android-sync"></span> {{currentGame.repeat | repeatTime}}
 
 			{{currentGame.end | relativeTime}}

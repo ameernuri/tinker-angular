@@ -116,7 +116,13 @@
 
 			img.prio-icon {
 				width: 22px;
+				margin-bottom: 5px;
 				vertical-align: middle;
+			}
+
+			.expand {
+				position: absolute;
+				right: 0;
 			}
 		}
 
@@ -128,6 +134,8 @@
 
 			.indicator {
 				font-weight: bold;
+				font-size: 10px;
+				vertical-align: middle;
 
 				&.online {
 					color: @green;
@@ -137,12 +145,18 @@
 					color: @red;
 				}
 			}
+
+			.signed-in {
+				vertical-align: middle;
+				color: @white1;
+			}
 		}
 	}
 
 	.logo {
 		max-height: 100%;
 		padding: 8px;
+		cursor: pointer;
 	}
 
 	.simple-logo {
@@ -166,4 +180,22 @@
 
 .main-content.scroll-content {
 	background: @dark5;
+}
+
+.popover, .popover-open .popover {
+	background: @dark6;
+	max-height: 200px;
+	max-width: 200px;
+	border-radius: 8px;
+
+	ul {
+		li {
+			padding: 5px 10px;
+			border-bottom: 1px solid @dark5;
+		}
+	}
+}
+
+.popover-arrow:after {
+	background: @dark6 !important;
 }

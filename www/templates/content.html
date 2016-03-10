@@ -1,3 +1,73 @@
+<div 
+	class="timebox timebox-top" 
+	ng-show="timeboxStarted && currentTimebox._id != currentGame._id"
+>
+	<div>
+		<b>{{currentTimebox.game}}</b>
+	</div>
+	<div class="progress-wrap">
+		<div class="progress done" style="width: {{counter*100/3600}}%"></div>
+	</div>
+
+	<div>
+		{{counter | toMinutes}}:{{counter | toSeconds}}
+	</div>
+</div>
+
+<ul class="top-notifs" ng-show="notifs.length > 0">
+	<li 
+		ng-repeat="notif in notifs" 
+		ng-class="{
+			success: notif.tag == 'success',
+			error: notif.tag == 'error',
+			info: notif.tag == 'info'
+		}"
+	>
+		<span 
+			class="close-button"
+			ng-click="closeNotif(notif.id)"
+		>
+			&times;
+		</span>
+
+		<span ng-show="notif.type == 'timeboxEnded'">
+
+			<div ng-click="setCurrentGame(notif.message.b); closeNotif(notif.id)">
+				<b>
+					{{notif.message.a}}
+				</b>			
+			</div>
+
+			<div class="message">
+				Timebox ended after {{notif.message.c}} 
+				<span class="time"> 
+					&bull; 
+					<span am-time-ago="notif.time"></span>
+				</span>
+			</div>
+
+
+			<div class="action-buttons">
+				<button 
+					ng-click="startTimebox(notif.message.b); closeNotif(notif.id)"
+					ng-show="!timeboxStarted"
+				>
+					<span class="ion-refresh"></span>
+					Restart Timebox
+				</button>
+				<button ng-show="timeboxStarted">
+					<span ng-show="currentTimebox._id != notif.message.b">
+						Another Timebox is Running...
+					</span>
+					<span ng-show="currentTimebox._id == notif.message.b">
+						Timebox Restarted
+					</span>
+				</button>
+			</div>			
+		</span>
+	</li>
+</ul>
+
 <div class="game-top-wrap">
 	<div ng-include src="'templates/path.html'"></div>
 	<div ng-include src="'templates/current.html'"></div>

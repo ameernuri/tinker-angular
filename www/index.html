@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html ng-app="tinker">
+<!-- <html ng-app="tinker" lang="en"> -->
+<html ng-app="tinker" lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
@@ -28,27 +29,51 @@
 	<script type="text/javascript" src="js/controllers/users.js"></script>
 </head>
 <body ng-controller="GamesCtrl">
-  <ion-side-menus>
+
+  <div class="loader-container" ng-show="playingGames == undefined">
+  	<div class="loader-content">
+  		<img src="img/splash_logo.svg">
+  	</div>
+  </div>
+  
+  <ion-side-menus ng-show="playingGames!= undefined">	  
     <ion-side-menu-content>
       <ion-header-bar class="main-header">
-			  <div class="buttons">
-			    <button class="button button-clear ion-chevron-left" ng-show="currentGame._id != &apos;_endgame&apos;" ng-click="openCurrentParent()"></button>
-				</div>
 
 			  <h1 class="title" ng-click="setCurrentGame(&apos;_endgame&apos;)">
-					<img class="logo" src="img/logo.svg">
+					<img class="logo" src="img/logo.svg" ng-show="currentGame._id == '_endgame'">
+					<img class="logo" src="img/logo_icon.svg" ng-show="currentGame._id != '_endgame'">
 				</h1>
+
 				<button class="button button-clear prio-switch" menu-toggle="right" ng-hide="$exposeAside.active || isRightSideBarOpen()">
 					<img src="img/triangle.svg">
 				</button>
       </ion-header-bar>
+      
       <ion-content class="main-content">
-		    <ion-refresher pulling-text="Sync" on-refresh="pullToSync()" pulling-icon="ion-android-sync">
+		    <ion-refresher
+		    	on-refresh="pullToOpenParent()"
+		    	pulling-icon="ion-ios-arrow-down"
+		    >
 				</ion-refresher>
 
-				<div class="sync-message">
-					{{syncMessage}}
-				</div>
+				<script id="editPopover.html" type="text/ng-template">
+				  <ion-popover-view>
+				    <ion-content>
+				      <ul>
+				      	<li>
+				      		<span class="ion-network"></span> Change Parent
+				      	</li>
+				      	<li>
+				      		<span class="ion-ios-filing"></span> Archive
+				      	</li>
+				      	<li>
+				      		<span class="ion-trash-a"></span> Delete Game
+				      	</li>
+				      </ul>
+				    </ion-content>
+				  </ion-popover-view>
+				</script>
 
 				<script id="signInModal.html" type="text/ng-template">
 			  	<div class="modal">

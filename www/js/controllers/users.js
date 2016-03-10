@@ -4,12 +4,40 @@ app.controller('UsersCtrl', function($scope, pouchDB) {
 	usersDB = pouchDB('users'),
 	sessionUser = window.sessionStorage.getItem('signedIn')
 
+	$scope.findByEmail = function(email, success, error) {
+
+		if (success == undefined) {
+			success = function() {}
+		}
+
+		if (error == undefined) {
+			error = function() {}
+		}
+
+		var userMap = function(doc, emit) {
+			if (
+				doc.email != undefined
+				&& doc.email.trim().toLowerCase() == email.trim().toLowerCase()
+			) {
+				emit()
+			}
+		}
+
+		usersDB.query(userMap, {include_docs: true, limit: 1}).then(function(doc) {
+			success(doc.rows[0])
+		}).catch(function(err) {
+			console.error(err)
+		})
+	}
+
 	if (sessionUser == undefined || sessionUser == '') {
 		$scope.signedIn = 'local'
 	} else {
 		$scope.signedIn = sessionUser
+		$scope.findByEmail(sessionUser, function(user) {
+			$scope.signedInUser = user
+		})
 	}
-
 
 	$scope.doSignIn = function(email) {
 
@@ -61,8 +89,11 @@ app.controller('UsersCtrl', function($scope, pouchDB) {
 		var userMap = function(doc, emit) {
 			if (
 				(
-					doc.email == $scope.signInUsernameOrEmail
-					|| doc.username == $scope.signInUsernameOrEmail
+					doc.email != undefined
+					&& (
+						doc.email.toLowerCase().trim() == $scope.signInUsernameOrEmail.toLowerCase().trim()
+						|| doc.username.toLowerCase().trim() == $scope.signInUsernameOrEmail.toLowerCase().trim()
+					)
 				)
 				&& doc.password == $scope.signInPassword
 			) {
@@ -72,15 +103,22 @@ app.controller('UsersCtrl', function($scope, pouchDB) {
 
 		usersDB.query(userMap, {include_docs: true}).then(function(users) {
 
-			if (users.rows[0].doc.email != undefined) {
+			if (
+				users.rows[0] != undefined
+				&& users.rows[0].doc.email != undefined
+			) {
 
 				window.sessionStorage.setItem('currentUser', users.rows[0].doc._id)
 
 				window.sessionStorage.setItem('signedIn', users.rows[0].doc.email)
 				$scope.signedIn = users.rows[0].doc.email
+				$scope.signedInUser = users.rows[0].doc
 				window.location.reload()
+			} else {
+				console.error(users.rows[0])
+				console.error(users.rows[0])
+				alert('Unable to sign in. Please try again.')
 			}
-			return true
 		}).catch(function(err) {
 			console.error(err)
 		})

@@ -28,6 +28,13 @@
 					).isPast()}}{{prio.doc.game}}
 			</div>
 			<div class="info-wrap">
+				<span 
+					class="ion-ios-rewind" 
+					ng-show="
+						isPast(prio.doc.plays[prio.doc.plays.length-1].end)
+						&& prio.doc.plays[prio.doc.plays.length-1].state == 'playing'
+					"
+				></span>
 				<span am-time-ago="prio.doc.plays[prio.doc.plays.length-1].end"></span>
 			</div>
 		</li>

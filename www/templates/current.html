@@ -21,29 +21,6 @@
 			<div class="edit-form-wrap">
 				<div class="form-content-wrap">
 					<form class="game-form" method="post" ng-submit="saveEdit()">
-
-						<div class="edit-more-wrap">
-							<div class="add-inbetween add-above">
-								<span class="ion-plus-circled"></span>
-								Add Above
-							</div>
-
-							<div ng-include src="'templates/currentGameText.html'"></div>
-
-							<div class="add-inbetween add-below">
-								<span class="ion-plus-circled"></span>
-								Add Below
-							</div>
-							<span class="delete button" ng-click="delete()">
-								<span class="fa fa-trash"></span>
-								Delete Game
-							</span>
-							<span class="move button">
-								<span class="ion-network"></span>
-								Change Parent
-							</span>
-						</div>
-
 						<div class="game-form-content">
 							<div class="game-text-wrap">
 								<span class="game-text-priority" ng-click="nextEditPriority()">
@@ -95,7 +72,7 @@
 						</div>
 
 						<div class="buttons-wrap">
-							<span class="ellipsis" ng-click="showEditMore()">
+							<span class="ellipsis" ng-click="openPopover($event)">
 								<span class="button-icon">&bull;&bull;&bull;</span>
 								<span class="button-text">more</span>
 							</span>
@@ -115,13 +92,43 @@
 
 		<div class="game-state-wrap">
 
-
-
 			<div class="replay-wrap" ng-show="currentGame.plays[currentGame.plays.length-1].state == 'playing'">
-				<button class="replay-form-switch">
-					<span class="ion-play"></span>
-					<span>Start Timebox</span>
-				</button>
+
+				<div class="timebox" ng-show="timeboxStarted && currentTimebox._id == currentGame._id">
+					<div class="progress-wrap">
+						<div class="progress done" style="width: {{counter*100/3600}}%"></div>
+					</div>
+
+					<div>
+						{{counter | toMinutes}}:{{counter | toSeconds}}
+					</div>
+				</div>
+
+				<span 
+					ng-show="timeboxStarted && currentTimebox._id == currentGame._id"
+				>
+					<button ng-click="stopTimebox()">					
+						<span class="ion-stop"></span>
+						<span>Stop Timebox</span>
+					</button>
+				</span>
+				<span 
+					ng-show="!timeboxStarted || currentTimebox._id != currentGame._id"
+				>
+					<button 
+						class="timebox-switch" 
+						ng-click="startTimeboxOnCurrentGame()" 
+						ng-class="{started: timeboxStarted}"
+					>
+						<span ng-show="timeboxStarted">
+							Timebox is Running...
+						</span>
+						<span ng-show="!timeboxStarted">
+							<span class="ion-play"></span>
+							Start Timebox
+						</span>
+					</button>
+				</span>
 			</div>
 			<div class="replay-wrap" ng-show="currentGame.plays[currentGame.plays.length-1].state != 'playing' && (currentGame.repeat == '' || currentGame.repeat == undefined || currentGame.repeat == false)">
 				<button class="replay-form-switch" ng-click="showReplayForm()">
